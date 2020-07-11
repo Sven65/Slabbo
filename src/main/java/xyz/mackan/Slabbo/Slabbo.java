@@ -39,10 +39,10 @@ public class Slabbo extends JavaPlugin {
 			return;
 		}
 
+		setupChat();
 		setupPermissions();
 		setupCommands();
 		setupListeners();
-		setupChat();
 
 		new File(getDataPath()).mkdirs();
 

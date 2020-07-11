@@ -11,6 +11,12 @@ public class ShopUtil {
 
 	public ShopUtil () { }
 
+	public int getOwnerCount (UUID ownerId) {
+		if (!shopsByOwnerId.containsKey(ownerId)) return 0;
+
+		return shopsByOwnerId.get(ownerId).size();
+	}
+
 	public void put (String key, Shop value) {
 		shops.put(key, value);
 

@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -16,6 +17,7 @@ import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.PermissionUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 public class PlayerInteractListener implements Listener {
@@ -43,9 +45,19 @@ public class PlayerInteractListener implements Listener {
 		boolean openAdmin = itemInHand != null && itemInHand.getType() == Material.STICK;
 
 		if (openAdmin) {
-			ShopCreationGUI gui = new ShopCreationGUI(clickedBlock.getLocation());
+			int limit = PermissionUtil.getLimit(player);
 
-			gui.openInventory(e.getPlayer());
+			if (Slabbo.shopUtil.getOwnerCount(player.getUniqueId()) >= limit) {
+				String clickedLocation = ShopUtil.locationToString(clickedBlock.getLocation());
+
+				if (!Slabbo.shopUtil.shops.containsKey(clickedLocation)) {
+					player.sendMessage(ChatColor.RED+"You've created all the shops you can! ("+limit+")");
+					return;
+				}
+			} else {
+				ShopCreationGUI gui = new ShopCreationGUI(clickedBlock.getLocation());
+				gui.openInventory(e.getPlayer());
+			}
 		} else {
 			String clickedLocation = ShopUtil.locationToString(clickedBlock.getLocation());
 

@@ -5,3 +5,16 @@ description: ${project.description}
 author: Mackan
 api-version: 1.16
 depend: [Vault]
+permissions:
+  slabbo.use:
+    default: op
+    description: Lets you use slab shops
+  slabbo.create:
+    default: op
+    description: Lets you create slab shops
+  slabbo.admin:
+    default: op
+    description: Lets you create admin shops
+  slabbo.limit.*:
+    default: op
+    description: Gives you unlimited shops
