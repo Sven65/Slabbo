@@ -6,9 +6,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.mackan.Slabbo.listeners.EntityPickupItemListener;
-import xyz.mackan.Slabbo.listeners.ItemDespawnListener;
-import xyz.mackan.Slabbo.listeners.PlayerInteractListener;
+import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
@@ -62,6 +60,8 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
 		getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
 		getServer().getPluginManager().registerEvents(new ItemDespawnListener(), this);
+		getServer().getPluginManager().registerEvents(new ItemMergeListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 	}
 
 	private void setupCommands () {

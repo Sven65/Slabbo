@@ -5,6 +5,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,6 +25,7 @@ import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class ShopCreationGUI implements Listener {
 	private Inventory inv;
@@ -32,10 +34,30 @@ public class ShopCreationGUI implements Listener {
 	private ItemStack shopItem = null;
 
 	private ChatWaitingType waitingType;
+	private UUID waitingPlayerId;
 
 	private int buyPrice = 0;
 	private int sellPrice = 0;
 	private int quantity = 0;
+
+	private boolean isModifying = false;
+
+	public ShopCreationGUI (Location slabLocation, Shop shop) {
+		isModifying = true;
+		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
+
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] Editing Shop");
+
+		this.slabLocation = slabLocation;
+
+		shopItem = shop.item;
+
+		buyPrice = shop.buyPrice;
+		sellPrice = shop.sellPrice;
+		quantity = shop.quantity;
+
+		initializeStage2();
+	}
 
 	public ShopCreationGUI (Location slabLocation) {
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
@@ -133,34 +155,54 @@ public class ShopCreationGUI implements Listener {
 				if (slot == 3) {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
+					waitingPlayerId = e.getWhoClicked().getUniqueId();
 					p.sendMessage("Please type the new buying price");
 					e.getWhoClicked().closeInventory();
 
 				} else if (slot == 4) {
 					//Sell Price
 					waitingType = ChatWaitingType.SELL_PRICE;
+					waitingPlayerId = e.getWhoClicked().getUniqueId();
 					p.sendMessage("Please type the new selling price");
 					e.getWhoClicked().closeInventory();
 
 				} else if (slot == 5) {
 					// Amount
 					waitingType = ChatWaitingType.QUANTITY;
+					waitingPlayerId = e.getWhoClicked().getUniqueId();
 					p.sendMessage("Please type the new quantity");
 					e.getWhoClicked().closeInventory();
 				} else if (slot == 7) {
 					// Confirm
 
+					UUID itemUUID = UUID.randomUUID();
+
 					Shop shop = new Shop(buyPrice, sellPrice, quantity, slabLocation, shopItem);
 
 					shop.ownerId = e.getWhoClicked().getUniqueId();
+					shop.droppedItemId = itemUUID;
 
-					Slabbo.shopUtil.shops.put(ShopUtil.locationToString(slabLocation), shop);
+					Slabbo.shopUtil.put(ShopUtil.locationToString(slabLocation), shop);
 
 					DataUtil.saveShops();
 
 					e.getWhoClicked().closeInventory();
 
-					ItemUtil.dropItem(slabLocation.add(0.5, 0.5, 0.5), shopItem);
+					if (isModifying) {
+						Item itemEnt = ItemUtil.findItemEntity(slabLocation);
+
+						if (itemEnt != null) {
+							System.out.println("Item Ent "+itemEnt.toString());
+
+							itemEnt.remove();
+						}
+
+						ItemUtil.dropItem(slabLocation.add(0, +1, 0), shopItem, itemUUID);
+
+					} else {
+						ItemUtil.dropItem(slabLocation.add(+0.5, +1, +0.5), shopItem, itemUUID);
+					}
+
 
 					resetGUI();
 
@@ -194,11 +236,15 @@ public class ShopCreationGUI implements Listener {
 
 	@EventHandler
 	public void onChat (final AsyncPlayerChatEvent e) {
+		if (!e.getPlayer().getUniqueId().equals(waitingPlayerId)) return;
+
 		if (waitingType == ChatWaitingType.NONE) return;
 
 		e.setCancelled(true);
 
 		int value = Integer.parseInt(e.getMessage());
+
+		if (value < 0) { value = 0; }
 
 		switch (waitingType) {
 			case SELL_PRICE:
@@ -213,6 +259,7 @@ public class ShopCreationGUI implements Listener {
 		}
 
 		waitingType = ChatWaitingType.NONE;
+		waitingPlayerId = null;
 
 		new BukkitRunnable() {
 			public void run () {

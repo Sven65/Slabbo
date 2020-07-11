@@ -121,8 +121,12 @@ public class GUIItems {
 
 		meta.setDisplayName(ChatColor.GOLD+"Slabbo Shop");
 
-		double buyPerItem = shop.quantity / shop.buyPrice;
-		double sellPerItem = shop.quantity / shop.sellPrice;
+		double buyPerItem = 0;
+		double sellPerItem = 0;
+
+		// TODO: Actually check if these are zero
+		try { buyPerItem = shop.quantity / shop.buyPrice; } catch (Exception e) {}
+		try { sellPerItem = shop.quantity / shop.sellPrice; } catch (Exception e) {}
 
 		OfflinePlayer owner = Bukkit.getOfflinePlayer(shop.ownerId);
 

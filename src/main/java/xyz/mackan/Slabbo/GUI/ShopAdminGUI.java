@@ -8,9 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.GUI.items.AdminGUIItems;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
@@ -19,6 +21,7 @@ import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ShopAdminGUI implements Listener {
 
@@ -26,6 +29,10 @@ public class ShopAdminGUI implements Listener {
 	private Inventory inv;
 
 	private int transferRate = 1;
+
+	private boolean isChangingRate = false;
+	private UUID waitingPlayerId;
+
 
 	public ShopAdminGUI (Shop shop) {
 		this.shop = shop;
@@ -40,7 +47,7 @@ public class ShopAdminGUI implements Listener {
 	public void initializeItems () {
 		ItemStack shopItem = shop.item.clone();
 
-		shopItem.setAmount(shop.quantity);
+		shopItem.setAmount(Math.max(shop.quantity, 1));
 
 		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock));
 		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock));
@@ -111,7 +118,7 @@ public class ShopAdminGUI implements Listener {
 				.reduce(0, (total, el) -> total + el);
 
 
-		shop.stock -= (tempTransferRate+leftoverCount);
+		shop.stock -= (tempTransferRate-leftoverCount);
 
 		DataUtil.saveShops();
 
@@ -119,14 +126,24 @@ public class ShopAdminGUI implements Listener {
 		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock));
 	}
 
-	public void handleChangeRate () {}
+	public void handleChangeRate (HumanEntity humanEntity) {
+		isChangingRate = true;
+		waitingPlayerId = humanEntity.getUniqueId();
 
-	public void handleModify () {}
+		humanEntity.sendMessage("Please type the new rate");
+		humanEntity.closeInventory();
+	}
 
-	public void handleViewAsCustomer (Player player) {
-		ShopUserGUI gui = new ShopUserGUI(shop, player);
+	public void handleModify (HumanEntity humanEntity) {
+		ShopCreationGUI gui = new ShopCreationGUI(shop.location, shop);
 
-		gui.openInventory(player);
+		gui.openInventory(humanEntity);
+	}
+
+	public void handleViewAsCustomer (HumanEntity humanEntity) {
+		ShopUserGUI gui = new ShopUserGUI(shop, (Player)humanEntity);
+
+		gui.openInventory(humanEntity);
 	}
 
 
@@ -153,10 +170,10 @@ public class ShopAdminGUI implements Listener {
 				handleWithdraw(p);
 				break;
 			case 2:
-				handleChangeRate();
+				handleChangeRate(p);
 				break;
 			case 7:
-				handleModify();
+				handleModify(p);
 				break;
 			case 8:
 				handleViewAsCustomer(p);
@@ -172,4 +189,28 @@ public class ShopAdminGUI implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onChat (final AsyncPlayerChatEvent e) {
+		if (!e.getPlayer().getUniqueId().equals(waitingPlayerId)) return;
+
+		if (isChangingRate) {
+			isChangingRate = false;
+			waitingPlayerId = null;
+
+			e.setCancelled(true);
+
+			int value = Integer.parseInt(e.getMessage());
+
+			if (value < 0) { value = 0; }
+
+			transferRate = value;
+
+			new BukkitRunnable() {
+				public void run () {
+					inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
+					openInventory(e.getPlayer());
+				}
+			}.runTask(Slabbo.getInstance());
+		}
+	}
 }
