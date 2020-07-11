@@ -2,7 +2,6 @@ package xyz.mackan.Slabbo.utils;
 
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
-import sun.security.provider.PolicyParser;
 
 import java.util.Set;
 
