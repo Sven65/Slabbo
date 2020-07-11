@@ -8,15 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.DataUtil;
-import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 
 public class ShopUserGUI implements Listener {
@@ -41,11 +37,11 @@ public class ShopUserGUI implements Listener {
 
 		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock));
 		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock));
-		inv.setItem(2, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance(player)));
 
 		inv.setItem(4, shopItem);
 
-		inv.setItem(6, GUIItems.getUserInfoItem(shop));
+		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance(player)));
+		inv.setItem(8, GUIItems.getUserInfoItem(shop));
 	}
 
 	public void openInventory (final HumanEntity ent) {
@@ -65,7 +61,7 @@ public class ShopUserGUI implements Listener {
 
 		int slot = e.getRawSlot();
 
-		if (slot <= 8) return; // User clicked shop GUI
+		if (slot > 8) return; // User clicked outside shop GUI
 	}
 
 	// Cancel dragging in our inventory
