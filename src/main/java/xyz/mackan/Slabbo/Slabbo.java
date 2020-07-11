@@ -6,6 +6,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.listeners.PlayerInteractListener;
 
 import java.io.File;
@@ -20,6 +21,8 @@ public class Slabbo extends JavaPlugin {
 	private static Economy econ = null;
 	private static Permission perms = null;
 	private static Chat chat = null;
+
+	private static Slabbo instance;
 
 	@Override
 	public void onEnable () {
@@ -39,6 +42,7 @@ public class Slabbo extends JavaPlugin {
 
 		getLogger().info("Slabbo enabled.");
 
+		instance = this;
 	}
 
 	@Override
@@ -89,4 +93,6 @@ public class Slabbo extends JavaPlugin {
 	}
 
 	public static Chat getChat () { return chat; }
+
+	public static Slabbo getInstance() { return instance; }
 }

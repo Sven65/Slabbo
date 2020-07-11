@@ -17,5 +17,7 @@ public class SlabUtil {
 				Material.SMOOTH_STONE_SLAB,
 				Material.SPRUCE_SLAB
 		};
+		
+		return false;
 	}
 }
