@@ -3,17 +3,23 @@ package xyz.mackan.Slabbo;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.Bukkit;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
+import xyz.mackan.Slabbo.listeners.EntityPickupItemListener;
+import xyz.mackan.Slabbo.listeners.ItemDespawnListener;
 import xyz.mackan.Slabbo.listeners.PlayerInteractListener;
+import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.logging.Logger;
 
 public class Slabbo extends JavaPlugin {
+	static {
+		ConfigurationSerialization.registerClass(Shop.class, "Shop");
+	}
+
 	private static final Logger log = Logger.getLogger("Minecraft");
 
 	private static String dataPath = null;
@@ -23,6 +29,8 @@ public class Slabbo extends JavaPlugin {
 	private static Chat chat = null;
 
 	private static Slabbo instance;
+
+	public static ShopUtil shopUtil = new ShopUtil();
 
 	@Override
 	public void onEnable () {
@@ -40,9 +48,11 @@ public class Slabbo extends JavaPlugin {
 
 		new File(getDataPath()).mkdirs();
 
+		instance = this;
+
 		getLogger().info("Slabbo enabled.");
 
-		instance = this;
+		shopUtil.loadShops();
 	}
 
 	@Override
@@ -50,6 +60,8 @@ public class Slabbo extends JavaPlugin {
 
 	private void setupListeners () {
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
+		getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
+		getServer().getPluginManager().registerEvents(new ItemDespawnListener(), this);
 	}
 
 	private void setupCommands () {

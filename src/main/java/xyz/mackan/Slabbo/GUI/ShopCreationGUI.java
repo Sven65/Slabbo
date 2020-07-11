@@ -16,16 +16,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.DataUtil;
+import xyz.mackan.Slabbo.utils.ItemUtil;
+import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Arrays;
-
-enum ChatWaitingType {
-	NONE,
-	BUY_PRICE,
-	SELL_PRICE,
-	QUANTITY;
-}
 
 public class ShopCreationGUI implements Listener {
 	private Inventory inv;
@@ -88,76 +86,15 @@ public class ShopCreationGUI implements Listener {
 
 		// 3,4,5
 
-		inv.setItem(3, getBuyPriceItem());
-		inv.setItem(4, getSellPriceItem());
-		inv.setItem(5, getAmountItem());
+		inv.setItem(3, GUIItems.getBuyPriceItem(buyPrice));
+		inv.setItem(4, GUIItems.getSellPriceItem(sellPrice));
+		inv.setItem(5, GUIItems.getAmountItem(quantity));
 
-		inv.setItem(7, getConfirmItem());
-		inv.setItem(8, getCancelItem());
+		inv.setItem(7, GUIItems.getConfirmItem(getLocationString()));
+		inv.setItem(8, GUIItems.getCancelItem());
 	}
 
-	protected ItemStack getBuyPriceItem () {
-		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
-		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+"Buy price");
-
-		meta.setLore(Arrays.asList("§r$"+buyPrice, "Click to set", "§r(Zero means not for sale)"));
-
-		item.setItemMeta(meta);
-
-		return item;
-	}
-
-	protected ItemStack getSellPriceItem () {
-		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
-		ItemMeta meta = item.getItemMeta();
-
-		meta.setDisplayName(ChatColor.RED+"Sell price");
-
-		meta.setLore(Arrays.asList("§r$"+sellPrice, "Click to set", "§r(Zero means not buying)"));
-
-		item.setItemMeta(meta);
-
-		return item;
-	}
-
-	protected ItemStack getAmountItem () {
-		ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
-		ItemMeta meta = item.getItemMeta();
-
-		meta.setDisplayName(ChatColor.YELLOW+"Quantity");
-
-		meta.setLore(Arrays.asList("§rAmount per transaction: "+quantity, "Click to set", "§r(Amount of items per buy / sell)"));
-
-		item.setItemMeta(meta);
-
-		return item;
-	}
-
-	protected ItemStack getCancelItem () {
-		ItemStack item = new ItemStack(Material.BARRIER, 1);
-		ItemMeta meta = item.getItemMeta();
-
-		meta.setDisplayName(ChatColor.RED+"Cancel");
-
-		item.setItemMeta(meta);
-
-		return item;
-	}
-
-	protected ItemStack getConfirmItem () {
-		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
-		ItemMeta meta = item.getItemMeta();
-
-		meta.setDisplayName(ChatColor.GREEN+"Confirm");
-
-		meta.setLore(Arrays.asList("New Shop", getLocationString()));
-
-		item.setItemMeta(meta);
-
-		return item;
-	}
 
 	protected ItemStack createGuiItem () {
 		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
@@ -213,7 +150,19 @@ public class ShopCreationGUI implements Listener {
 				} else if (slot == 7) {
 					// Confirm
 
+					Shop shop = new Shop(buyPrice, sellPrice, quantity, slabLocation, shopItem);
 
+					shop.ownerId = e.getWhoClicked().getUniqueId();
+
+					Slabbo.shopUtil.shops.put(ShopUtil.locationToString(slabLocation), shop);
+
+					DataUtil.saveShops();
+
+					e.getWhoClicked().closeInventory();
+
+					ItemUtil.dropItem(slabLocation.add(0.5, 0.5, 0.5), shopItem);
+
+					resetGUI();
 
 				} else if (slot == 8) {
 					// Cancel
@@ -228,7 +177,9 @@ public class ShopCreationGUI implements Listener {
 
 		if (slot <= 8) return; // User clicked shop GUI
 
-		shopItem = clickedItem;
+		shopItem = clickedItem.clone();
+
+		shopItem.setAmount(1);
 
 		initializeStage2();
 	}
