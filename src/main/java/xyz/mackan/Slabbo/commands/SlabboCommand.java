@@ -12,11 +12,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.importers.ImportResult;
+import xyz.mackan.Slabbo.importers.UShopImporter;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
+import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
+import java.io.File;
 import java.util.Set;
+import java.util.UUID;
 
 @CommandAlias("slabbo")
 @Description("Base command for Slabbo")
@@ -65,7 +70,7 @@ public class SlabboCommand extends BaseCommand {
 	@Subcommand("destroy")
 	@Description("Destroys a shop")
 	@CommandPermission("slabbo.destroy")
-	public void onModifyQuantity(Player player) {
+	public void onDestroyShop(Player player) {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
 			player.sendMessage(ChatColor.RED+"That's not a shop.");
@@ -79,6 +84,53 @@ public class SlabboCommand extends BaseCommand {
 
 		ShopDeletionGUI deletionGUI = new ShopDeletionGUI(lookingAtShop);
 		deletionGUI.openInventory(player);
+	}
+
+	@Subcommand("import")
+	@Description("Imports shop from another plugin")
+	@CommandPermission("slabbo.importshops")
+	@CommandCompletion("ushops @importFiles")
+	public void onImportShops(Player player, String type, String file) {
+		File importFile = new File(Slabbo.getDataPath()+"/"+file);
+
+		if (!importFile.exists()) {
+			player.sendMessage(ChatColor.RED+"That file can't be found.");
+			return;
+		}
+
+		ImportResult result;
+
+		switch (type.toLowerCase()) {
+			case "ushops":
+				player.sendMessage("Importing shops!");
+				result = UShopImporter.importUShops(importFile);
+				break;
+			default:
+				player.sendMessage(ChatColor.RED+"That plugin can't be imported.");
+				return;
+		}
+
+		if (result == null) {
+			player.sendMessage(ChatColor.RED+"An error occured when importing. See the console for more details.");
+			return;
+		}
+
+		for (Shop shop : result.shops) {
+			UUID itemUUID = UUID.randomUUID();
+
+			ItemUtil.dropItem(shop.location, shop.item, itemUUID);
+
+			shop.droppedItemId = itemUUID;
+
+			Slabbo.shopUtil.put(shop.getLocationString(), shop);
+		}
+
+		DataUtil.saveShops();
+
+		player.sendMessage(
+				ChatColor.GREEN +
+				String.format("Imported %d shops. Skipped %d as shops already exists at their locations.", result.shops.size(), result.skippedShops.size())
+		);
 	}
 
 	@Subcommand("modify")

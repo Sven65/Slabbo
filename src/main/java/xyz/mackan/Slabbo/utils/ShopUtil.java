@@ -1,6 +1,8 @@
 package xyz.mackan.Slabbo.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.*;
@@ -74,6 +76,25 @@ public class ShopUtil {
 				location.getBlockY(),
 				location.getBlockZ()
 		);
+	}
+
+	public static Location fromString(String locString) {
+		String[] parts = locString.split(",");
+
+		String worldName = parts[0];
+		String xString = parts[1];
+		String yString = parts[2];
+		String zString = parts[3];
+
+		double x = Double.parseDouble(xString);
+		double y = Double.parseDouble(yString);
+		double z = Double.parseDouble(zString);
+
+		World world = Bukkit.getWorld(worldName);
+
+		if (world == null) return null;
+
+		return new Location(world, x, y, z);
 	}
 
 }
