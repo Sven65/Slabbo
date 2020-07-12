@@ -34,11 +34,14 @@ public class PlayerInteractListener implements Listener {
 
 		boolean isShopOwner = false;
 
+		boolean canCreateShop = PermissionUtil.canCreateShop(player);
+		boolean canUseShop = PermissionUtil.canCreateShop(player);
+
 		if (shopExists) {
 			isShopOwner = shop.ownerId.equals(player.getUniqueId());
 		}
 
-		if (holdingStick && !shopExists) {
+		if (holdingStick && !shopExists && canCreateShop) {
 			int maxShops = PermissionUtil.getLimit(player);
 			int userShops = Slabbo.shopUtil.getOwnerCount(player.getUniqueId());
 
@@ -49,7 +52,7 @@ public class PlayerInteractListener implements Listener {
 			return new ShopAction(ShopActionType.CREATE);
 		}
 
-		if (holdingStick && shopExists) {
+		if (holdingStick && shopExists && canUseShop) {
 			if (isShopOwner) {
 				return new ShopAction(ShopActionType.OPEN_DELETION_GUI, shop);
 			} else {
@@ -57,7 +60,7 @@ public class PlayerInteractListener implements Listener {
 			}
 		}
 
-		if (!holdingStick && shopExists) {
+		if (!holdingStick && shopExists && canUseShop) {
 			if (isShopOwner) {
 				return new ShopAction(ShopActionType.OPEN_ADMIN_GUI, shop);
 			} else {

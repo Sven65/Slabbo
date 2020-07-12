@@ -30,4 +30,12 @@ public class PermissionUtil {
 
 		return limit;
 	}
+
+	public static boolean canCreateShop (Player player) {
+		return player.hasPermission("slabbo.create");
+	}
+
+	public static boolean canUseShop (Player player) {
+		return player.hasPermission("slabbo.use");
+	}
 }
