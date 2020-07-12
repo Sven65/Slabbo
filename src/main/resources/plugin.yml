@@ -18,9 +18,28 @@ permissions:
   slabbo.limit.*:
     default: op
     description: Gives you unlimited shops
-commands:
-  toggleadmin:
-    description: Makes a shop an admin shop
-    usage: /<command>
-    permission: slabbo.admin
-    
+  slabbo.destroy:
+    default: op
+    description: Lets you destroy your shops
+
+  slabbo.modify:
+    default: op
+    description: Lets you use /slabbo modify
+
+  slabbo.modify.buyprice:
+    default: op
+    description: Lets you modify the buy price of shops with a command
+  slabbo.modify.sellprice:
+    default: op
+    description: Lets you modify the sell price of shops with a command
+  slabbo.modify.quantity:
+    default: op
+    description: Lets you modify the quantity of shops with a command
+
+  slabbo.modify.*:
+    default: op
+    description: Gives you access to all the modification commands
+    children:
+      slabbo.modify.buyprice: true
+      slabbo.modify.sellprice: true
+      slabbo.modify.quantity: true

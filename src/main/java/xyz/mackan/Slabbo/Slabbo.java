@@ -3,13 +3,14 @@
 // TODO: Docs
 package xyz.mackan.Slabbo;
 
+import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.mackan.Slabbo.commands.ToggleAdmin;
+import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -70,7 +71,11 @@ public class Slabbo extends JavaPlugin {
 	}
 
 	private void setupCommands () {
-		this.getCommand("toggleadmin").setExecutor(new ToggleAdmin());
+		PaperCommandManager manager = new PaperCommandManager(this);
+
+		manager.enableUnstableAPI("help");
+
+		manager.registerCommand(new SlabboCommand());
 	}
 
 	private boolean setupEconomy () {

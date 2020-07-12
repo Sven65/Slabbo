@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -95,5 +96,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		boolean admin = (boolean) args.get("admin");
 
 		return new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, droppedItemId);
+	}
+
+	public String getLocationString () {
+		return ShopUtil.locationToString(this.location);
 	}
 }
