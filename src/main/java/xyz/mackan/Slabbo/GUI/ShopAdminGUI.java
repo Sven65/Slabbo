@@ -6,6 +6,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -49,8 +50,8 @@ public class ShopAdminGUI implements Listener {
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
-		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock));
-		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock));
+		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
+		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 		inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
 
 		inv.setItem(4, shopItem);
@@ -64,7 +65,9 @@ public class ShopAdminGUI implements Listener {
 		ent.openInventory(inv);
 	}
 
-	public void handleDeposit (HumanEntity humanEntity) {
+	public void handleDeposit (HumanEntity humanEntity, ClickType clickType) {
+		boolean isBulk = clickType.equals(ClickType.SHIFT_LEFT);
+
 		Player player = (Player) humanEntity;
 
 		PlayerInventory pInv = player.getInventory();
@@ -84,9 +87,15 @@ public class ShopAdminGUI implements Listener {
 
 		int tempTransferRate = Math.min(itemCount, transferRate);
 
+		if (isBulk) {
+			tempTransferRate = itemCount;
+		}
+
 		ItemStack shopItemClone = shop.item.clone();
 
-		shop.stock += tempTransferRate;
+		if (!shop.admin) {
+			shop.stock += tempTransferRate;
+		}
 
 		DataUtil.saveShops();
 
@@ -94,16 +103,34 @@ public class ShopAdminGUI implements Listener {
 
 		pInv.removeItem(shopItemClone);
 
-		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock));
-		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock));
+		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
+		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 	}
 
-	public void handleWithdraw (HumanEntity humanEntity) {
+	public void handleWithdraw (HumanEntity humanEntity, ClickType clickType) {
+		boolean isBulk = clickType.equals(ClickType.SHIFT_LEFT);
+
 		Player player = (Player) humanEntity;
 
 		PlayerInventory pInv = player.getInventory();
 
 		int tempTransferRate = Math.min(shop.stock, transferRate);
+
+
+		if (shop.admin) {
+			tempTransferRate = transferRate;
+		}
+
+		if (isBulk) {
+			int maxItems = 4 * 9 * 64;
+
+			if (shop.admin) {
+				tempTransferRate = maxItems;
+			} else {
+				tempTransferRate = Math.min(maxItems, shop.stock);
+			}
+
+		}
 
 		ItemStack shopItemClone = shop.item.clone();
 
@@ -117,13 +144,14 @@ public class ShopAdminGUI implements Listener {
 				.map(stack -> stack.getAmount())
 				.reduce(0, (total, el) -> total + el);
 
-
-		shop.stock -= (tempTransferRate-leftoverCount);
+		if (!shop.admin) {
+			shop.stock -= (tempTransferRate - leftoverCount);
+		}
 
 		DataUtil.saveShops();
 
-		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock));
-		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock));
+		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
+		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 	}
 
 	public void handleChangeRate (HumanEntity humanEntity) {
@@ -164,10 +192,10 @@ public class ShopAdminGUI implements Listener {
 
 		switch (slot) {
 			case 0:
-				handleDeposit(p);
+				handleDeposit(p, e.getClick());
 				break;
 			case 1:
-				handleWithdraw(p);
+				handleWithdraw(p, e.getClick());
 				break;
 			case 2:
 				handleChangeRate(p);

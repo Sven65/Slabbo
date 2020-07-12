@@ -25,6 +25,8 @@ public class PlayerJoinListener implements Listener {
 		List<Shop> shops = Slabbo.shopUtil.shopsByOwnerId.get(userId);
 
 		for (Shop shop : shops) {
+			if (shop.admin) continue;
+
 			if (shop.stock == 0) {
 				player.sendMessage("Your shop at " + ShopUtil.locationToString(shop.location) + " is out of "+ NameUtil.getName(shop.item));
 			}

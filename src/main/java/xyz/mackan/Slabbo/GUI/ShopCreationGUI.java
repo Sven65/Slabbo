@@ -41,6 +41,7 @@ public class ShopCreationGUI implements Listener {
 	private int quantity = 0;
 
 	private boolean isModifying = false;
+	private boolean isAdmin = false;
 
 	public ShopCreationGUI (Location slabLocation, Shop shop) {
 		isModifying = true;
@@ -55,6 +56,8 @@ public class ShopCreationGUI implements Listener {
 		buyPrice = shop.buyPrice;
 		sellPrice = shop.sellPrice;
 		quantity = shop.quantity;
+
+		isAdmin = shop.admin;
 
 		initializeStage2();
 	}
@@ -177,6 +180,9 @@ public class ShopCreationGUI implements Listener {
 
 					shop.ownerId = e.getWhoClicked().getUniqueId();
 					shop.droppedItemId = itemUUID;
+
+
+					shop.admin = isAdmin;
 
 					Slabbo.shopUtil.put(ShopUtil.locationToString(slabLocation), shop);
 

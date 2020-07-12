@@ -18,3 +18,9 @@ permissions:
   slabbo.limit.*:
     default: op
     description: Gives you unlimited shops
+commands:
+  toggleadmin:
+    description: Makes a shop an admin shop
+    usage: /<command>
+    permission: slabbo.admin
+    

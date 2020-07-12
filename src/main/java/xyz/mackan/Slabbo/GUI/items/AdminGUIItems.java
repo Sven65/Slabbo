@@ -9,26 +9,34 @@ import xyz.mackan.Slabbo.utils.Misc;
 import java.util.Arrays;
 
 public class AdminGUIItems {
-	public static ItemStack getDepositItem (String itemName, int stock) {
+	public static ItemStack getDepositItem (String itemName, int stock, boolean isAdmin) {
 		ItemStack item = new ItemStack(Material.CHEST_MINECART, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Deposit '"+itemName+"'");
 
-		meta.setLore(Arrays.asList("§r+Shift for bulk deposit", "In stock: "+stock, "("+ Misc.countStacks(stock) +" stacks)"));
+		if (isAdmin) {
+			meta.setLore(Arrays.asList("§r+Shift for bulk deposit", "In stock: ∞", "(∞ stacks)"));
+		} else {
+			meta.setLore(Arrays.asList("§r+Shift for bulk deposit", "In stock: "+stock, "("+ Misc.countStacks(stock) +" stacks)"));
+		}
 
 		item.setItemMeta(meta);
 
 		return item;
 	}
 
-	public static ItemStack getWithdrawItem (String itemName, int stock) {
+	public static ItemStack getWithdrawItem (String itemName, int stock, boolean isAdmin) {
 		ItemStack item = new ItemStack(Material.HOPPER_MINECART, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Withdraw '"+itemName+"'");
 
-		meta.setLore(Arrays.asList("§r+Shift for bulk withdrawal", "In stock: "+stock, "("+ Misc.countStacks(stock) +" stacks)"));
+		if (isAdmin) {
+			meta.setLore(Arrays.asList("§r+Shift for bulk withdrawal", "In stock: ∞", "(∞ stacks)"));
+		} else {
+			meta.setLore(Arrays.asList("§r+Shift for bulk withdrawal", "In stock: "+stock, "("+ Misc.countStacks(stock) +" stacks)"));
+		}
 
 		item.setItemMeta(meta);
 

@@ -10,6 +10,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.Misc;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 
 public class GUIItems {
@@ -76,26 +78,35 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getUserBuyItem (String itemName, int quantity, int price, int stock) {
+	public static ItemStack getUserBuyItem (String itemName, int quantity, int price, int stock, boolean isAdmin) {
 		ItemStack item = new ItemStack(Material.GOLD_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Buy '"+itemName+"' * "+quantity);
 
-		meta.setLore(Arrays.asList("§rBuy for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+		if (isAdmin) {
+			meta.setLore(Arrays.asList("§rBuy for: $"+price, "In Stock: ∞", "(∞ stacks)"));
+		} else {
+			meta.setLore(Arrays.asList("§rBuy for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+		}
+
 
 		item.setItemMeta(meta);
 
 		return item;
 	}
 
-	public static ItemStack getUserSellItem (String itemName, int quantity, int price, int stock) {
+	public static ItemStack getUserSellItem (String itemName, int quantity, int price, int stock, boolean isAdmin) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Sell '"+itemName+"' * "+quantity);
 
-		meta.setLore(Arrays.asList("§rSell for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+		if (isAdmin) {
+			meta.setLore(Arrays.asList("§Sell for: $"+price, "In Stock: ∞", "(∞ stacks)"));
+		} else {
+			meta.setLore(Arrays.asList("§Sell for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+		}
 
 		item.setItemMeta(meta);
 
@@ -124,6 +135,8 @@ public class GUIItems {
 		double buyPerItem = 0;
 		double sellPerItem = 0;
 
+		NumberFormat formatter = new DecimalFormat("#0.00");
+
 		// TODO: Actually check if these are zero
 		try { buyPerItem = shop.quantity / shop.buyPrice; } catch (Exception e) {}
 		try { sellPerItem = shop.quantity / shop.sellPrice; } catch (Exception e) {}
@@ -134,8 +147,8 @@ public class GUIItems {
 				"§rOwned by "+owner.getName(),
 				"",
 				"§rSelling: "+shop.item.getType(),
-				"Buy "+shop.quantity+" for $"+shop.buyPrice+" ($"+buyPerItem+" each)",
-				"Sell "+shop.quantity+" for $"+shop.sellPrice+" ($"+sellPerItem+" each)"
+				"Buy "+shop.quantity+" for $"+shop.buyPrice+" ($"+formatter.format(buyPerItem)+" each)",
+				"Sell "+shop.quantity+" for $"+shop.sellPrice+" ($"+formatter.format(sellPerItem)+" each)"
 		));
 
 		item.setItemMeta(meta);

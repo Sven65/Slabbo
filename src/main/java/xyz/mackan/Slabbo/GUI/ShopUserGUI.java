@@ -44,11 +44,11 @@ public class ShopUserGUI implements Listener {
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
 		if (shop.buyPrice > 0) {
-			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock));
+			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
 		}
 
 		if (shop.sellPrice > 0) {
-			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock));
+			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
 		}
 
 		inv.setItem(4, shopItem);
@@ -64,12 +64,16 @@ public class ShopUserGUI implements Listener {
 	public void handleBuy (HumanEntity humanEntity) {
 		double playerFunds = Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity);
 
-		if (shop.stock == 0) {
+		if (shop.stock == 0 && !shop.admin) {
 			humanEntity.sendMessage(ChatColor.RED+"This shop is out of stock!");
 			return;
 		}
 
 		int itemCount = Math.min(shop.stock, shop.quantity);
+
+		if (shop.admin) {
+			itemCount = shop.quantity;
+		}
 
 		int totalCost = shop.buyPrice * itemCount;
 
@@ -96,13 +100,15 @@ public class ShopUserGUI implements Listener {
 
 		int totalBought = shop.quantity - leftoverCount;
 
-		shop.stock -= totalBought;
+		if (!shop.admin) {
+			shop.stock -= totalBought;
+		}
 
 		int actualCost = totalBought * shop.buyPrice;
 
 		humanEntity
 			.sendMessage(String.format(
-				ChatColor.GREEN+"Bought %d %s for a total of $%d at your shop.",
+				ChatColor.GREEN+"Bought %d %s for a total of $%d.",
 				totalBought,
 				NameUtil.getName(shop.item),
 				actualCost
@@ -113,26 +119,28 @@ public class ShopUserGUI implements Listener {
 
 		OfflinePlayer shopOwner = Bukkit.getOfflinePlayer(shop.ownerId);
 
-		Slabbo.getEconomy().depositPlayer(shopOwner, actualCost);
+		if (!shop.admin) {
+			Slabbo.getEconomy().depositPlayer(shopOwner, actualCost);
 
-		if (shopOwner.isOnline()) {
-			shopOwner
-			.getPlayer()
-			.sendMessage(
-				String.format(
-					ChatColor.GREEN+"%s bought %d %s for a total of $%d at your shop.",
-					humanEntity.getName(),
-					totalBought,
-					NameUtil.getName(shop.item),
-					actualCost
-				)
-			);
+			if (shopOwner.isOnline()) {
+				shopOwner
+						.getPlayer()
+						.sendMessage(
+								String.format(
+										ChatColor.GREEN + "%s bought %d %s for a total of $%d at your shop.",
+										humanEntity.getName(),
+										totalBought,
+										NameUtil.getName(shop.item),
+										actualCost
+								)
+						);
+			}
 		}
 
 		DataUtil.saveShops();
 
-		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock));
-		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock));
+		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
 	}
 
@@ -140,6 +148,10 @@ public class ShopUserGUI implements Listener {
 		OfflinePlayer shopOwner = Bukkit.getOfflinePlayer(shop.ownerId);
 
 		double shopFunds = Slabbo.getEconomy().getBalance(shopOwner);
+
+		if (shop.admin) {
+			shopFunds = Integer.MAX_VALUE;
+		}
 
 		PlayerInventory pInv = humanEntity.getInventory();
 
@@ -172,7 +184,9 @@ public class ShopUserGUI implements Listener {
 
 		ItemStack shopItemClone = shop.item.clone();
 
-		shop.stock += itemCount;
+		if (!shop.admin) {
+			shop.stock += itemCount;
+		}
 
 		DataUtil.saveShops();
 
@@ -180,26 +194,37 @@ public class ShopUserGUI implements Listener {
 
 		pInv.removeItem(shopItemClone);
 
-		Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);
-
 		Slabbo.getEconomy().depositPlayer((OfflinePlayer)humanEntity, totalCost);
 
-		if (shopOwner.isOnline()) {
-			shopOwner
-					.getPlayer()
-					.sendMessage(
-							String.format(
-								ChatColor.GREEN+"%s sold %d %s for a total of $%d at your shop.",
-								humanEntity.getName(),
-								itemCount,
-								NameUtil.getName(shop.item),
-								totalCost
-							)
-					);
+		humanEntity
+		.sendMessage(String.format(
+				ChatColor.GREEN+"Sold %d %s for a total of $%d.",
+				itemCount,
+				NameUtil.getName(shop.item),
+				totalCost
+			)
+		);
+
+		if (!shop.admin) {
+			Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);
+
+			if (shopOwner.isOnline()) {
+				shopOwner
+						.getPlayer()
+						.sendMessage(
+								String.format(
+										ChatColor.GREEN+"%s sold %d %s for a total of $%d at your shop.",
+										humanEntity.getName(),
+										itemCount,
+										NameUtil.getName(shop.item),
+										totalCost
+								)
+						);
+			}
 		}
 
-		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock));
-		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock));
+		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
 
 	}

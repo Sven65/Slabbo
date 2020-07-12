@@ -9,6 +9,7 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.mackan.Slabbo.commands.ToggleAdmin;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -65,10 +66,11 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ItemDespawnListener(), this);
 		getServer().getPluginManager().registerEvents(new ItemMergeListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+		getServer().getPluginManager().registerEvents(new BlockEventListeners(), this);
 	}
 
 	private void setupCommands () {
-
+		this.getCommand("toggleadmin").setExecutor(new ToggleAdmin());
 	}
 
 	private boolean setupEconomy () {
