@@ -83,10 +83,6 @@ public class ShopCreationGUI implements Listener {
 		return shopItem != null;
 	}
 
-	public String getLocationString () {
-		return slabLocation.getWorld().getName()+","+slabLocation.getBlockX()+","+slabLocation.getBlockY()+","+slabLocation.getBlockZ();
-	}
-
 	public void clearShopInv () {
 		for (int i = 0; i < inv.getSize(); i++) {
 			inv.setItem(i, null);
@@ -112,7 +108,7 @@ public class ShopCreationGUI implements Listener {
 		inv.setItem(4, GUIItems.getSellPriceItem(sellPrice));
 		inv.setItem(5, GUIItems.getAmountItem(quantity));
 
-		inv.setItem(7, GUIItems.getConfirmItem(getLocationString()));
+		inv.setItem(7, GUIItems.getConfirmItem(ShopUtil.locationToString(slabLocation)));
 		inv.setItem(8, GUIItems.getCancelItem());
 	}
 
@@ -124,7 +120,7 @@ public class ShopCreationGUI implements Listener {
 
 		meta.setDisplayName(ChatColor.RED+"Click item below");
 
-		meta.setLore(Arrays.asList("New Shop", getLocationString()));
+		meta.setLore(Arrays.asList("New Shop", ShopUtil.locationToString(slabLocation)));
 
 		item.setItemMeta(meta);
 
@@ -192,15 +188,21 @@ public class ShopCreationGUI implements Listener {
 						Item itemEnt = ItemUtil.findItemEntity(slabLocation);
 
 						if (itemEnt != null) {
-							System.out.println("Item Ent "+itemEnt.toString());
-
 							itemEnt.remove();
 						}
 
-						ItemUtil.dropItem(slabLocation.add(0, +1, 0), shopItem, itemUUID);
+						Location dropLocation = slabLocation.clone();
+
+						dropLocation.add(0.5, +1, 0.5);
+
+						ItemUtil.dropItem(dropLocation, shopItem, itemUUID);
 
 					} else {
-						ItemUtil.dropItem(slabLocation.add(+0.5, +1, +0.5), shopItem, itemUUID);
+						Location dropLocation = slabLocation.clone();
+
+						dropLocation.add(+0.5, +1, +0.5);
+
+						ItemUtil.dropItem(dropLocation, shopItem, itemUUID);
 					}
 
 

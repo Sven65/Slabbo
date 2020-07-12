@@ -35,7 +35,7 @@ public class ItemUtil {
 	}
 
 	public static Item findItemEntity (Location location) {
-		Collection<Entity> nearbyEntites = location.getWorld().getNearbyEntities(location, 0, 1, 0);
+		Collection<Entity> nearbyEntites = location.getWorld().getNearbyEntities(location, 0.5, 2, 0.5);
 
 		Item returnItem = null;
 
@@ -61,8 +61,6 @@ public class ItemUtil {
 				break;
 			}
 		}
-
-
 
 		return returnItem;
 	}

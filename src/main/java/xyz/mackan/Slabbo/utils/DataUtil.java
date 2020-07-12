@@ -25,18 +25,6 @@ public class DataUtil {
 
 		configFile.createSection("shops", Slabbo.shopUtil.shops);
 
-//		Slabbo.shopUtil.shops.forEach((k, v) -> {
-//			String configKey = String.format(
-//				"%s,%d,%d,%d",
-//				v.location.getWorld().getName(),
-//				v.location.getBlockX(),
-//				v.location.getBlockY(),
-//				v.location.getBlockZ()
-//			);
-//
-//			configFile.createSection(configKey, v.serialize());
-//		});
-
 		try {
 			configFile.save(dataFile);
 			return true;
@@ -52,8 +40,6 @@ public class DataUtil {
 
 
 			YamlConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
-
-			System.out.println("Config: "+configFile.saveToString());
 
 			Object shops = configFile.getConfigurationSection("shops").getValues(false);
 

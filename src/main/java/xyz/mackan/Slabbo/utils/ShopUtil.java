@@ -31,6 +31,20 @@ public class ShopUtil {
 		shopsByOwnerId.put(value.ownerId, shopList);
 	}
 
+	public void removeShop(Shop shop) {
+		String locationString = ShopUtil.locationToString(shop.location);
+
+		shops.remove(locationString);
+
+		List<Shop> shopList = shopsByOwnerId.get(shop.ownerId);
+
+		if (shopList != null) {
+			shopList.remove(shop);
+
+			shopsByOwnerId.put(shop.ownerId, shopList);
+		}
+	}
+
 	public void loadShops () {
 		shops = DataUtil.loadShops();
 

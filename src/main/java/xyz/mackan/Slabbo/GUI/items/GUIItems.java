@@ -142,4 +142,19 @@ public class GUIItems {
 
 		return item;
 	}
+
+	public static ItemStack getDestroyConfirmItem () {
+		ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
+		ItemMeta meta = item.getItemMeta();
+
+		meta.setDisplayName(ChatColor.GREEN+"Destroy Shop");
+
+		meta.setLore(Arrays.asList(
+				ChatColor.RED+"This will destroy your items."
+		));
+
+		item.setItemMeta(meta);
+
+		return item;
+	}
 }
