@@ -38,6 +38,8 @@ public class InventoryClickListener implements Listener {
 			action != InventoryAction.MOVE_TO_OTHER_INVENTORY
 		) return;
 
+		if(e.getInventory().getLocation() == null) return;
+
 		Block chestBlock = e.getInventory().getLocation().getBlock();
 
 		if (chestBlock == null) return;

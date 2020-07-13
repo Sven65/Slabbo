@@ -42,7 +42,7 @@ public class PlayerInteractListener implements Listener {
 		boolean isShopOwner = false;
 
 		boolean canCreateShop = PermissionUtil.canCreateShop(player);
-		boolean canUseShop = PermissionUtil.canCreateShop(player);
+		boolean canUseShop = PermissionUtil.canUseShop(player);
 
 		if (shopExists) {
 			isShopOwner = shop.ownerId.equals(player.getUniqueId());
