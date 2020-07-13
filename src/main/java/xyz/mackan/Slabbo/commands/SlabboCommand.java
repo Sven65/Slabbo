@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
@@ -19,8 +20,7 @@ import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.File;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @CommandAlias("slabbo")
 @Description("Base command for Slabbo")
@@ -41,6 +41,46 @@ public class SlabboCommand extends BaseCommand {
 	public static void onCommand(CommandSender sender, CommandHelp help) {
 		sender.sendMessage("=====[ Slabbo ]=====");
 		help.showHelp();
+	}
+
+	@Subcommand("reload")
+	@Description("Reloads Slabbo")
+	@CommandPermission("slabbo.reload")
+	public void onReload (Player player) {
+		player.sendMessage("Reloading Slabbo");
+		for (String shopKey : Slabbo.shopUtil.shops.keySet()) {
+			Shop shop = Slabbo.shopUtil.shops.get(shopKey);
+
+			Item droppedItem = ItemUtil.findItemEntity(shop.location);
+
+			if (droppedItem != null) {
+				droppedItem.remove();
+			}
+		}
+
+		Slabbo.shopUtil.shops = new HashMap<String, Shop>();
+		Slabbo.shopUtil.shopsByOwnerId = new HashMap<UUID, List<Shop>>();
+
+		Slabbo.shopUtil.loadShops();
+
+		for (Map.Entry<String, Shop> shopEntry : Slabbo.shopUtil.shops.entrySet()) {
+			String key = shopEntry.getKey();
+			Shop shop = shopEntry.getValue();
+
+			UUID itemUUID = UUID.randomUUID();
+
+			shop.droppedItemId = itemUUID;
+
+			Location dropLocation = shop.location.clone();
+
+			dropLocation.add(0.5, 0.5, 0.5);
+
+			ItemUtil.dropItem(dropLocation, shop.item, itemUUID);
+
+			Slabbo.shopUtil.put(key, shop);
+		}
+
+		player.sendMessage("Slabbo reloaded!");
 	}
 
 	@Subcommand("info")
