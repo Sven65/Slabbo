@@ -77,4 +77,30 @@ public class AdminGUIItems {
 
 		return item;
 	}
+
+	public static ItemStack getLinkChestItem () {
+		ItemStack item = new ItemStack(Material.CHEST, 1);
+		ItemMeta meta = item.getItemMeta();
+
+		meta.setDisplayName(ChatColor.GOLD+"Link chest");
+
+		meta.setLore(Arrays.asList(
+				ChatColor.GREEN+"Link a chest for refilling!"
+		));
+
+		item.setItemMeta(meta);
+
+		return item;
+	}
+
+	public static ItemStack getUnlinkChestItem () {
+		ItemStack item = new ItemStack(Material.ENDER_CHEST, 1);
+		ItemMeta meta = item.getItemMeta();
+
+		meta.setDisplayName(ChatColor.GOLD+"Cancel chest link");
+
+		item.setItemMeta(meta);
+
+		return item;
+	}
 }

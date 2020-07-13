@@ -14,6 +14,7 @@ import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.File;
@@ -35,6 +36,7 @@ public class Slabbo extends JavaPlugin {
 	private static Slabbo instance;
 
 	public static ShopUtil shopUtil = new ShopUtil();
+	public static ChestLinkUtil chestLinkUtil = new ChestLinkUtil();
 
 	@Override
 	public void onEnable () {

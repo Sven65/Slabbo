@@ -4,7 +4,7 @@
   <groupId>xyz.mackan</groupId>
   <artifactId>Slabbo</artifactId>
   <name>Slabbo</name>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <description>Slab shops for spigot</description>
   <build>
     <resources>

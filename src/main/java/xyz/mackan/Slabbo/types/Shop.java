@@ -31,7 +31,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public UUID droppedItemId;
 
-	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, UUID droppedItemId) {
+	public String linkedChestLocation;
+
+	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, UUID droppedItemId, String linkedChestLocation) {
 		this.buyPrice = buyPrice;
 		this.sellPrice = sellPrice;
 		this.quantity = quantity;
@@ -41,6 +43,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		this.ownerId = ownerId;
 		this.admin = admin;
 		this.droppedItemId = droppedItemId;
+		this.linkedChestLocation = linkedChestLocation;
 	}
 
 	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock) {
@@ -73,6 +76,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("ownerId", ownerId.toString());
 		result.put("droppedItemId", droppedItemId.toString());
 
+		result.put("linkedChestLocation", linkedChestLocation);
+
 		return result;
 	}
 
@@ -89,13 +94,14 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		String loadedOwnerId = (String) args.get("ownerId");
 		String loadedDroppedItemId = (String) args.get("droppedItemId");
 
-
 		UUID ownerId = UUID.fromString(loadedOwnerId);
 		UUID droppedItemId = UUID.fromString(loadedDroppedItemId);
 
 		boolean admin = (boolean) args.get("admin");
 
-		return new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, droppedItemId);
+		String linkedChestLocation = (String) args.get("linkedChestLocation");
+
+		return new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, droppedItemId, linkedChestLocation);
 	}
 
 	public String getLocationString () {

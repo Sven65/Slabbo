@@ -62,7 +62,7 @@ public class UShopImporter {
 
 			Location shopLocation = ShopUtil.fromString(key);
 
-			Shop shop = new Shop(buyPrice, sellPrice, quantity, shopLocation, itemStack, stock, shopOwnerUUID, isAdmin, null);
+			Shop shop = new Shop(buyPrice, sellPrice, quantity, shopLocation, itemStack, stock, shopOwnerUUID, isAdmin, null, null);
 
 			shops.add(shop);
 		}

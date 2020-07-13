@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -20,6 +21,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
+import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -35,17 +37,17 @@ public class ShopAdminGUI implements Listener {
 	private UUID waitingPlayerId;
 
 
-	public ShopAdminGUI (Shop shop) {
+	public ShopAdminGUI (Shop shop, Player humanEntity) {
 		this.shop = shop;
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
 		inv = Bukkit.createInventory(null, 9, "[Slabbo] Owner");
 
-		initializeItems();
+		initializeItems(humanEntity);
 	}
 
-	public void initializeItems () {
+	public void initializeItems (Player humanEntity) {
 		ItemStack shopItem = shop.item.clone();
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
@@ -55,6 +57,22 @@ public class ShopAdminGUI implements Listener {
 		inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
 
 		inv.setItem(4, shopItem);
+
+		boolean hasPendingLink = Slabbo.chestLinkUtil.hasPendingLink(humanEntity);
+		boolean hasExistingLink = shop.linkedChestLocation != null;
+
+		if (hasPendingLink && Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+			// Current shop's being linked
+			inv.setItem(5, AdminGUIItems.getUnlinkChestItem());
+		} else if (!hasPendingLink && hasExistingLink) {
+			// Current shop isn't being linked, but it has one
+			inv.setItem(5, AdminGUIItems.getUnlinkChestItem());
+		} else if (hasPendingLink && !Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+			// A link is in progress, but it's not the current shop
+			inv.setItem(5, AdminGUIItems.getLinkChestItem());
+		} else if (!hasPendingLink && !hasExistingLink) {
+			inv.setItem(5, AdminGUIItems.getLinkChestItem());
+		}
 
 		inv.setItem(6, GUIItems.getUserInfoItem(shop));
 		inv.setItem(7, AdminGUIItems.getModifyItem());
@@ -174,6 +192,45 @@ public class ShopAdminGUI implements Listener {
 		gui.openInventory(humanEntity);
 	}
 
+	public void handleChestLink (HumanEntity humanEntity) {
+		Player p = (Player)humanEntity;
+
+		boolean hasPendingLink = Slabbo.chestLinkUtil.hasPendingLink(p);
+		boolean hasExistingLink = shop.linkedChestLocation != null;
+
+		if (hasPendingLink && Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+			// Current shop's being linked
+			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+			p.sendMessage(ChatColor.RED+"Linking has been cancelled.");
+			inv.setItem(5, AdminGUIItems.getLinkChestItem());
+			return;
+		} else if (!hasPendingLink && hasExistingLink) {
+			// Current shop isn't being linked, but it has one
+			Slabbo.chestLinkUtil.links.remove(shop.linkedChestLocation);
+
+			shop.linkedChestLocation = null;
+
+			Slabbo.shopUtil.put(shop.getLocationString(), shop);
+
+			p.sendMessage(ChatColor.GREEN+"Shop linking has been removed.");
+			inv.setItem(5, AdminGUIItems.getLinkChestItem());
+
+			DataUtil.saveShops();
+
+			return;
+		} else if (hasPendingLink && !Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+			// A link is in progress, but it's not the current shop
+			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+			p.sendMessage(ChatColor.RED+"Your previous linking has been cancelled.");
+			inv.setItem(5, AdminGUIItems.getLinkChestItem());
+		}
+
+
+		Slabbo.chestLinkUtil.pendingLinks.put(p.getUniqueId(), ShopUtil.locationToString(shop.location));
+
+		p.sendMessage("Please crouch and punch the chest you want to link.");
+		p.closeInventory();
+	}
 
 	@EventHandler
 	public void onInventoryClick (final InventoryClickEvent e) {
@@ -199,6 +256,9 @@ public class ShopAdminGUI implements Listener {
 				break;
 			case 2:
 				handleChangeRate(p);
+				break;
+			case 5:
+				handleChestLink(p);
 				break;
 			case 7:
 				handleModify(p);

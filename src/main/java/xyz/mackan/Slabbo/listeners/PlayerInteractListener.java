@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.listeners;
 
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -12,6 +13,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
@@ -20,8 +23,11 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.PermissionUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
+
+import javax.xml.crypto.Data;
 
 public class PlayerInteractListener implements Listener {
 	public ShopAction getAction (ItemStack itemInHand, Block clickedBlock, Player player) {
@@ -71,6 +77,41 @@ public class PlayerInteractListener implements Listener {
 		return new ShopAction(ShopActionType.NONE);
 	}
 
+	public void handleLeftClick (PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+
+		if (!p.isSneaking()) return;
+
+		if (!Slabbo.chestLinkUtil.hasPendingLink(p)) return;
+
+		Block clickedBlock = e.getClickedBlock();
+
+		Material clickedBlockMaterial = clickedBlock.getBlockData().getMaterial();
+
+		if (clickedBlockMaterial != Material.CHEST && clickedBlockMaterial != Material.TRAPPED_CHEST) return;
+
+		e.setCancelled(true);
+
+		String linkingShopLocation = Slabbo.chestLinkUtil.pendingLinks.get(p.getUniqueId());
+		String linkingChestLocation = ShopUtil.locationToString(clickedBlock.getLocation());
+
+		Shop linkingShop = Slabbo.shopUtil.shops.get(linkingShopLocation);
+
+		linkingShop.linkedChestLocation = linkingChestLocation;
+
+		Slabbo.shopUtil.put(linkingShopLocation, linkingShop);
+
+		Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+
+		Slabbo.chestLinkUtil.links.put(linkingChestLocation, linkingShop);
+
+		p.sendMessage(ChatColor.GREEN+"Chest linked to shop at "+linkingShopLocation);
+
+		DataUtil.saveShops();
+
+		//p.isSneaking();
+	}
+
 	@EventHandler
 	public void onInteract (PlayerInteractEvent e) {
 		EquipmentSlot hand = e.getHand();
@@ -85,6 +126,9 @@ public class PlayerInteractListener implements Listener {
 		Block clickedBlock = e.getClickedBlock();
 
 		if (action != Action.RIGHT_CLICK_BLOCK) {
+			if (action == Action.LEFT_CLICK_BLOCK) {
+				handleLeftClick(e);
+			}
 			return;
 		}
 
@@ -124,7 +168,7 @@ public class PlayerInteractListener implements Listener {
 			case OPEN_ADMIN_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
-				ShopAdminGUI gui = new ShopAdminGUI(shop);
+				ShopAdminGUI gui = new ShopAdminGUI(shop, player);
 				gui.openInventory(e.getPlayer());
 				break;
 			}

@@ -3,6 +3,7 @@ package xyz.mackan.Slabbo.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.*;
@@ -64,6 +65,10 @@ public class ShopUtil {
 				shopList.add(v);
 
 				shopsByOwnerId.put(v.ownerId, shopList);
+
+				if (v.linkedChestLocation != null) {
+					Slabbo.chestLinkUtil.links.put(v.linkedChestLocation, v);
+				}
 			});
 		}
 	}

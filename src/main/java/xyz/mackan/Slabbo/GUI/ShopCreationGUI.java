@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -105,7 +106,6 @@ public class ShopCreationGUI implements Listener {
 
 		inv.setItem(0, shopItem);
 
-		// 3,4,5
 
 		inv.setItem(3, GUIItems.getBuyPriceItem(buyPrice));
 		inv.setItem(4, GUIItems.getSellPriceItem(sellPrice));
@@ -151,6 +151,7 @@ public class ShopCreationGUI implements Listener {
 			if (slot <= 8) {
 				// User's clicked shop GUI
 
+				// TODO: Move this to a switch
 				if (slot == 3) {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
