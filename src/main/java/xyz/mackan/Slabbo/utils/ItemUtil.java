@@ -31,7 +31,11 @@ public class ItemUtil {
 
 		Item itemEnt = location.getWorld().dropItem(location, clonedItem);
 
+		itemEnt.setGravity(false);
+
 		itemEnt.setVelocity(itemEnt.getVelocity().zero());
+
+		itemEnt.teleport(location);
 	}
 
 	public static Item findItemEntity (Location location) {

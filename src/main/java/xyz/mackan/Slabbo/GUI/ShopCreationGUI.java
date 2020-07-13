@@ -199,14 +199,14 @@ public class ShopCreationGUI implements Listener {
 
 						Location dropLocation = slabLocation.clone();
 
-						dropLocation.add(0.5, +1, 0.5);
+						dropLocation.add(0.5, 0.5, 0.5);
 
 						ItemUtil.dropItem(dropLocation, shopItem, itemUUID);
 
 					} else {
 						Location dropLocation = slabLocation.clone();
 
-						dropLocation.add(+0.5, +1, +0.5);
+						dropLocation.add(0.5, 0.5, 0.5);
 
 						ItemUtil.dropItem(dropLocation, shopItem, itemUUID);
 					}

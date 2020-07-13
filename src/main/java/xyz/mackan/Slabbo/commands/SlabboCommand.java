@@ -4,10 +4,9 @@ import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
@@ -44,6 +43,19 @@ public class SlabboCommand extends BaseCommand {
 		help.showHelp();
 	}
 
+	@Subcommand("info")
+	@Description("Shows information about Slabbo")
+	@CommandPermission("slabbo.info")
+	public void onInfo (Player sender) {
+		sender.sendMessage("=====[ Slabbo Info ]=====");
+
+		sender.sendMessage("Version: "+ Slabbo.getInstance().getDescription().getVersion());
+		sender.sendMessage("Total Shops: "+Slabbo.shopUtil.shops.size());
+		sender.sendMessage("Economy Provider: "+Slabbo.getEconomy().getName());
+
+		sender.sendMessage("=====[ Slabbo Info ]=====");
+	}
+
 	@Subcommand("toggleadmin")
 	@Description("Toggles the shop as being an item shop")
 	@CommandPermission("slabbo.admin")
@@ -77,9 +89,14 @@ public class SlabboCommand extends BaseCommand {
 			return;
 		}
 
-		if (!lookingAtShop.ownerId.equals(player.getUniqueId())) {
-			player.sendMessage(ChatColor.RED+"That's not your shop.");
-			return;
+		boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+		boolean canDestroyOthers = player.hasPermission("slabbo.destroy.others");
+
+		if (!isShopOwner) {
+			if (!canDestroyOthers) {
+				player.sendMessage(ChatColor.RED+"That's not your shop.");
+				return;
+			}
 		}
 
 		ShopDeletionGUI deletionGUI = new ShopDeletionGUI(lookingAtShop);
@@ -118,7 +135,11 @@ public class SlabboCommand extends BaseCommand {
 		for (Shop shop : result.shops) {
 			UUID itemUUID = UUID.randomUUID();
 
-			ItemUtil.dropItem(shop.location, shop.item, itemUUID);
+			Location dropLocation = shop.location.clone();
+
+			dropLocation.add(0.5, 0.5, 0.5);
+
+			ItemUtil.dropItem(dropLocation, shop.item, itemUUID);
 
 			shop.droppedItemId = itemUUID;
 
@@ -158,9 +179,14 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			if (!lookingAtShop.ownerId.equals(player.getUniqueId())) {
-				player.sendMessage(ChatColor.RED+"That's not your shop.");
-				return;
+			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.buyprice.others");
+
+			if (!isShopOwner) {
+				if (!canModifyOthers) {
+					player.sendMessage(ChatColor.RED+"That's not your shop.");
+					return;
+				}
 			}
 
 			lookingAtShop.buyPrice = newBuyingPrice;
@@ -187,9 +213,14 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			if (!lookingAtShop.ownerId.equals(player.getUniqueId())) {
-				player.sendMessage(ChatColor.RED+"That's not your shop.");
-				return;
+			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.sellprice.others");
+
+			if (!isShopOwner) {
+				if (!canModifyOthers) {
+					player.sendMessage(ChatColor.RED+"That's not your shop.");
+					return;
+				}
 			}
 
 			lookingAtShop.sellPrice = newSellingPrice;
@@ -216,9 +247,14 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			if (!lookingAtShop.ownerId.equals(player.getUniqueId())) {
-				player.sendMessage(ChatColor.RED+"That's not your shop.");
-				return;
+			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.quantity.others");
+
+			if (!isShopOwner) {
+				if (!canModifyOthers) {
+					player.sendMessage(ChatColor.RED+"That's not your shop.");
+					return;
+				}
 			}
 
 			lookingAtShop.quantity = newQuantity;

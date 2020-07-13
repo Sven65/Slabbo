@@ -114,12 +114,14 @@ public class GUIItems {
 	}
 
 	public static ItemStack getUserFundsItem (double funds) {
+		NumberFormat formatter = new DecimalFormat("#0.00");
+
 		ItemStack item = new ItemStack(Material.PAPER, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Current funds");
 
-		meta.setLore(Arrays.asList("§rFunds: §a$"+funds));
+		meta.setLore(Arrays.asList("§rFunds: §a$"+formatter.format(funds)));
 
 		item.setItemMeta(meta);
 

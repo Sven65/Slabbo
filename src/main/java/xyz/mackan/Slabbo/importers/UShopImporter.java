@@ -47,7 +47,7 @@ public class UShopImporter {
 
 			ItemStack itemStack = shopConfig.getItemStack("item");
 
-			int buyPrice = shopConfig.getInt("buyprice");
+			int buyPrice = shopConfig.getInt("buyPrice");
 			int sellPrice = shopConfig.getInt("sellPrice");
 
 			int quantity = shopConfig.getInt("stack");
