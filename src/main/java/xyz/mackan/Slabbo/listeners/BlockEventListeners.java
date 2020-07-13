@@ -32,6 +32,14 @@ public class BlockEventListeners implements Listener {
 		return false;
 	}
 
+	public boolean isLookingAtLinkedChest (Player player) {
+		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
+
+		if (!Slabbo.chestLinkUtil.isChestLinked(lookingAt)) return false;
+
+		return true;
+	}
+
 	@EventHandler
 	public void onPlace (BlockPlaceEvent e) {
 		if (isLookingAtShop(e.getPlayer())) {
@@ -43,6 +51,12 @@ public class BlockEventListeners implements Listener {
 	@EventHandler
 	public void onBreak (BlockBreakEvent e) {
 		if (isLookingAtShop(e.getPlayer())) {
+			e.setCancelled(true);
+			e.setDropItems(false);
+		}
+
+		if (isLookingAtLinkedChest(e.getPlayer())) {
+			e.getPlayer().sendMessage("You can't destroy that chest because it's linked to a chest.");
 			e.setCancelled(true);
 			e.setDropItems(false);
 		}
@@ -58,6 +72,7 @@ public class BlockEventListeners implements Listener {
 			String locationString = ShopUtil.locationToString(block.getLocation());
 
 			if (!Slabbo.shopUtil.shops.containsKey(ShopUtil.locationToString(block.getLocation()))) continue;
+			if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
 
 			it.remove();
 		}
@@ -69,6 +84,7 @@ public class BlockEventListeners implements Listener {
 			String locationString = ShopUtil.locationToString(block.getLocation());
 
 			if (!Slabbo.shopUtil.shops.containsKey(locationString)) continue;
+			if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
 
 			event.setCancelled(true);
 		}
@@ -80,6 +96,7 @@ public class BlockEventListeners implements Listener {
 			String locationString = ShopUtil.locationToString(block.getLocation());
 
 			if (!Slabbo.shopUtil.shops.containsKey(locationString)) continue;
+			if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
 
 			event.setCancelled(true);
 		}

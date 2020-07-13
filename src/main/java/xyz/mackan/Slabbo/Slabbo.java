@@ -71,6 +71,7 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new ItemMergeListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockEventListeners(), this);
+		getServer().getPluginManager().registerEvents(new InventoryMoveListener(), this);
 	}
 
 	private void setupCommands () {

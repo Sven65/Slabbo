@@ -1,37 +1,33 @@
 package xyz.mackan.Slabbo.utils;
 
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 public class DataUtil {
-	public static boolean saveShops () {
-		File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
+	public static void saveShops () {
+		Bukkit.getScheduler().runTaskAsynchronously(Slabbo.getInstance(), new Runnable() {
+			@Override
+			public void run () {
+				File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
 
-		FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
+				FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
-		configFile.createSection("shops", Slabbo.shopUtil.shops);
+				configFile.createSection("shops", Slabbo.shopUtil.shops);
 
-		try {
-			configFile.save(dataFile);
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+				try {
+					configFile.save(dataFile);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 
 	public static HashMap<String, Shop> loadShops() {

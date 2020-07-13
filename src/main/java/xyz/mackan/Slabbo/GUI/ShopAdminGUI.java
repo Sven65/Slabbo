@@ -2,7 +2,9 @@ package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,6 +21,7 @@ import xyz.mackan.Slabbo.GUI.items.AdminGUIItems;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -207,6 +210,12 @@ public class ShopAdminGUI implements Listener {
 		} else if (!hasPendingLink && hasExistingLink) {
 			// Current shop isn't being linked, but it has one
 			Slabbo.chestLinkUtil.links.remove(shop.linkedChestLocation);
+
+			Location blockLocation = ShopUtil.fromString(shop.linkedChestLocation);
+
+			Block chestBlock = blockLocation.getBlock();
+
+			ChestLinkUtil.setChestName(chestBlock, null);
 
 			shop.linkedChestLocation = null;
 

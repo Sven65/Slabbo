@@ -49,4 +49,17 @@ public class ChestLinkUtil {
 
 		return (links.containsKey(leftChestLocation) || links.containsKey(rightChestLocation));
 	}
+
+	public static void setChestName (Block chestBlock, String name) {
+		if (chestBlock == null) return;
+		BlockState blockState = chestBlock.getState();
+
+		if (!(blockState instanceof Chest)) return;
+
+		Chest chest = (Chest) blockState;
+
+		chest.setCustomName(name);
+
+		chest.update();
+	}
 }

@@ -117,6 +117,8 @@ public class PlayerInteractListener implements Listener {
 
 		p.sendMessage(ChatColor.GREEN+"Chest linked to shop at "+linkingShopLocation);
 
+		ChestLinkUtil.setChestName(clickedBlock, "Slabbo Chest ["+linkingShopLocation+"]");
+
 		DataUtil.saveShops();
 
 		//p.isSneaking();
