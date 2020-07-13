@@ -61,6 +61,16 @@ public class ShopAdminGUI implements Listener {
 
 		inv.setItem(4, shopItem);
 
+		inv.setItem(6, GUIItems.getUserInfoItem(shop));
+		inv.setItem(7, AdminGUIItems.getModifyItem());
+		inv.setItem(8, AdminGUIItems.getViewAsCustomerItem());
+
+		if (!Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) return;
+
+		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enforcepermission")) {
+			if (!humanEntity.hasPermission("slabbo.link")) return;
+		}
+
 		boolean hasPendingLink = Slabbo.chestLinkUtil.hasPendingLink(humanEntity);
 		boolean hasExistingLink = shop.linkedChestLocation != null;
 
@@ -76,10 +86,6 @@ public class ShopAdminGUI implements Listener {
 		} else if (!hasPendingLink && !hasExistingLink) {
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 		}
-
-		inv.setItem(6, GUIItems.getUserInfoItem(shop));
-		inv.setItem(7, AdminGUIItems.getModifyItem());
-		inv.setItem(8, AdminGUIItems.getViewAsCustomerItem());
 	}
 
 	public void openInventory (final HumanEntity ent) {
@@ -196,6 +202,8 @@ public class ShopAdminGUI implements Listener {
 	}
 
 	public void handleChestLink (HumanEntity humanEntity) {
+		if (!Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) return;
+		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enforcepermission") && !humanEntity.hasPermission("slabbo.link")) return;
 		Player p = (Player)humanEntity;
 
 		boolean hasPendingLink = Slabbo.chestLinkUtil.hasPendingLink(p);

@@ -7,6 +7,7 @@ import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,6 +48,8 @@ public class Slabbo extends JavaPlugin {
 			return;
 		}
 
+		this.saveDefaultConfig();
+
 		setupChat();
 		setupPermissions();
 		setupCommands();
@@ -72,6 +75,7 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockEventListeners(), this);
 		getServer().getPluginManager().registerEvents(new InventoryMoveListener(), this);
+		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
 	}
 
 	private void setupCommands () {

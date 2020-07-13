@@ -19,21 +19,19 @@ public class InventoryMoveListener implements Listener {
 
 	@EventHandler
 	public void onInventoryMove (InventoryMoveItemEvent e) {
-		Inventory source = e.getSource();
-		Inventory destinationInventory = e.getDestination();
-		Inventory initiator = e.getInitiator();
+		if (!Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) return;
 
-		System.out.println("dest "+destinationInventory.getType());
+		if (!Slabbo.getInstance().getConfig().getBoolean("chestlinks.hoppers.enabled")) return;
+
+		Inventory destinationInventory = e.getDestination();
 
 		ItemStack item = e.getItem();
 
 		Block destinationBlock = destinationInventory.getLocation().getBlock();
 
-		String destinationString = ShopUtil.locationToString(destinationBlock.getLocation());
-
 		if (!Slabbo.chestLinkUtil.isChestLinked(destinationBlock)) return;
 
-		Shop shop = Slabbo.chestLinkUtil.links.get(destinationString);
+		Shop shop = Slabbo.chestLinkUtil.getShopByChestLocation(destinationBlock.getLocation());
 
 		ItemStack itemClone = item.clone();
 		ItemStack shopItemClone = shop.item.clone();
@@ -57,6 +55,7 @@ public class InventoryMoveListener implements Listener {
 			}
 		}, 1); // Run it next tick
 
+		int saveTime = Slabbo.getInstance().getConfig().getInt("chestlinks.hoppers.savetime");
 
 		if (!isWaitingForSave) {
 			isWaitingForSave = true;
@@ -66,7 +65,7 @@ public class InventoryMoveListener implements Listener {
 					Bukkit.getServer().getScheduler().cancelTask(taskId);
 					isWaitingForSave = false;
 				}
-			}, 5 * 20); // Delay in ticks
+			}, saveTime * 20); // Delay in ticks
 		}
 	}
 }
