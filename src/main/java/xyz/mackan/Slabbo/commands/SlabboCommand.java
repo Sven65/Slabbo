@@ -58,6 +58,7 @@ public class SlabboCommand extends BaseCommand {
 			}
 		}
 
+		Slabbo.chestLinkUtil.links = new HashMap<String, Shop>();
 		Slabbo.shopUtil.shops = new HashMap<String, Shop>();
 		Slabbo.shopUtil.shopsByOwnerId = new HashMap<UUID, List<Shop>>();
 

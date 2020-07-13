@@ -23,6 +23,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.PermissionUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -94,6 +95,15 @@ public class PlayerInteractListener implements Listener {
 
 		String linkingShopLocation = Slabbo.chestLinkUtil.pendingLinks.get(p.getUniqueId());
 		String linkingChestLocation = ShopUtil.locationToString(clickedBlock.getLocation());
+
+		boolean isLinked = Slabbo.chestLinkUtil.isChestLinked(clickedBlock);
+
+		// TODO: Make this check all possible double chests starting from linkingChestLocation
+		if (isLinked) {
+			p.sendMessage(ChatColor.RED+"That chest's already linked to a shop.");
+			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+			return;
+		}
 
 		Shop linkingShop = Slabbo.shopUtil.shops.get(linkingShopLocation);
 
