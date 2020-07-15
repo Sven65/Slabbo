@@ -11,7 +11,7 @@
 
     <groupId>xyz.mackan</groupId>
     <artifactId>Slabbo</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <description>Slab shops for spigot</description>
     <name>Slabbo</name>
 
@@ -66,6 +66,7 @@
                 <includes>
                     <include>plugin.yml</include>
                     <include>config.yml</include>
+                    <include>lang.yml</include>
                 </includes>
             </resource>
         </resources>

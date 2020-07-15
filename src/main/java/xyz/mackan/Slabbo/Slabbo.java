@@ -3,11 +3,14 @@
 // TODO: Docs
 package xyz.mackan.Slabbo;
 
+import co.aikar.commands.BukkitLocales;
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,6 +22,9 @@ import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 public class Slabbo extends JavaPlugin {
@@ -39,6 +45,8 @@ public class Slabbo extends JavaPlugin {
 	public static ShopUtil shopUtil = new ShopUtil();
 	public static ChestLinkUtil chestLinkUtil = new ChestLinkUtil();
 
+	BukkitLocales locales;
+
 	@Override
 	public void onEnable () {
 		dataPath = this.getDataFolder().getPath();
@@ -48,14 +56,16 @@ public class Slabbo extends JavaPlugin {
 			return;
 		}
 
+		new File(getDataPath()).mkdirs();
+
+		saveResource("lang.yml", false);
+
 		this.saveDefaultConfig();
 
 		setupChat();
 		setupPermissions();
 		setupCommands();
 		setupListeners();
-
-		new File(getDataPath()).mkdirs();
 
 		instance = this;
 
@@ -78,14 +88,27 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
 	}
 
+
 	private void setupCommands () {
 		PaperCommandManager manager = new PaperCommandManager(this);
+
+		try {
+			manager.getLocales().loadYamlLanguageFile("lang.yml", Locale.ENGLISH);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 
 		manager.enableUnstableAPI("help");
 
 		manager.getCommandCompletions().registerCompletion("importFiles", c -> {
 			return SlabboCommandCompletions.getImportFiles();
 		});
+
+//		locales = manager.getLocales();
+//
+//		setupLanguage();
 
 		manager.registerCommand(new SlabboCommand());
 	}

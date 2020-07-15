@@ -21,7 +21,7 @@ public class GUIItems {
 
 		meta.setDisplayName(ChatColor.GREEN+"Buy price");
 
-		meta.setLore(Arrays.asList("§r$"+buyPrice, "Click to set", "§r(Zero means not for sale)"));
+		meta.setLore(Arrays.asList("§r$"+buyPrice, "Click to set", "§r(-1 means not for sale)"));
 
 		item.setItemMeta(meta);
 
@@ -34,7 +34,7 @@ public class GUIItems {
 
 		meta.setDisplayName(ChatColor.RED+"Sell price");
 
-		meta.setLore(Arrays.asList("§r$"+sellPrice, "Click to set", "§r(Zero means not buying)"));
+		meta.setLore(Arrays.asList("§r$"+sellPrice, "Click to set", "§r(-1 means not buying)"));
 
 		item.setItemMeta(meta);
 
@@ -103,9 +103,9 @@ public class GUIItems {
 		meta.setDisplayName(ChatColor.GOLD+"Sell '"+itemName+"' * "+quantity);
 
 		if (isAdmin) {
-			meta.setLore(Arrays.asList("§Sell for: $"+price, "In Stock: ∞", "(∞ stacks)"));
+			meta.setLore(Arrays.asList("§rSell for: $"+price, "In Stock: ∞", "(∞ stacks)"));
 		} else {
-			meta.setLore(Arrays.asList("§Sell for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+			meta.setLore(Arrays.asList("§rSell for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
 		}
 
 		item.setItemMeta(meta);

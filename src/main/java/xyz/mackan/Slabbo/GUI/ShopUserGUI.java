@@ -43,11 +43,11 @@ public class ShopUserGUI implements Listener {
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
-		if (shop.buyPrice > 0) {
+		if (shop.buyPrice > -1) {
 			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
 		}
 
-		if (shop.sellPrice > 0) {
+		if (shop.sellPrice > -1) {
 			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
 		}
 
@@ -223,8 +223,15 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
-		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+		if (shop.buyPrice > -1) {
+			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+
+		}
+
+		if (shop.sellPrice > -1) {
+			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+		}
+
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
 
 	}

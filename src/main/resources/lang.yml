@@ -1,0 +1,5 @@
+# Translation file and properties for Slabbo
+
+cmd-help: # Command descriptions
+  slabbo: Base command for Slabbo
+  reload: Reloads Slabbo

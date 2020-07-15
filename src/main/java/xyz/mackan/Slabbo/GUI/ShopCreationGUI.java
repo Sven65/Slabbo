@@ -253,7 +253,7 @@ public class ShopCreationGUI implements Listener {
 
 		int value = Integer.parseInt(e.getMessage());
 
-		if (value < 0) { value = 0; }
+		if (value < -1) { value = -1; }
 
 		switch (waitingType) {
 			case SELL_PRICE:
@@ -263,6 +263,10 @@ public class ShopCreationGUI implements Listener {
 				buyPrice = value;
 				break;
 			case QUANTITY:
+				if (value <= -1) {
+					value = 0;
+				}
+
 				quantity = value;
 				break;
 		}

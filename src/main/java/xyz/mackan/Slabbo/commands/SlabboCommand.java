@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.*;
 
 @CommandAlias("slabbo")
-@Description("Base command for Slabbo")
+@Description("{@@slabbo.cmd-help.slabbo}")
 public class SlabboCommand extends BaseCommand {
 	public Shop getLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
@@ -39,12 +39,12 @@ public class SlabboCommand extends BaseCommand {
 
 	@HelpCommand
 	public static void onCommand(CommandSender sender, CommandHelp help) {
-		sender.sendMessage("=====[ Slabbo ]=====");
+		//sender.sendMessage("=====[ Slabbo ]=====");
 		help.showHelp();
 	}
 
 	@Subcommand("reload")
-	@Description("Reloads Slabbo")
+	@Description("{@@slabbo.cmd-help.reload}")
 	@CommandPermission("slabbo.reload")
 	public void onReload (Player player) {
 		player.sendMessage("Reloading Slabbo");
@@ -80,6 +80,8 @@ public class SlabboCommand extends BaseCommand {
 
 			Slabbo.shopUtil.put(key, shop);
 		}
+
+
 
 		player.sendMessage("Slabbo reloaded!");
 	}
@@ -201,7 +203,7 @@ public class SlabboCommand extends BaseCommand {
 	public class SlabboModifyCommand extends BaseCommand {
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
-			sender.sendMessage("=====[ Slabbo Modification ]=====");
+			//sender.sendMessage("=====[ Slabbo Modification ]=====");
 			help.showHelp();
 		}
 
