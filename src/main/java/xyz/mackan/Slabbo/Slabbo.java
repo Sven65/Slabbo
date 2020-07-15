@@ -58,7 +58,7 @@ public class Slabbo extends JavaPlugin {
 
 		new File(getDataPath()).mkdirs();
 
-		saveResource("lang.yml", false);
+		//saveResource("lang.yml", false);
 
 		this.saveDefaultConfig();
 
@@ -92,23 +92,19 @@ public class Slabbo extends JavaPlugin {
 	private void setupCommands () {
 		PaperCommandManager manager = new PaperCommandManager(this);
 
-		try {
-			manager.getLocales().loadYamlLanguageFile("lang.yml", Locale.ENGLISH);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			manager.getLocales().loadYamlLanguageFile("lang.yml", Locale.ENGLISH);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} catch (InvalidConfigurationException e) {
+//			e.printStackTrace();
+//		}
 
 		manager.enableUnstableAPI("help");
 
 		manager.getCommandCompletions().registerCompletion("importFiles", c -> {
 			return SlabboCommandCompletions.getImportFiles();
 		});
-
-//		locales = manager.getLocales();
-//
-//		setupLanguage();
 
 		manager.registerCommand(new SlabboCommand());
 	}

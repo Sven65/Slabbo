@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.*;
 
 @CommandAlias("slabbo")
-@Description("{@@slabbo.cmd-help.slabbo}")
+@Description("Base command for slabbo")
 public class SlabboCommand extends BaseCommand {
 	public Shop getLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
@@ -44,7 +44,7 @@ public class SlabboCommand extends BaseCommand {
 	}
 
 	@Subcommand("reload")
-	@Description("{@@slabbo.cmd-help.reload}")
+	@Description("Reloads Slabbo")
 	@CommandPermission("slabbo.reload")
 	public void onReload (Player player) {
 		player.sendMessage("Reloading Slabbo");
