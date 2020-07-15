@@ -186,8 +186,9 @@ public class ShopCreationGUI implements Listener {
 					shop.ownerId = e.getWhoClicked().getUniqueId();
 					shop.droppedItemId = itemUUID;
 
-
 					shop.admin = isAdmin;
+					shop.stock = stock;
+
 
 					Slabbo.shopUtil.put(ShopUtil.locationToString(slabLocation), shop);
 
