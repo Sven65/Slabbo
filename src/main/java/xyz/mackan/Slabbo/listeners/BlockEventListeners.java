@@ -57,7 +57,7 @@ public class BlockEventListeners implements Listener {
 
 		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 			if (isLookingAtLinkedChest(e.getPlayer())) {
-				e.getPlayer().sendMessage("You can't destroy that chest because it's linked to a chest.");
+				e.getPlayer().sendMessage("You can't destroy that chest because it's linked to a shop.");
 				e.setCancelled(true);
 				e.setDropItems(false);
 			}
@@ -73,7 +73,11 @@ public class BlockEventListeners implements Listener {
 
 			String locationString = ShopUtil.locationToString(block.getLocation());
 
-			if (!Slabbo.shopUtil.shops.containsKey(ShopUtil.locationToString(block.getLocation()))) continue;
+			if (!Slabbo.shopUtil.shops.containsKey(locationString)) {
+				continue;
+			} else {
+				it.remove();
+			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 				if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
@@ -88,7 +92,11 @@ public class BlockEventListeners implements Listener {
 		for (Block block : event.getBlocks()){
 			String locationString = ShopUtil.locationToString(block.getLocation());
 
-			if (!Slabbo.shopUtil.shops.containsKey(locationString)) continue;
+			if (!Slabbo.shopUtil.shops.containsKey(locationString)) {
+				continue;
+			} else {
+				event.setCancelled(true);
+			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 				if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
@@ -103,7 +111,11 @@ public class BlockEventListeners implements Listener {
 		for (Block block : event.getBlocks()){
 			String locationString = ShopUtil.locationToString(block.getLocation());
 
-			if (!Slabbo.shopUtil.shops.containsKey(locationString)) continue;
+			if (!Slabbo.shopUtil.shops.containsKey(locationString)) {
+				continue;
+			} else {
+				event.setCancelled(true);
+			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 				if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;

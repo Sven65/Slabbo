@@ -43,11 +43,11 @@ public class ShopUserGUI implements Listener {
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
-		if (shop.buyPrice > -1) {
+		if (shop.buyPrice > -1 && shop.quantity > 0) {
 			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
 		}
 
-		if (shop.sellPrice > -1) {
+		if (shop.sellPrice > -1 && shop.quantity > 0) {
 			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
 		}
 
@@ -75,7 +75,7 @@ public class ShopUserGUI implements Listener {
 			itemCount = shop.quantity;
 		}
 
-		int totalCost = shop.buyPrice * itemCount;
+		int totalCost = shop.buyPrice;// * itemCount;
 
 		if (playerFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+"You don't have enough funds!");
@@ -104,7 +104,8 @@ public class ShopUserGUI implements Listener {
 			shop.stock -= totalBought;
 		}
 
-		int actualCost = totalBought * shop.buyPrice;
+		//int actualCost = totalBought * shop.buyPrice;
+		int actualCost = shop.buyPrice;
 
 		humanEntity
 			.sendMessage(String.format(
@@ -175,7 +176,7 @@ public class ShopUserGUI implements Listener {
 
 		itemCount = Math.min(itemCount, shop.quantity);
 
-		int totalCost = shop.sellPrice * itemCount;
+		int totalCost = shop.sellPrice;// * itemCount;
 
 		if (shopFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+"The shop doesn't have enough funds!");
@@ -223,12 +224,12 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-		if (shop.buyPrice > -1) {
+		if (shop.buyPrice > -1 && shop.quantity > 0) {
 			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
 
 		}
 
-		if (shop.sellPrice > -1) {
+		if (shop.sellPrice > -1 && shop.quantity > 0) {
 			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
 		}
 

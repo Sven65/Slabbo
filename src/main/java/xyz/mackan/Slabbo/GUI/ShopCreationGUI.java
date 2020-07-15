@@ -40,6 +40,7 @@ public class ShopCreationGUI implements Listener {
 	private int buyPrice = 0;
 	private int sellPrice = 0;
 	private int quantity = 0;
+	private int stock = 0;
 
 	private boolean isModifying = false;
 	private boolean isAdmin = false;
@@ -57,6 +58,8 @@ public class ShopCreationGUI implements Listener {
 		buyPrice = shop.buyPrice;
 		sellPrice = shop.sellPrice;
 		quantity = shop.quantity;
+
+		stock = shop.stock;
 
 		isAdmin = shop.admin;
 
@@ -81,6 +84,7 @@ public class ShopCreationGUI implements Listener {
 		buyPrice = 0;
 		sellPrice = 0;
 		quantity = 0;
+		stock = 0;
 	}
 
 	public boolean getIsStage2 () {
