@@ -64,7 +64,7 @@ public class ShopUserGUI implements Listener {
 	public void handleBuy (HumanEntity humanEntity) {
 		double playerFunds = Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity);
 
-		if (shop.stock == 0 && !shop.admin) {
+		if (shop.stock <= 0 && !shop.admin) {
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.out-of-stock"));
 			return;
 		}
