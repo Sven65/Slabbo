@@ -48,7 +48,11 @@ public class LocaleManager {
 	 * @return String
 	 */
 	public String getString (String key) {
-		return translationMap.get(key);
+		String value = translationMap.get(key);
+
+		if (value == null || value.equals("")) return "Translation key "+key+" not found!";
+
+		return value;
 	}
 
 	/**

@@ -92,8 +92,8 @@ general:
     funds-message: "Funds: {funds}"
 
     shift-bulk:
-      deposit: Shift for bulk deposit
-      withdraw: Shift for bulk withdrawal
+      deposit: +Shift for bulk deposit
+      withdraw: +Shift for bulk withdrawal
 
 # [Slabbo] Owner
 gui:
