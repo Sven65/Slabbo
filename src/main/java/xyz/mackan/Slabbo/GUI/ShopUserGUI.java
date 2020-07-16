@@ -84,7 +84,7 @@ public class ShopUserGUI implements Listener {
 
 		ItemStack shopItemClone = shop.item.clone();
 
-		shopItemClone.setAmount(shop.quantity);
+		shopItemClone.setAmount(itemCount);
 
 		HashMap<Integer, ItemStack> leftovers = pInv.addItem(shopItemClone);
 
@@ -96,7 +96,7 @@ public class ShopUserGUI implements Listener {
 				.reduce(0, (total, el) -> total + el);
 
 
-		int totalBought = shop.quantity - leftoverCount;
+		int totalBought = itemCount - leftoverCount;
 
 		if (!shop.admin) {
 			shop.stock -= totalBought;
