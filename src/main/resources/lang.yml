@@ -13,8 +13,8 @@ error-message:
     plugin-not-supported: That plugin can't be imported
     general-error: An error occured when importing. See the console for more details.
   modify:
-    not-positive-buy-price: Please provide a positive buy price
-    not-positive-sell-price: Please provide a positive sell price
+    not-positive-buy-price: Please provide a positive buy price or -1 for not buying.
+    not-positive-sell-price: Please provide a positive sell price or -1 for not selling.
     not-positive-quantity-price: Please provide a positive quantity
   shop-errors:
     out-of-stock: This shop is out of stock!

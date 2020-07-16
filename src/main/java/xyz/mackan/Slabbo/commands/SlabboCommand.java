@@ -213,8 +213,8 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Sets the buying price for the shop")
 		@CommandPermission("slabbo.modify.buyprice")
 		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
-			if (newBuyingPrice < 0) { // TODO: Make this support -1 as 0 is now free shops
-				player.sendMessage(ChatColor.RED+"Please provide a positive buy price.");
+			if (newBuyingPrice < -1) {
+				player.sendMessage(ChatColor.RED+"Please provide a positive buy price, or -1 for not buying.");
 				return;
 			}
 
@@ -247,7 +247,7 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Sets the selling price for the shop")
 		@CommandPermission("slabbo.modify.sellprice")
 		public void onModifySellPrice(Player player, int newSellingPrice) {
-			if (newSellingPrice < 0) { // TODO: Make this support -1 as 0 is now free shops
+			if (newSellingPrice < -1) {
 				player.sendMessage(ChatColor.RED+"Please provide a positive sell price.");
 				return;
 			}
