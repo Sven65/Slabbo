@@ -13,9 +13,9 @@ error-message:
     plugin-not-supported: That plugin can't be imported
     general-error: An error occured when importing. See the console for more details.
   modify:
-    not-positive-buy-price: Please provide a positive buy price or -1 for not buying.
-    not-positive-sell-price: Please provide a positive sell price or -1 for not selling.
-    not-positive-quantity-price: Please provide a positive quantity
+    invalid-buy-price: Please provide a positive buy price or -1 for not buying.
+    invalid-sell-price: Please provide a positive sell price or -1 for not selling.
+    invalid-quantity: Please provide a positive quantity
   shop-errors:
     out-of-stock: This shop is out of stock!
     not-enough-funds: You don't have enough funds!
@@ -37,7 +37,7 @@ success-message:
   modify:
     buyprice-set: Buy price set to {price}
     sellprice-set: Sell price set to {price}
-    quantity-set: Quantity set to {count}
+    quantity-set: Quantity set to {quantity}
   client:
     buy-success: Bought {count} {item} for a total of {cost}
     sell-success: Sold {count} {item} for a total of {cost}

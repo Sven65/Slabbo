@@ -214,13 +214,13 @@ public class SlabboCommand extends BaseCommand {
 		@CommandPermission("slabbo.modify.buyprice")
 		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
 			if (newBuyingPrice < -1) {
-				player.sendMessage(ChatColor.RED+"Please provide a positive buy price, or -1 for not buying.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-buy-price"));
 				return;
 			}
 
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+"That's not a shop.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
 				return;
 			}
 
@@ -229,14 +229,18 @@ public class SlabboCommand extends BaseCommand {
 
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+"That's not your shop.");
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
 					return;
 				}
 			}
 
 			lookingAtShop.buyPrice = newBuyingPrice;
 
-			player.sendMessage(ChatColor.GREEN+"Buy price set to "+newBuyingPrice);
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("price", newBuyingPrice);
+
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.buyprice-set", replacementMap));
 
 			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
@@ -248,13 +252,13 @@ public class SlabboCommand extends BaseCommand {
 		@CommandPermission("slabbo.modify.sellprice")
 		public void onModifySellPrice(Player player, int newSellingPrice) {
 			if (newSellingPrice < -1) {
-				player.sendMessage(ChatColor.RED+"Please provide a positive sell price.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-sell-price"));
 				return;
 			}
 
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+"That's not a shop.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
 				return;
 			}
 
@@ -263,14 +267,18 @@ public class SlabboCommand extends BaseCommand {
 
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+"That's not your shop.");
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
 					return;
 				}
 			}
 
 			lookingAtShop.sellPrice = newSellingPrice;
 
-			player.sendMessage(ChatColor.GREEN+"Sell price set to "+newSellingPrice);
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("price", newSellingPrice);
+
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.sellprice-set", replacementMap));
 
 			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
@@ -282,13 +290,13 @@ public class SlabboCommand extends BaseCommand {
 		@CommandPermission("slabbo.modify.quantity")
 		public void onModifyQuantity(Player player, int newQuantity) {
 			if (newQuantity < 0) {
-				player.sendMessage(ChatColor.RED+"Please provide a positive quantity.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-quantity"));
 				return;
 			}
 
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+"That's not a shop.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
 				return;
 			}
 
@@ -297,14 +305,18 @@ public class SlabboCommand extends BaseCommand {
 
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+"That's not your shop.");
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
 					return;
 				}
 			}
 
 			lookingAtShop.quantity = newQuantity;
 
-			player.sendMessage(ChatColor.GREEN+"Quantity set to "+newQuantity);
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("quantity", newQuantity);
+
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.quantity-set", replacementMap));
 
 			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
