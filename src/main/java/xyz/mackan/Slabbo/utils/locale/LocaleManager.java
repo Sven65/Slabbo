@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LocaleManager {
 	public HashMap<String, String> translationMap = new HashMap<String, String>();
@@ -68,7 +70,7 @@ public class LocaleManager {
 			String key = replacement.getKey();
 			String value = replacement.getValue().toString();
 
-			replaceString = replaceString.replaceAll("\\{"+key+"\\}", value);
+			replaceString = replaceString.replaceAll("\\{" + key + "\\}", Matcher.quoteReplacement(value));
 		}
 
 		return replaceString;

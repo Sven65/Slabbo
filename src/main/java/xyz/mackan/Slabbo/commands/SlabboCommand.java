@@ -114,7 +114,7 @@ public class SlabboCommand extends BaseCommand {
 		if (lookingAtShop.admin) {
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-create"));
 		} else {
-			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general-admin-destroy"));
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-destroy"));
 		}
 
 		Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
@@ -201,7 +201,7 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("modify")
 	@Description("Modifies the shop")
-	@CommandPermission("slabbo.modify")
+	@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.self.sellprice|slabbo.modify.self.quantity|slabbo.modify.others.buyprice|slabbo.modify.others.sellprice|slabbo.modify.others.quantity")
 	public class SlabboModifyCommand extends BaseCommand {
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
@@ -211,7 +211,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("buyprice")
 		@Description("Sets the buying price for the shop")
-		@CommandPermission("slabbo.modify.buyprice")
+		@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.others.buyprice")
 		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
 			if (newBuyingPrice < -1) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-buy-price"));
@@ -225,7 +225,7 @@ public class SlabboCommand extends BaseCommand {
 			}
 
 			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.buyprice.others");
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.buyprice");
 
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
@@ -249,7 +249,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("sellprice")
 		@Description("Sets the selling price for the shop")
-		@CommandPermission("slabbo.modify.sellprice")
+		@CommandPermission("slabbo.modify.self.sellprice|slabbo.modify.others.sellprice")
 		public void onModifySellPrice(Player player, int newSellingPrice) {
 			if (newSellingPrice < -1) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-sell-price"));
@@ -263,7 +263,7 @@ public class SlabboCommand extends BaseCommand {
 			}
 
 			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.sellprice.others");
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.sellprice");
 
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
@@ -287,7 +287,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("quantity")
 		@Description("Sets the quantity for the shop")
-		@CommandPermission("slabbo.modify.quantity")
+		@CommandPermission("slabbo.modify.self.quantity|slabbo.modify.others.quantity")
 		public void onModifyQuantity(Player player, int newQuantity) {
 			if (newQuantity < 0) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-quantity"));
@@ -301,7 +301,7 @@ public class SlabboCommand extends BaseCommand {
 			}
 
 			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.quantity.others");
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.quantity");
 
 			if (!isShopOwner) {
 				if (!canModifyOthers) {

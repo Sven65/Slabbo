@@ -25,45 +25,41 @@ permissions:
     default: op
     description: Lets you destroy other peoples shops
 
-  slabbo.modify:
-    default: op
-    description: Lets you use /slabbo modify
-
-  slabbo.modify.buyprice.others:
-    default: op
-    description: Lets you modify the buy price of other peoples shops
-  slabbo.modify.sellprice.others:
-    default: op
-    description: Lets you modify the sell price of other peoples shops
-  slabbo.modify.quantity.others:
-    default: op
-    description: Lets you modify the quantity of other peoples shops.
-
-  slabbo.modify.buyprice:
+  slabbo.modify.self.buyprice:
     default: op
     description: Lets you modify the buy price of shops with a command
-  slabbo.modify.sellprice:
+  slabbo.modify.self.sellprice:
     default: op
     description: Lets you modify the sell price of shops with a command
-  slabbo.modify.quantity:
+  slabbo.modify.self.quantity:
     default: op
     description: Lets you modify the quantity of shops with a command
 
-  slabbo.modify.*:
+  slabbo.modify.self.*:
     default: op
     description: Gives you access to all the modification commands
     children:
-      slabbo.modify.buyprice: true
-      slabbo.modify.sellprice: true
-      slabbo.modify.quantity: true
+      slabbo.modify.self.buyprice: true
+      slabbo.modify.self.sellprice: true
+      slabbo.modify.self.quantity: true
 
-  slabbo.modify.*.others:
+  slabbo.modify.others.buyprice:
+    default: op
+    description: Lets you modify the buy price of other peoples shops
+  slabbo.modify.others.sellprice:
+    default: op
+    description: Lets you modify the sell price of other peoples shops
+  slabbo.modify.others.quantity:
+    default: op
+    description: Lets you modify the quantity of other peoples shops.
+
+  slabbo.modify.others.*:
     default: op
     description: Gives you access to use all the modification commands for other peoples shops
     children:
-      slabbo.modify.buyprice.others: true
-      slabbo.modify.sellprice.others: true
-      slabbo.modify.quantity.others: true
+      slabbo.modify.others.buyprice: true
+      slabbo.modify.others.sellprice: true
+      slabbo.modify.others.quantity: true
 
   slabbo.link:
     default: op

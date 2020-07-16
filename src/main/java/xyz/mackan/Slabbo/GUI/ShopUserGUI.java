@@ -111,7 +111,7 @@ public class ShopUserGUI implements Listener {
 
 		replacementMap.put("count", totalBought);
 		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
-		replacementMap.put("cost", actualCost);
+		replacementMap.put("cost", "$"+actualCost);
 		replacementMap.put("user", humanEntity.getName());
 
 		String userMessage = Slabbo.localeManager.replaceKey("success-message.client.buy-success", replacementMap);
@@ -194,7 +194,7 @@ public class ShopUserGUI implements Listener {
 
 		replacementMap.put("count", itemCount);
 		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
-		replacementMap.put("cost", totalCost);
+		replacementMap.put("cost", "$"+totalCost);
 		replacementMap.put("user", humanEntity.getName());
 
 		String userMessage = Slabbo.localeManager.replaceKey("success-message.client.sell-success", replacementMap);

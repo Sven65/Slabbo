@@ -101,7 +101,7 @@ public class GUIItems {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		replacementMap.put("itemName", "'"+itemName+"'");
+		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
 		replacementMap.put("price", price);
 
@@ -136,7 +136,7 @@ public class GUIItems {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		replacementMap.put("itemName", "'"+itemName+"'");
+		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
 		replacementMap.put("price", price);
 

@@ -47,7 +47,7 @@ success-message:
 
 general:
   chestlink:
-    chest-name: Chest [{location}]
+    chest-name: "Chest [{location}]"
     crouch-to-link: Please crouch and punch the chest you want to link.
     link-for-refill: Link a chest for refilling!
     cancel-chest-link: Cancel chest link
