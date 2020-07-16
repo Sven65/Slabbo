@@ -70,7 +70,7 @@ general:
     current-funds: Current funds
     new-shop: New Shop
 
-    slabbo-shop: Slabbo Shop
+    shop: Shop
     destroy-shop: Destroy Shop
 
     destroy-shop-item-warning: This will destroy your items.
@@ -111,8 +111,8 @@ gui:
       view-as-customer: View as customer
       link-chest: Link chest
     user:
-      buy-item: Buy '{item}' * {quantity}
-      sell-item: Sell '{item}' * {quantity}
+      buy-item: Buy {item} * {quantity}
+      sell-item: Sell {item} * {quantity}
     info:
       owned-by: Owned by {owner}
       selling-item: "Selling: {item}"

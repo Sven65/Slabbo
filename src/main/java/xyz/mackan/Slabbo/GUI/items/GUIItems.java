@@ -4,24 +4,30 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.Misc;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class GUIItems {
 	public static ItemStack getBuyPriceItem (int buyPrice) {
 		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+"Buy price");
+		meta.setDisplayName(ChatColor.GREEN+ Slabbo.localeManager.getString("general.general.buy-price"));
 
-		meta.setLore(Arrays.asList("§r$"+buyPrice, "Click to set", "§r(-1 means not for sale)"));
+		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
+		String explainer = Slabbo.localeManager.getString("general.general.not-for-sale-explain");
+
+		meta.setLore(Arrays.asList("§r$"+buyPrice, clickToSet, "§r"+explainer));
 
 		item.setItemMeta(meta);
 
@@ -32,9 +38,12 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.RED+"Sell price");
+		meta.setDisplayName(ChatColor.RED+ Slabbo.localeManager.getString("general.general.sell-price"));
 
-		meta.setLore(Arrays.asList("§r$"+sellPrice, "Click to set", "§r(-1 means not buying)"));
+		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
+		String explainer = Slabbo.localeManager.getString("general.general.not-buying-explain");
+
+		meta.setLore(Arrays.asList("§r$"+sellPrice, clickToSet, "§r"+explainer));
 
 		item.setItemMeta(meta);
 
@@ -45,9 +54,17 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.YELLOW+"Quantity");
+		meta.setDisplayName(ChatColor.YELLOW+ Slabbo.localeManager.getString("general.general.quantity"));
 
-		meta.setLore(Arrays.asList("§rAmount per transaction: "+quantity, "Click to set", "§r(Amount of items per buy / sell)"));
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("count", quantity);
+
+		String amountPerTransaction = Slabbo.localeManager.replaceKey("general.general.amount-per-transaction", replacementMap);
+		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
+		String explainer = Slabbo.localeManager.getString("general.general.quantity-explain");
+
+		meta.setLore(Arrays.asList("§r"+amountPerTransaction, clickToSet, "§r"+explainer));
 
 		item.setItemMeta(meta);
 
@@ -58,7 +75,7 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.BARRIER, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.RED+"Cancel");
+		meta.setDisplayName(ChatColor.RED + Slabbo.localeManager.getString("general.general.cancel"));
 
 		item.setItemMeta(meta);
 
@@ -69,9 +86,9 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+"Confirm");
+		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("general.general.confirm"));
 
-		meta.setLore(Arrays.asList("New Shop", locationString));
+		meta.setLore(Arrays.asList(Slabbo.localeManager.getString("general.general.new-shop"), locationString));
 
 		item.setItemMeta(meta);
 
@@ -82,14 +99,31 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.GOLD_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+"Buy '"+itemName+"' * "+quantity);
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("itemName", "'"+itemName+"'");
+		replacementMap.put("quantity", quantity);
+		replacementMap.put("price", price);
 
 		if (isAdmin) {
-			meta.setLore(Arrays.asList("§rBuy for: $"+price, "In Stock: ∞", "(∞ stacks)"));
+			replacementMap.put("count", "∞");
 		} else {
-			meta.setLore(Arrays.asList("§rBuy for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+			replacementMap.put("count", stock);
 		}
 
+		String inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+
+		String stacks = Slabbo.localeManager.getString("general.general.stacks");
+
+		String buyFor = Slabbo.localeManager.replaceKey("general.general.buy-for", replacementMap);
+
+		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.user.buy-item", replacementMap));
+
+		if (isAdmin) {
+			meta.setLore(Arrays.asList("§r"+buyFor, inStock, "(∞ "+stacks+")"));
+		} else {
+			meta.setLore(Arrays.asList("§r"+buyFor, inStock, "("+Misc.countStacks(stock)+" "+stacks+")"));
+		}
 
 		item.setItemMeta(meta);
 
@@ -100,12 +134,30 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.IRON_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+"Sell '"+itemName+"' * "+quantity);
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("itemName", "'"+itemName+"'");
+		replacementMap.put("quantity", quantity);
+		replacementMap.put("price", price);
 
 		if (isAdmin) {
-			meta.setLore(Arrays.asList("§rSell for: $"+price, "In Stock: ∞", "(∞ stacks)"));
+			replacementMap.put("count", "∞");
 		} else {
-			meta.setLore(Arrays.asList("§rSell for: $"+price, "In Stock: "+stock, "("+ Misc.countStacks(stock)+" stacks)"));
+			replacementMap.put("count", stock);
+		}
+
+		String inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+
+		String stacks = Slabbo.localeManager.getString("general.general.stacks");
+
+		String sellFor = Slabbo.localeManager.replaceKey("general.general.sell-for", replacementMap);
+
+		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.user.sell-item", replacementMap));
+
+		if (isAdmin) {
+			meta.setLore(Arrays.asList("§r"+sellFor, inStock, "(∞ "+stacks+")"));
+		} else {
+			meta.setLore(Arrays.asList("§r"+sellFor, inStock, "("+Misc.countStacks(stock)+" "+stacks+")"));
 		}
 
 		item.setItemMeta(meta);
@@ -119,9 +171,15 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.PAPER, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+"Current funds");
+		// TODO: Think over whether we need to show what's essentially "current funds" twice
 
-		meta.setLore(Arrays.asList("§rFunds: §a$"+formatter.format(funds)));
+		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.getString("general.general.current-funds"));
+
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("funds", "§a$"+formatter.format(funds));
+
+		meta.setLore(Arrays.asList(Slabbo.localeManager.replaceKey("general.general.funds-message", replacementMap)));
 
 		item.setItemMeta(meta);
 
@@ -132,7 +190,7 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.COMMAND_BLOCK, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+"Slabbo Shop");
+		meta.setDisplayName(ChatColor.GOLD+"Slabbo "+Slabbo.localeManager.getString("general.general.shop"));
 
 		double buyPerItem = 0;
 		double sellPerItem = 0;
@@ -145,12 +203,27 @@ public class GUIItems {
 
 		OfflinePlayer owner = Bukkit.getOfflinePlayer(shop.ownerId);
 
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("owner", owner.getName());
+		replacementMap.put("item", shop.item.getType());
+		replacementMap.put("quantity", shop.quantity);
+		replacementMap.put("buyPrice", shop.buyPrice);
+		replacementMap.put("sellPrice", shop.sellPrice);
+		replacementMap.put("buyPerItem", "$"+formatter.format(buyPerItem)); // TODO: Think over whether to move the currency symbol to a resolver, or to put it in the lang file
+		replacementMap.put("sellPerItem", "$"+formatter.format(sellPerItem));
+
+		String ownerString = Slabbo.localeManager.replaceKey("gui.items.info.owned-by", replacementMap);
+		String sellingString = Slabbo.localeManager.replaceKey("gui.items.info.selling-item", replacementMap);
+		String buyEachString = Slabbo.localeManager.replaceKey("gui.items.info.buy-each", replacementMap);
+		String sellEachString = Slabbo.localeManager.replaceKey("gui.items.info.sell-each", replacementMap);
+
 		meta.setLore(Arrays.asList(
-				"§rOwned by "+owner.getName(),
+				"§r"+ownerString,
 				"",
-				"§rSelling: "+shop.item.getType(),
-				"Buy "+shop.quantity+" for $"+shop.buyPrice+" ($"+formatter.format(buyPerItem)+" each)",
-				"Sell "+shop.quantity+" for $"+shop.sellPrice+" ($"+formatter.format(sellPerItem)+" each)"
+				"§r"+sellingString,
+				buyEachString,
+				sellEachString
 		));
 
 		item.setItemMeta(meta);
@@ -162,10 +235,10 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+"Destroy Shop");
+		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("general.general.destroy-shop"));
 
 		meta.setLore(Arrays.asList(
-				ChatColor.RED+"This will destroy your items."
+				ChatColor.RED+Slabbo.localeManager.getString("general.general.destroy-shop-item-warning")
 		));
 
 		item.setItemMeta(meta);
