@@ -57,7 +57,7 @@ public class BlockEventListeners implements Listener {
 
 		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 			if (isLookingAtLinkedChest(e.getPlayer())) {
-				e.getPlayer().sendMessage("You can't destroy that chest because it's linked to a shop.");
+				e.getPlayer().sendMessage(Slabbo.localeManager.getString("error-message.chestlink.no-destroy-linked"));
 				e.setCancelled(true);
 				e.setDropItems(false);
 			}

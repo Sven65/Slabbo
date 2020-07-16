@@ -11,6 +11,7 @@ import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,11 +25,17 @@ public class PlayerJoinListener implements Listener {
 
 		List<Shop> shops = Slabbo.shopUtil.shopsByOwnerId.get(userId);
 
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
 		for (Shop shop : shops) {
 			if (shop.admin) continue;
 
 			if (shop.stock == 0) {
-				player.sendMessage("Your shop at " + ShopUtil.locationToString(shop.location) + " is out of "+ NameUtil.getName(shop.item));
+				replacementMap.put("location", ShopUtil.locationToString(shop.location));
+				replacementMap.put("item", NameUtil.getName(shop.item));
+
+
+				player.sendMessage(Slabbo.localeManager.replaceKey("general.general.restock-message", replacementMap));
 			}
 		}
 	}

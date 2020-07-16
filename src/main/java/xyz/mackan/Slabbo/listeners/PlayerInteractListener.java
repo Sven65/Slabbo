@@ -29,6 +29,7 @@ import xyz.mackan.Slabbo.utils.PermissionUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import javax.xml.crypto.Data;
+import java.util.HashMap;
 
 public class PlayerInteractListener implements Listener {
 	public ShopAction getAction (ItemStack itemInHand, Block clickedBlock, Player player) {
@@ -100,7 +101,7 @@ public class PlayerInteractListener implements Listener {
 
 		// TODO: Make this check all possible double chests starting from linkingChestLocation
 		if (isLinked) {
-			p.sendMessage(ChatColor.RED+"That chest's already linked to a shop.");
+			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.chestlink.already-linked"));
 			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
 			return;
 		}
@@ -115,9 +116,13 @@ public class PlayerInteractListener implements Listener {
 
 		Slabbo.chestLinkUtil.links.put(linkingChestLocation, linkingShop);
 
-		p.sendMessage(ChatColor.GREEN+"Chest linked to shop at "+linkingShopLocation);
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		ChestLinkUtil.setChestName(clickedBlock, "Slabbo Chest ["+linkingShopLocation+"]");
+		replacementMap.put("location", linkingShopLocation);
+
+		p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.chestlink.link-success", replacementMap));
+
+		ChestLinkUtil.setChestName(clickedBlock, "Slabbo "+Slabbo.localeManager.replaceKey("general.chestlink.chest-name", replacementMap));
 
 		DataUtil.saveShops();
 
@@ -152,10 +157,16 @@ public class PlayerInteractListener implements Listener {
 
 		ShopAction pAction = getAction(itemInHand, clickedBlock, player);
 
+
+
 		switch (pAction.type) {
 			case CREATION_LIMIT_HIT: {
 				int limit = (Integer) pAction.extra;
-				player.sendMessage(ChatColor.RED + "You've created all the shops you can! (" + limit + ")");
+
+				HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+				replacementMap.put("limit", limit);
+
+				player.sendMessage(ChatColor.RED + Slabbo.localeManager.replaceKey("error-message.general.limit-hit", replacementMap));
 				break;
 			}
 			case CREATE: {
