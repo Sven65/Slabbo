@@ -97,10 +97,8 @@ general:
 
 # [Slabbo] Owner
 gui:
-  owner-title: Owner # TODO: Remove [Slabbo], just append it in code
+  owner-title: Owner
   editing-shop: Editing Shop
-  new-shop: New Shop
-  destroy-shop: Destroy
   client: Client
   items:
     admin:

@@ -49,7 +49,7 @@ public class ShopCreationGUI implements Listener {
 		isModifying = true;
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] Editing Shop");
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("gui.editing-shop"));
 
 		this.slabLocation = slabLocation;
 
@@ -69,7 +69,7 @@ public class ShopCreationGUI implements Listener {
 	public ShopCreationGUI (Location slabLocation) {
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] New Shop");
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("general.general.new-shop"));
 
 		this.slabLocation = slabLocation;
 
@@ -125,9 +125,9 @@ public class ShopCreationGUI implements Listener {
 		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.RED+"Click item below");
+		meta.setDisplayName(ChatColor.RED+Slabbo.localeManager.getString("gui.items.new-shop.click-item-below"));
 
-		meta.setLore(Arrays.asList("New Shop", ShopUtil.locationToString(slabLocation)));
+		meta.setLore(Arrays.asList(Slabbo.localeManager.getString("general.general.new-shop"), ShopUtil.locationToString(slabLocation)));
 
 		item.setItemMeta(meta);
 
@@ -160,21 +160,21 @@ public class ShopCreationGUI implements Listener {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
-					p.sendMessage("Please type the new buying price");
+					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-buy-price"));
 					e.getWhoClicked().closeInventory();
 
 				} else if (slot == 4) {
 					//Sell Price
 					waitingType = ChatWaitingType.SELL_PRICE;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
-					p.sendMessage("Please type the new selling price");
+					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-sell-price"));
 					e.getWhoClicked().closeInventory();
 
 				} else if (slot == 5) {
 					// Amount
 					waitingType = ChatWaitingType.QUANTITY;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
-					p.sendMessage("Please type the new quantity");
+					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-quantity"));
 					e.getWhoClicked().closeInventory();
 				} else if (slot == 7) {
 					// Confirm

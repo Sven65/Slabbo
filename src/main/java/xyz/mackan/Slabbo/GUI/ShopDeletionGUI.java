@@ -32,7 +32,7 @@ public class ShopDeletionGUI  implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] Destroy");
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("general.general-destroy-shop"));
 
 		initializeItems();
 	}

@@ -45,7 +45,7 @@ public class ShopAdminGUI implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] Owner");
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("gui.owner-title"));
 
 		initializeItems(humanEntity);
 	}
@@ -185,7 +185,7 @@ public class ShopAdminGUI implements Listener {
 		isChangingRate = true;
 		waitingPlayerId = humanEntity.getUniqueId();
 
-		humanEntity.sendMessage("Please type the new rate");
+		humanEntity.sendMessage(Slabbo.localeManager.getString("general.general.type-new-rate"));
 		humanEntity.closeInventory();
 	}
 
@@ -212,7 +212,7 @@ public class ShopAdminGUI implements Listener {
 		if (hasPendingLink && Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
 			// Current shop's being linked
 			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
-			p.sendMessage(ChatColor.RED+"Linking has been cancelled.");
+			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.linking-cancelled"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 			return;
 		} else if (!hasPendingLink && hasExistingLink) {
@@ -229,7 +229,7 @@ public class ShopAdminGUI implements Listener {
 
 			Slabbo.shopUtil.put(shop.getLocationString(), shop);
 
-			p.sendMessage(ChatColor.GREEN+"Shop linking has been removed.");
+			p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.chestlink.linking-removed"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 
 			DataUtil.saveShops();
@@ -238,14 +238,14 @@ public class ShopAdminGUI implements Listener {
 		} else if (hasPendingLink && !Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
 			// A link is in progress, but it's not the current shop
 			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
-			p.sendMessage(ChatColor.RED+"Your previous linking has been cancelled.");
+			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.previous-linking-cancelled"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 		}
 
 
 		Slabbo.chestLinkUtil.pendingLinks.put(p.getUniqueId(), ShopUtil.locationToString(shop.location));
 
-		p.sendMessage("Please crouch and punch the chest you want to link.");
+		p.sendMessage(Slabbo.localeManager.getString("general.chestlink.crouch-to-link"));
 		p.closeInventory();
 	}
 

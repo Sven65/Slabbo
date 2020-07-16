@@ -33,7 +33,7 @@ public class ShopUserGUI implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] Client");
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("gui.client"));
 
 		initializeItems(player);
 	}
@@ -65,7 +65,7 @@ public class ShopUserGUI implements Listener {
 		double playerFunds = Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity);
 
 		if (shop.stock == 0 && !shop.admin) {
-			humanEntity.sendMessage(ChatColor.RED+"This shop is out of stock!");
+			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.out-of-stock"));
 			return;
 		}
 
@@ -78,7 +78,7 @@ public class ShopUserGUI implements Listener {
 		int totalCost = shop.buyPrice;// * itemCount;
 
 		if (playerFunds < totalCost) {
-			humanEntity.sendMessage(ChatColor.RED+"You don't have enough funds!");
+			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-funds"));
 			return;
 		}
 
@@ -107,14 +107,17 @@ public class ShopUserGUI implements Listener {
 		//int actualCost = totalBought * shop.buyPrice;
 		int actualCost = shop.buyPrice;
 
-		humanEntity
-			.sendMessage(String.format(
-				ChatColor.GREEN+"Bought %d %s for a total of $%d.",
-				totalBought,
-				NameUtil.getName(shop.item),
-				actualCost
-			)
-		);
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("count", totalBought);
+		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
+		replacementMap.put("cost", actualCost);
+		replacementMap.put("user", humanEntity.getName());
+
+		String userMessage = Slabbo.localeManager.replaceKey("success-message.client.buy-success", replacementMap);
+		String ownerMessage = Slabbo.localeManager.replaceKey("success-message.owner.buy-success", replacementMap);
+
+		humanEntity.sendMessage(ChatColor.GREEN+userMessage);
 
 		Slabbo.getEconomy().withdrawPlayer((OfflinePlayer)humanEntity, actualCost);
 
@@ -124,17 +127,7 @@ public class ShopUserGUI implements Listener {
 			Slabbo.getEconomy().depositPlayer(shopOwner, actualCost);
 
 			if (shopOwner.isOnline()) {
-				shopOwner
-						.getPlayer()
-						.sendMessage(
-								String.format(
-										ChatColor.GREEN + "%s bought %d %s for a total of $%d at your shop.",
-										humanEntity.getName(),
-										totalBought,
-										NameUtil.getName(shop.item),
-										actualCost
-								)
-						);
+				shopOwner.getPlayer().sendMessage(ChatColor.GREEN+ownerMessage);
 			}
 		}
 
@@ -170,7 +163,7 @@ public class ShopUserGUI implements Listener {
 		}
 
 		if (itemCount <= 0) {
-			humanEntity.sendMessage(ChatColor.RED+"You don't have enough items!");
+			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-items"));
 			return;
 		}
 
@@ -179,7 +172,7 @@ public class ShopUserGUI implements Listener {
 		int totalCost = shop.sellPrice;// * itemCount;
 
 		if (shopFunds < totalCost) {
-			humanEntity.sendMessage(ChatColor.RED+"The shop doesn't have enough funds!");
+			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-shop-funds"));
 			return;
 		}
 
@@ -197,30 +190,23 @@ public class ShopUserGUI implements Listener {
 
 		Slabbo.getEconomy().depositPlayer((OfflinePlayer)humanEntity, totalCost);
 
-		humanEntity
-		.sendMessage(String.format(
-				ChatColor.GREEN+"Sold %d %s for a total of $%d.",
-				itemCount,
-				NameUtil.getName(shop.item),
-				totalCost
-			)
-		);
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("count", itemCount);
+		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
+		replacementMap.put("cost", totalCost);
+		replacementMap.put("user", humanEntity.getName());
+
+		String userMessage = Slabbo.localeManager.replaceKey("success-message.client.sell-success", replacementMap);
+		String ownerMessage = Slabbo.localeManager.replaceKey("success-message.owner.sell-success", replacementMap);
+
+		humanEntity.sendMessage(ChatColor.GREEN+userMessage);
 
 		if (!shop.admin) {
 			Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);
 
 			if (shopOwner.isOnline()) {
-				shopOwner
-						.getPlayer()
-						.sendMessage(
-								String.format(
-										ChatColor.GREEN+"%s sold %d %s for a total of $%d at your shop.",
-										humanEntity.getName(),
-										itemCount,
-										NameUtil.getName(shop.item),
-										totalCost
-								)
-						);
+				shopOwner.getPlayer().sendMessage(ChatColor.GREEN+ownerMessage);
 			}
 		}
 
