@@ -20,6 +20,7 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.utils.locale.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class Slabbo extends JavaPlugin {
 	public static ShopUtil shopUtil = new ShopUtil();
 	public static ChestLinkUtil chestLinkUtil = new ChestLinkUtil();
 
-	BukkitLocales locales;
+	public static LocaleManager localeManager;
 
 	@Override
 	public void onEnable () {
@@ -58,16 +59,19 @@ public class Slabbo extends JavaPlugin {
 
 		new File(getDataPath()).mkdirs();
 
-		//saveResource("lang.yml", false);
-
 		this.saveDefaultConfig();
+
+		saveResource("lang.yml", false);
+
+		instance = this;
+
+		localeManager = new LocaleManager();
 
 		setupChat();
 		setupPermissions();
 		setupCommands();
 		setupListeners();
 
-		instance = this;
 
 		getLogger().info("Slabbo enabled.");
 
@@ -91,14 +95,6 @@ public class Slabbo extends JavaPlugin {
 
 	private void setupCommands () {
 		PaperCommandManager manager = new PaperCommandManager(this);
-
-//		try {
-//			manager.getLocales().loadYamlLanguageFile("lang.yml", Locale.ENGLISH);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		} catch (InvalidConfigurationException e) {
-//			e.printStackTrace();
-//		}
 
 		manager.enableUnstableAPI("help");
 

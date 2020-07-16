@@ -3,6 +3,7 @@ package xyz.mackan.Slabbo.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -47,7 +48,7 @@ public class SlabboCommand extends BaseCommand {
 	@Description("Reloads Slabbo")
 	@CommandPermission("slabbo.reload")
 	public void onReload (Player player) {
-		player.sendMessage("Reloading Slabbo");
+		player.sendMessage(Slabbo.localeManager.getString("general.general.reloading")+" Slabbo");
 		for (String shopKey : Slabbo.shopUtil.shops.keySet()) {
 			Shop shop = Slabbo.shopUtil.shops.get(shopKey);
 
@@ -82,8 +83,7 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 
-
-		player.sendMessage("Slabbo reloaded!");
+		player.sendMessage("Slabbo "+Slabbo.localeManager.getString("general.general.reloaded")+"!");
 	}
 
 	@Subcommand("info")
@@ -105,16 +105,16 @@ public class SlabboCommand extends BaseCommand {
 	public void onToggleAdmin (Player player) {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
-			player.sendMessage(ChatColor.RED+"That's not a shop.");
+			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
 			return;
 		}
 
 		lookingAtShop.admin = !lookingAtShop.admin;
 
 		if (lookingAtShop.admin) {
-			player.sendMessage(ChatColor.GREEN+"The shop is now an admin shop!");
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-create"));
 		} else {
-			player.sendMessage(ChatColor.GREEN+"The shop is no longer an admin shop!");
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general-admin-destroy"));
 		}
 
 		Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
@@ -128,7 +128,7 @@ public class SlabboCommand extends BaseCommand {
 	public void onDestroyShop(Player player) {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
-			player.sendMessage(ChatColor.RED+"That's not a shop.");
+			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
 			return;
 		}
 
@@ -137,7 +137,7 @@ public class SlabboCommand extends BaseCommand {
 
 		if (!isShopOwner) {
 			if (!canDestroyOthers) {
-				player.sendMessage(ChatColor.RED+"That's not your shop.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
 				return;
 			}
 		}
@@ -154,7 +154,7 @@ public class SlabboCommand extends BaseCommand {
 		File importFile = new File(Slabbo.getDataPath()+"/"+file);
 
 		if (!importFile.exists()) {
-			player.sendMessage(ChatColor.RED+"That file can't be found.");
+			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.import.file-not-found"));
 			return;
 		}
 
@@ -162,16 +162,16 @@ public class SlabboCommand extends BaseCommand {
 
 		switch (type.toLowerCase()) {
 			case "ushops":
-				player.sendMessage("Importing shops!");
+				player.sendMessage(Slabbo.localeManager.getString("success-message.import.importing"));
 				result = UShopImporter.importUShops(importFile);
 				break;
 			default:
-				player.sendMessage(ChatColor.RED+"That plugin can't be imported.");
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.import.plugin-not-supported"));
 				return;
 		}
 
 		if (result == null) {
-			player.sendMessage(ChatColor.RED+"An error occured when importing. See the console for more details.");
+			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.import.general-error"));
 			return;
 		}
 
@@ -191,10 +191,12 @@ public class SlabboCommand extends BaseCommand {
 
 		DataUtil.saveShops();
 
-		player.sendMessage(
-				ChatColor.GREEN +
-				String.format("Imported %d shops. Skipped %d as shops already exists at their locations.", result.shops.size(), result.skippedShops.size())
-		);
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("count", result.shops.size());
+		replacementMap.put("skipped", result.skippedShops.size());
+
+		player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.import.success", replacementMap));
 	}
 
 	@Subcommand("modify")
@@ -211,7 +213,7 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Sets the buying price for the shop")
 		@CommandPermission("slabbo.modify.buyprice")
 		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
-			if (newBuyingPrice < 0) {
+			if (newBuyingPrice < 0) { // TODO: Make this support -1 as 0 is now free shops
 				player.sendMessage(ChatColor.RED+"Please provide a positive buy price.");
 				return;
 			}
@@ -245,7 +247,7 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Sets the selling price for the shop")
 		@CommandPermission("slabbo.modify.sellprice")
 		public void onModifySellPrice(Player player, int newSellingPrice) {
-			if (newSellingPrice < 0) {
+			if (newSellingPrice < 0) { // TODO: Make this support -1 as 0 is now free shops
 				player.sendMessage(ChatColor.RED+"Please provide a positive sell price.");
 				return;
 			}

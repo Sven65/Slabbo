@@ -1,5 +1,122 @@
 # Translation file and properties for Slabbo
 
-cmd-help: # Command descriptions
-  slabbo: Base command for Slabbo
-  reload: Reloads Slabbo
+error-message:
+  chestlink:
+    no-destroy-linked: You can't destroy that chest because it's linked to a shop.
+    already-linked: That chest's already linked to a shop.
+  general:
+    limit-hit: You've created all the shops you can! ({limit})
+    not-a-shop: That's not a shop.
+    not-shop-owner: That's not your shop.
+  import:
+    file-not-found: That file can't be found
+    plugin-not-supported: That plugin can't be imported
+    general-error: An error occured when importing. See the console for more details.
+  modify:
+    not-positive-buy-price: Please provide a positive buy price
+    not-positive-sell-price: Please provide a positive sell price
+    not-positive-quantity-price: Please provide a positive quantity
+  shop-errors:
+    out-of-stock: This shop is out of stock!
+    not-enough-funds: You don't have enough funds!
+    not-enough-items: You don't have enough items!
+    not-enough-shop-funds: The shop doesn't have enough funds!
+
+success-message:
+  chestlink:
+    link-success: Chest linked to shop at {location}
+    linking-cancelled: Linking has been cancelled.
+    linking-removed: Shop linking has been removed.
+    previous-linking-cancelled: Your previous linking has been cancelled.
+  general:
+    admin-create: The shop is now an admin shop!
+    admin-destroy: The shop is no longer an admin shop
+  import:
+    importing: Importing shops!
+    success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.
+  modify:
+    buyprice-set: Buy price set to {price}
+    sellprice-set: Sell price set to {price}
+    quantity-set: Quantity set to {count}
+  client:
+    buy-success: Bought {count} {item} for a total of {cost}
+    sell-success: Sold {count} {item} for a total of {cost}
+  owner:
+    buy-success: "{user} bought {count} {item} for a total of {cost} at your shop."
+    sell-success: "{user} sold {count} {item} for a total of {cost} at your shop."
+
+general:
+  chestlink:
+    chest-name: Slabbo Chest [{location}]
+    crouch-to-link: Please crouch and punch the chest you want to link.
+    link-for-refill: Link a chest for refilling!
+    cancel-chest-link: Cancel chest link
+  general:
+    reloading: Reloading
+    reloaded: Reloaded
+    restock-message: Your shop at {location} is out of {item}
+    stacks: Stacks
+    cancel: Cancel
+    confirm: Confirm
+
+
+    buy-price: Buy price
+    sell-price: Sell price
+
+    click-to-set: Click to set
+
+    quantity: Quantity
+
+    current-funds: Current funds
+    new-shop: New Shop
+
+    slabbo-shop: Slabbo Shop
+    destroy-shop: Destroy Shop
+
+    destroy-shop-item-warning: This will destroy your items.
+    type-new-rate: Please type the new rate
+    type-new-buy-price: Please type the new buying price
+    type-new-sell-price: Please type the new selling price
+    type-new-quantity: Please type the new quantity
+
+    not-for-sale-explain: (-1 means not for sale)
+    not-buying-explain: (-1 means not buying)
+    quantity-explain: (Amount of items per buy / sell)
+
+    amount-per-transaction: "Amount per transaction: {count}"
+    amount-per-click: "Amount per click: {count}"
+    in-stock: "In stock: {count}"
+
+    buy-for: "Buy for: {price}"
+    sell-for: "Sell for: {price}"
+    funds-message: "Funds: {funds}"
+
+    shift-bulk:
+      deposit: Shift for bulk deposit
+      withdraw: Shift for bulk withdrawal
+
+# [Slabbo] Owner
+gui:
+  owner-title: Owner # TODO: Remove [Slabbo], just append it in code
+  editing-shop: Editing Shop
+  new-shop: New Shop
+  destroy-shop: Destroy
+  client: Client
+  items:
+    admin:
+      deposit-item: Deposit {item}
+      withdraw-item: Withdraw {item}
+      changerate-item: Change rate
+      modify-shop: Modify Shop
+      view-as-customer: View as customer
+      link-chest: Link chest
+    user:
+      buy-item: Buy '{item}' * {quantity}
+      sell-item: Sell '{item}' * {quantity}
+    info:
+      owned-by: Owned by {owner}
+      selling-item: "Selling: {item}"
+      buy-each: Buy {quantity} for {buyPrice} ({buyPerItem} each)
+      sell-each: Sell {quantity} for {sellPrice} ({sellPerItem} each)
+    new-shop:
+      click-item-below: Click item below

@@ -1,0 +1,89 @@
+package xyz.mackan.Slabbo.utils.locale;
+
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.yaml.snakeyaml.Yaml;
+import xyz.mackan.Slabbo.Slabbo;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+public class LocaleManager {
+	public HashMap<String, String> translationMap = new HashMap<String, String>();
+
+	public LocaleManager () {
+		File languageFile = new File(Slabbo.getDataPath(), "lang.yml");
+		InputStream defaultFile = Slabbo.getInstance().getResource("lang.yml");
+		InputStreamReader reader = new InputStreamReader(defaultFile);
+
+		YamlConfiguration defaultConf = YamlConfiguration.loadConfiguration(reader);
+		YamlConfiguration languageConf = YamlConfiguration.loadConfiguration(languageFile);
+
+		Set<String> keys = defaultConf.getKeys(true);
+
+		for (String key : keys) {
+			Object valueObj = defaultConf.get(key);
+
+			if (valueObj instanceof MemorySection) continue;
+
+			String value = (String) valueObj;
+			String userValue = languageConf.getString(key);
+
+			if(userValue == null || userValue.equals("")) {
+				userValue = value;
+			}
+
+			translationMap.put(key, userValue);
+		}
+	}
+
+	/**
+	 * Gets a string from the translation map by key
+	 * @param key The key to get
+	 * @return String
+	 */
+	public String getString (String key) {
+		return translationMap.get(key);
+	}
+
+	/**
+	 * Replaces a string from translation key and hashmap
+	 * @param tlKey The key to use for getting the replacement string
+	 * @param replacementMap The map to use for replacements
+	 * @return String
+	 */
+	public String replaceKey (String tlKey, HashMap<String, Object> replacementMap) {
+		String replaceString = getString(tlKey);
+
+		for (Map.Entry<String, Object> replacement : replacementMap.entrySet()) {
+			String key = replacement.getKey();
+			String value = replacement.getValue().toString();
+
+			replaceString = replaceString.replaceAll("\\{"+key+"\\}", value);
+		}
+
+		return replaceString;
+	}
+
+	/**
+	 * Replaces a string from hashmap
+	 * @param replaceString The string to replace
+	 * @param replacementMap The map to use for replacements
+	 * @return String
+	 */
+	public static String replaceString (String replaceString, HashMap<String, Object> replacementMap) {
+		for (Map.Entry<String, Object> replacement : replacementMap.entrySet()) {
+			String key = replacement.getKey();
+			String value = replacement.getValue().toString();
+
+			replaceString = replaceString.replaceAll("\\{"+key+"\\}", value);
+		}
+
+		return replaceString;
+	}
+}
