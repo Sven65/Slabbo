@@ -8,10 +8,12 @@ import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
@@ -20,6 +22,7 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.utils.locale.LocaleManager;
 
 import java.io.File;
@@ -48,6 +51,8 @@ public class Slabbo extends JavaPlugin {
 
 	public static LocaleManager localeManager;
 
+	public static boolean hasUpdate = false;
+
 	@Override
 	public void onEnable () {
 		dataPath = this.getDataFolder().getPath();
@@ -72,6 +77,7 @@ public class Slabbo extends JavaPlugin {
 		setupCommands();
 		setupListeners();
 
+		checkUpdates();
 
 		getLogger().info("Slabbo enabled.");
 
@@ -80,6 +86,18 @@ public class Slabbo extends JavaPlugin {
 
 	@Override
 	public void onDisable () { log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion())); }
+
+	private void checkUpdates () {
+		boolean doCheck = getConfig().getBoolean("checkupdates", true);
+
+		if (!doCheck) return;
+
+		UpdateChecker.getVersion(version -> {
+			if (!this.getDescription().getVersion().equalsIgnoreCase(version)) {
+				hasUpdate = true;
+			}
+		});
+	}
 
 	private void setupListeners () {
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
@@ -90,6 +108,10 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BlockEventListeners(), this);
 		getServer().getPluginManager().registerEvents(new InventoryMoveListener(), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
+
+		if (getServer().getPluginManager().getPlugin("ClearLag") != null) {
+			getServer().getPluginManager().registerEvents(new ClearlagItemRemoveListener(), this);
+		}
 	}
 
 

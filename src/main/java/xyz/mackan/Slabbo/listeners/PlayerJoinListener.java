@@ -1,8 +1,10 @@
 package xyz.mackan.Slabbo.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.mackan.Slabbo.Slabbo;
@@ -16,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class PlayerJoinListener implements Listener {
-	@EventHandler
+	@EventHandler(priority = EventPriority.HIGH)
 	public void onJoin (PlayerJoinEvent e) {
 		Player player = e.getPlayer();
 		UUID userId = player.getUniqueId();
@@ -36,6 +38,12 @@ public class PlayerJoinListener implements Listener {
 
 
 				player.sendMessage(Slabbo.localeManager.replaceKey("general.general.restock-message", replacementMap));
+			}
+		}
+
+		if (player.hasPermission("slabbo.notifyupdate")) {
+			if (Slabbo.hasUpdate) {
+				player.sendMessage(ChatColor.LIGHT_PURPLE + "There's a new Slabbo update available!");
 			}
 		}
 	}

@@ -27,7 +27,7 @@ Destroying: Right click existing shop with stick
 |                    slabbo.info | Lets players use `/slabbo info`                                                              |
 |                  slabbo.reload | Lets players use `/slabbo reload`                                                            |
 |                    slabbo.link | Lets players link chests and shops                                                           |
-
+|            slabbo.notifyupdate | Shows a player Slabbo update notifications on join                                           |
 
 ## Commands
 

@@ -5,6 +5,7 @@ description: ${project.description}
 author: Mackan
 api-version: 1.16
 depend: [Vault]
+softdepend: [ClearLag]
 permissions:
   slabbo.use:
     default: op
@@ -64,3 +65,7 @@ permissions:
   slabbo.link:
     default: op
     description: Lets you link a shop to a chest
+
+  slabbo.notifyupdate:
+    default: op
+    description: Shows you the update notification when you join

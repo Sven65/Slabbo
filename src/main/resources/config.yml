@@ -9,3 +9,5 @@ chestlinks: # Linking chests
   player: # If the player is able to deposit to the chest
     enabled: true
     savetime: 5
+
+checkupdates: true

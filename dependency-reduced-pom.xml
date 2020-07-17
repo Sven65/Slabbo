@@ -4,7 +4,7 @@
   <groupId>xyz.mackan</groupId>
   <artifactId>Slabbo</artifactId>
   <name>Slabbo</name>
-  <version>1.0.7</version>
+  <version>0.0.1</version>
   <description>Slab shops for spigot</description>
   <build>
     <resources>
@@ -115,6 +115,12 @@
           <groupId>org.bukkit</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>me.minebuilders</groupId>
+      <artifactId>clearlag-core</artifactId>
+      <version>3.1.6</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <properties>
