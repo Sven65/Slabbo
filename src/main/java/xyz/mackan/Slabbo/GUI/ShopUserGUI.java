@@ -160,7 +160,9 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-		if (itemCount <= 0) {
+		if (itemCount < shop.quantity || itemCount <= 0) {
+			// TODO: Make this configurable
+			// I.E, If selling quantities that aren't the full of what the shop wants
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-items"));
 			return;
 		}
