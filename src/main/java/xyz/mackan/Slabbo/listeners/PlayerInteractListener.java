@@ -3,6 +3,7 @@ package xyz.mackan.Slabbo.listeners;
 import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
@@ -23,6 +24,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.PermissionUtil;
@@ -99,10 +101,11 @@ public class PlayerInteractListener implements Listener {
 
 		boolean isLinked = Slabbo.chestLinkUtil.isChestLinked(clickedBlock);
 
-		// TODO: Make this check all possible double chests starting from linkingChestLocation
 		if (isLinked) {
 			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.chestlink.already-linked"));
 			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+
+			p.playSound(clickedBlock.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
 			return;
 		}
 
@@ -123,6 +126,8 @@ public class PlayerInteractListener implements Listener {
 		p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.chestlink.link-success", replacementMap));
 
 		ChestLinkUtil.setChestName(clickedBlock, "Slabbo "+Slabbo.localeManager.replaceKey("general.chestlink.chest-name", replacementMap));
+
+		p.playSound(clickedBlock.getLocation(), SlabboSound.SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
 
 		DataUtil.saveShops();
 
@@ -167,6 +172,8 @@ public class PlayerInteractListener implements Listener {
 				replacementMap.put("limit", limit);
 
 				player.sendMessage(ChatColor.RED + Slabbo.localeManager.replaceKey("error-message.general.limit-hit", replacementMap));
+
+				player.playSound(clickedBlock.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
 				break;
 			}
 			case CREATE: {

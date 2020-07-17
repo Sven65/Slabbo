@@ -6,6 +6,7 @@ import co.aikar.commands.annotation.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Item;
@@ -15,6 +16,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.importers.ImportResult;
 import xyz.mackan.Slabbo.importers.UShopImporter;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -97,6 +99,7 @@ public class SlabboCommand extends BaseCommand {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
 			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+			player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
 			return;
 		}
 
@@ -111,6 +114,8 @@ public class SlabboCommand extends BaseCommand {
 		Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 		DataUtil.saveShops();
+
+		player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
 	}
 
 	@Subcommand("destroy")
@@ -120,6 +125,8 @@ public class SlabboCommand extends BaseCommand {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
 			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+			player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 			return;
 		}
 
@@ -129,6 +136,8 @@ public class SlabboCommand extends BaseCommand {
 		if (!isShopOwner) {
 			if (!canDestroyOthers) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 		}
@@ -167,11 +176,7 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 		for (Shop shop : result.shops) {
-			Location dropLocation = shop.location.clone();
-
-			dropLocation.add(0.5, 0.5, 0.5);
-
-			ItemUtil.dropShopItem(dropLocation, shop.item);
+			ItemUtil.dropShopItem(shop.location, shop.item);
 
 			Slabbo.shopUtil.put(shop.getLocationString(), shop);
 		}
@@ -202,12 +207,16 @@ public class SlabboCommand extends BaseCommand {
 		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
 			if (newBuyingPrice < -1) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-buy-price"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 
@@ -217,6 +226,8 @@ public class SlabboCommand extends BaseCommand {
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
+					player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 					return;
 				}
 			}
@@ -232,6 +243,9 @@ public class SlabboCommand extends BaseCommand {
 			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
+
+			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+
 		}
 
 		@Subcommand("sellprice")
@@ -240,12 +254,16 @@ public class SlabboCommand extends BaseCommand {
 		public void onModifySellPrice(Player player, int newSellingPrice) {
 			if (newSellingPrice < -1) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-sell-price"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 
@@ -255,6 +273,8 @@ public class SlabboCommand extends BaseCommand {
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
+					player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 					return;
 				}
 			}
@@ -270,6 +290,9 @@ public class SlabboCommand extends BaseCommand {
 			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
+
+			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+
 		}
 
 		@Subcommand("quantity")
@@ -278,12 +301,16 @@ public class SlabboCommand extends BaseCommand {
 		public void onModifyQuantity(Player player, int newQuantity) {
 			if (newQuantity < 0) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-quantity"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 				return;
 			}
 
@@ -293,6 +320,8 @@ public class SlabboCommand extends BaseCommand {
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
+					player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
 					return;
 				}
 			}
@@ -308,6 +337,9 @@ public class SlabboCommand extends BaseCommand {
 			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
+
+			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+
 		}
 	}
 }

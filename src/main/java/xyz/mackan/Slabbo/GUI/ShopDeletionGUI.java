@@ -2,6 +2,7 @@ package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -46,6 +48,8 @@ public class ShopDeletionGUI  implements Listener {
 
 		Slabbo.shopUtil.removeShop(shop);
 
+		((Player) humanEntity).playSound(shop.location, SlabboSound.DESTROY.sound, SoundCategory.BLOCKS, 1, 1);
+
 		DataUtil.saveShops();
 
 		humanEntity.closeInventory();
@@ -53,6 +57,8 @@ public class ShopDeletionGUI  implements Listener {
 
 	public void handleCancel (HumanEntity humanEntity) {
 		humanEntity.closeInventory();
+		((Player) humanEntity).playSound(shop.location, SlabboSound.CANCEL.sound, SoundCategory.BLOCKS, 1, 1);
+
 	}
 
 	public void initializeItems () {

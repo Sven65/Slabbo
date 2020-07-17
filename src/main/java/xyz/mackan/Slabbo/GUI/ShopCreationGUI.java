@@ -1,9 +1,6 @@
 package xyz.mackan.Slabbo.GUI;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -20,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -162,6 +160,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-buy-price"));
 					e.getWhoClicked().closeInventory();
 
+					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
 				} else if (slot == 4) {
 					//Sell Price
 					waitingType = ChatWaitingType.SELL_PRICE;
@@ -169,12 +168,15 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-sell-price"));
 					e.getWhoClicked().closeInventory();
 
+					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
 				} else if (slot == 5) {
 					// Amount
 					waitingType = ChatWaitingType.QUANTITY;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-quantity"));
 					e.getWhoClicked().closeInventory();
+
+					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
 				} else if (slot == 7) {
 					// Confirm
 					Shop shop = new Shop(buyPrice, sellPrice, quantity, slabLocation, shopItem);
@@ -204,11 +206,14 @@ public class ShopCreationGUI implements Listener {
 						ItemUtil.dropShopItem(slabLocation, shopItem);
 					}
 
+					p.playSound(this.slabLocation, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
 
 					resetGUI();
 
 				} else if (slot == 8) {
 					// Cancel
+
+					p.playSound(this.slabLocation, SlabboSound.CANCEL.sound, SoundCategory.BLOCKS, 1, 1);
 
 					resetGUI();
 					e.getWhoClicked().closeInventory();
@@ -219,6 +224,8 @@ public class ShopCreationGUI implements Listener {
 		}
 
 		if (slot <= 8) return; // User clicked shop GUI
+
+		p.playSound(this.slabLocation, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
 
 		shopItem = clickedItem.clone();
 
@@ -268,6 +275,7 @@ public class ShopCreationGUI implements Listener {
 
 		new BukkitRunnable() {
 			public void run () {
+				e.getPlayer().playSound(slabLocation, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
 				openInventory(e.getPlayer());
 				initializeStage2();
 			}
