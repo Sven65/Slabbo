@@ -11,12 +11,14 @@ import org.bukkit.persistence.PersistentDataType;
 import xyz.mackan.Slabbo.types.AttributeKey;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
 
 public class ItemUtil {
 
-	public static void dropItem (Location location, ItemStack item, UUID uuid) {
+	public static void dropShopItem (Location location, ItemStack item) {
+		Location dropLocation = location.clone();
+
+		dropLocation.add(0.5, 0.5, 0.5);
+
 		ItemStack clonedItem = item.clone();
 		ItemMeta meta = clonedItem.getItemMeta();
 
@@ -25,21 +27,23 @@ public class ItemUtil {
 		meta.getPersistentDataContainer().set(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER, 1);
 		meta.getPersistentDataContainer().set(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER, 1);
 		meta.getPersistentDataContainer().set(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER, 1);
-		meta.getPersistentDataContainer().set(AttributeKey.UNIQUE_KEY.getKey(), PersistentDataType.STRING, uuid.toString());
+		meta.getPersistentDataContainer().set(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING, ShopUtil.locationToString(location));
 
 		clonedItem.setItemMeta(meta);
 
-		Item itemEnt = location.getWorld().dropItem(location, clonedItem);
+		Item itemEnt = location.getWorld().dropItem(dropLocation, clonedItem);
 
 		itemEnt.setGravity(false);
 
 		itemEnt.setVelocity(itemEnt.getVelocity().zero());
 
-		itemEnt.teleport(location);
+		itemEnt.teleport(dropLocation);
 	}
 
-	public static Item findItemEntity (Location location) {
-		Collection<Entity> nearbyEntites = location.getWorld().getNearbyEntities(location, 0, 2, 0);
+	public static Item findShopItem (Location location) {
+		Collection<Entity> nearbyEntites = location.getWorld().getNearbyEntities(location, 0.5, 2, 0.5);
+
+		String locationString = ShopUtil.locationToString(location);
 
 		Item returnItem = null;
 
@@ -58,9 +62,11 @@ public class ItemUtil {
 
 			PersistentDataContainer container = meta.getPersistentDataContainer();
 
-			boolean hasKey = container.has(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
+			String itemLocationString = container.get(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING);
 
-			if (hasKey) {
+			if (itemLocationString == null || itemLocationString.equals("")) continue;
+
+			if (itemLocationString.equals(locationString)) {
 				returnItem = item;
 				break;
 			}

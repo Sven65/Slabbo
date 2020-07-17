@@ -2,7 +2,6 @@ package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -17,10 +16,8 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
-import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ShopDeletionGUI  implements Listener {
@@ -39,7 +36,7 @@ public class ShopDeletionGUI  implements Listener {
 
 	public void handleDestroy (HumanEntity humanEntity) {
 		UUID userId = humanEntity.getUniqueId();
-		Item itemEnt = ItemUtil.findItemEntity(shop.location);
+		Item itemEnt = ItemUtil.findShopItem(shop.location);
 
 		String shopLocationString = ShopUtil.locationToString(shop.location);
 

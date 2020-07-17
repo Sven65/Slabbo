@@ -3,7 +3,6 @@ package xyz.mackan.Slabbo.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -52,7 +51,7 @@ public class SlabboCommand extends BaseCommand {
 		for (String shopKey : Slabbo.shopUtil.shops.keySet()) {
 			Shop shop = Slabbo.shopUtil.shops.get(shopKey);
 
-			Item droppedItem = ItemUtil.findItemEntity(shop.location);
+			Item droppedItem = ItemUtil.findShopItem(shop.location);
 
 			if (droppedItem != null) {
 				droppedItem.remove();
@@ -69,15 +68,7 @@ public class SlabboCommand extends BaseCommand {
 			String key = shopEntry.getKey();
 			Shop shop = shopEntry.getValue();
 
-			UUID itemUUID = UUID.randomUUID();
-
-			shop.droppedItemId = itemUUID;
-
-			Location dropLocation = shop.location.clone();
-
-			dropLocation.add(0.5, 0.5, 0.5);
-
-			ItemUtil.dropItem(dropLocation, shop.item, itemUUID);
+			ItemUtil.dropShopItem(shop.location, shop.item);
 
 			Slabbo.shopUtil.put(key, shop);
 		}
@@ -176,15 +167,11 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 		for (Shop shop : result.shops) {
-			UUID itemUUID = UUID.randomUUID();
-
 			Location dropLocation = shop.location.clone();
 
 			dropLocation.add(0.5, 0.5, 0.5);
 
-			ItemUtil.dropItem(dropLocation, shop.item, itemUUID);
-
-			shop.droppedItemId = itemUUID;
+			ItemUtil.dropShopItem(dropLocation, shop.item);
 
 			Slabbo.shopUtil.put(shop.getLocationString(), shop);
 		}

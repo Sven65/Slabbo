@@ -29,11 +29,11 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public boolean admin;
 
-	public UUID droppedItemId;
+	//public UUID droppedItemId;
 
 	public String linkedChestLocation;
 
-	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, UUID droppedItemId, String linkedChestLocation) {
+	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
 		this.buyPrice = buyPrice;
 		this.sellPrice = sellPrice;
 		this.quantity = quantity;
@@ -42,7 +42,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		this.stock = stock;
 		this.ownerId = ownerId;
 		this.admin = admin;
-		this.droppedItemId = droppedItemId;
+//		this.droppedItemId = droppedItemId;
 		this.linkedChestLocation = linkedChestLocation;
 	}
 
@@ -74,7 +74,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("stock", stock);
 		result.put("admin", admin);
 		result.put("ownerId", ownerId.toString());
-		result.put("droppedItemId", droppedItemId.toString());
+//		result.put("droppedItemId", droppedItemId.toString());
 
 		result.put("linkedChestLocation", linkedChestLocation);
 
@@ -95,13 +95,13 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		String loadedDroppedItemId = (String) args.get("droppedItemId");
 
 		UUID ownerId = UUID.fromString(loadedOwnerId);
-		UUID droppedItemId = UUID.fromString(loadedDroppedItemId);
+//		UUID droppedItemId = UUID.fromString(loadedDroppedItemId);
 
 		boolean admin = (boolean) args.get("admin");
 
 		String linkedChestLocation = (String) args.get("linkedChestLocation");
 
-		return new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, droppedItemId, linkedChestLocation);
+		return new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);
 	}
 
 	public String getLocationString () {

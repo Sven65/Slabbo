@@ -6,7 +6,7 @@ import xyz.mackan.Slabbo.Slabbo;
 public enum AttributeKey {
 	NO_PICKUP ("noPickup"),
 	NO_DESPAWN ("noDespawn"),
-	UNIQUE_KEY ("unique"),
+	SHOP_LOCATION ("shopLocation"),
 	NO_MERGE ("noMerge");
 
 	private final NamespacedKey key;

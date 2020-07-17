@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -14,7 +13,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -179,13 +177,9 @@ public class ShopCreationGUI implements Listener {
 					e.getWhoClicked().closeInventory();
 				} else if (slot == 7) {
 					// Confirm
-
-					UUID itemUUID = UUID.randomUUID();
-
 					Shop shop = new Shop(buyPrice, sellPrice, quantity, slabLocation, shopItem);
 
 					shop.ownerId = e.getWhoClicked().getUniqueId();
-					shop.droppedItemId = itemUUID;
 
 					shop.admin = isAdmin;
 					shop.stock = stock;
@@ -198,24 +192,16 @@ public class ShopCreationGUI implements Listener {
 					e.getWhoClicked().closeInventory();
 
 					if (isModifying) {
-						Item itemEnt = ItemUtil.findItemEntity(slabLocation);
+						Item itemEnt = ItemUtil.findShopItem(slabLocation);
 
 						if (itemEnt != null) {
 							itemEnt.remove();
 						}
 
-						Location dropLocation = slabLocation.clone();
 
-						dropLocation.add(0.5, 0.5, 0.5);
-
-						ItemUtil.dropItem(dropLocation, shopItem, itemUUID);
-
+						ItemUtil.dropShopItem(slabLocation, shopItem);
 					} else {
-						Location dropLocation = slabLocation.clone();
-
-						dropLocation.add(0.5, 0.5, 0.5);
-
-						ItemUtil.dropItem(dropLocation, shopItem, itemUUID);
+						ItemUtil.dropShopItem(slabLocation, shopItem);
 					}
 
 
