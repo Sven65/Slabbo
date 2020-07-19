@@ -1,6 +1,9 @@
 package xyz.mackan.Slabbo.utils;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.craftbukkit.v1_16_R1.entity.CraftItem;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -14,10 +17,32 @@ import java.util.Collection;
 
 public class ItemUtil {
 
+	public static double getSlabYOffset (Location location) {
+		Block block = location.getBlock();
+
+		if (block == null) return 0;
+
+		BlockData blockData = block.getBlockData();
+
+		boolean isSlab = (blockData instanceof Slab);
+
+		if (!isSlab) return 0;
+
+		Slab slab = (Slab) blockData;
+
+		Slab.Type slabType = slab.getType();
+
+		if (slabType == Slab.Type.BOTTOM) {
+			return 0.5;
+		} else {
+			return 1.0;
+		}
+	}
+
 	public static void dropShopItem (Location location, ItemStack item) {
 		Location dropLocation = location.clone();
 
-		dropLocation.add(0.5, 0.5, 0.5);
+		dropLocation.add(0.5, getSlabYOffset(location), 0.5);
 
 		ItemStack clonedItem = item.clone();
 		ItemMeta meta = clonedItem.getItemMeta();
