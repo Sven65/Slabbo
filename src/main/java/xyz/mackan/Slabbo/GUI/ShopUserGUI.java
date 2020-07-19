@@ -98,7 +98,10 @@ public class ShopUserGUI implements Listener {
 
 		int totalBought = itemCount - leftoverCount;
 
-		if (totalBought <= 0) {
+		if (totalBought < shop.quantity) {
+			shopItemClone.setAmount(totalBought);
+			pInv.removeItem(shopItemClone);
+
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-inventory-space"));
 			((Player) humanEntity).playSound(shop.location, SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
 			return;
