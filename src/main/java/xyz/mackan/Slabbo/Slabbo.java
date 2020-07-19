@@ -42,7 +42,7 @@ public class Slabbo extends JavaPlugin {
 
 	private static Economy econ = null;
 	private static Permission perms = null;
-	private static Chat chat = null;
+//	private static Chat chat = null;
 
 	private static Slabbo instance;
 
@@ -72,7 +72,7 @@ public class Slabbo extends JavaPlugin {
 
 		localeManager = new LocaleManager();
 
-		setupChat();
+//		setupChat();
 		setupPermissions();
 		setupCommands();
 		setupListeners();
@@ -145,11 +145,11 @@ public class Slabbo extends JavaPlugin {
 		return perms != null;
 	}
 
-	private boolean setupChat() {
-		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-		chat = rsp.getProvider();
-		return chat != null;
-	}
+//	private boolean setupChat() {
+//		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+//		chat = rsp.getProvider();
+//		return chat != null;
+//	}
 
 	public static String getDataPath () {
 		return dataPath;
@@ -163,7 +163,7 @@ public class Slabbo extends JavaPlugin {
 		return perms;
 	}
 
-	public static Chat getChat () { return chat; }
+//	public static Chat getChat () { return chat; }
 
 	public static Slabbo getInstance() { return instance; }
 }

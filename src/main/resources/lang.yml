@@ -21,6 +21,7 @@ error-message:
     not-enough-funds: You don't have enough funds!
     not-enough-items: You don't have enough items!
     not-enough-shop-funds: The shop doesn't have enough funds!
+    not-enough-inventory-space: You don't have enough inventory space!
 
 success-message:
   chestlink:
