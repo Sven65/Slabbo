@@ -70,7 +70,7 @@ public class SlabboCommand extends BaseCommand {
 			String key = shopEntry.getKey();
 			Shop shop = shopEntry.getValue();
 
-			ItemUtil.dropShopItem(shop.location, shop.item);
+			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
 
 			Slabbo.shopUtil.put(key, shop);
 		}
@@ -176,7 +176,7 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 		for (Shop shop : result.shops) {
-			ItemUtil.dropShopItem(shop.location, shop.item);
+			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
 
 			Slabbo.shopUtil.put(shop.getLocationString(), shop);
 		}

@@ -111,7 +111,16 @@ public class InventoryClickListener implements Listener {
 
 	@EventHandler
 	public void onInventoryDrag (InventoryDragEvent e) {
-		Block chestBlock = e.getInventory().getLocation().getBlock(); // TODO check this
+		Inventory inv = e.getInventory();
+
+		if (inv == null) return;
+
+		Location invLocation = inv.getLocation();
+
+		if (invLocation == null) return;
+
+
+		Block chestBlock = invLocation.getBlock(); // TODO check this
 
 		if (chestBlock == null) return;
 

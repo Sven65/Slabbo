@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.AttributeKey;
 
 import java.util.Collection;
@@ -39,7 +40,7 @@ public class ItemUtil {
 		}
 	}
 
-	public static void dropShopItem (Location location, ItemStack item) {
+	public static void dropShopItem (Location location, ItemStack item, int quantity) {
 		Location dropLocation = location.clone();
 
 		dropLocation.add(0.5, getSlabYOffset(location), 0.5);
@@ -47,7 +48,16 @@ public class ItemUtil {
 		ItemStack clonedItem = item.clone();
 		ItemMeta meta = clonedItem.getItemMeta();
 
-		clonedItem.setAmount(64);
+		String displayType = Slabbo.getInstance().getConfig().getString("itemdisplay", "quantity");
+
+		if (displayType.equalsIgnoreCase("quantity")) {
+			if (quantity < 1) quantity = 1;
+			if (quantity > 64) quantity = 64;
+
+			clonedItem.setAmount(quantity);
+		} else {
+			clonedItem.setAmount(64);
+		}
 
 		meta.getPersistentDataContainer().set(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER, 1);
 		meta.getPersistentDataContainer().set(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER, 1);

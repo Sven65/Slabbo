@@ -10,4 +10,6 @@ chestlinks: # Linking chests
     enabled: true
     savetime: 5
 
+itemdisplay: quantity # Quantity (The amount the shop sells) / Full (A full stack (64 items))
+
 checkupdates: true

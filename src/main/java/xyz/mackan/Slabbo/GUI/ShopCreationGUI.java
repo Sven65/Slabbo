@@ -201,9 +201,9 @@ public class ShopCreationGUI implements Listener {
 						}
 
 
-						ItemUtil.dropShopItem(slabLocation, shopItem);
+						ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 					} else {
-						ItemUtil.dropShopItem(slabLocation, shopItem);
+						ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 					}
 
 					p.playSound(this.slabLocation, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
