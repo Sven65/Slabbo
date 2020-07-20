@@ -11,7 +11,7 @@
 
     <groupId>xyz.mackan</groupId>
     <artifactId>Slabbo</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <description>Slab shops for spigot</description>
     <name>Slabbo</name>
 
@@ -75,6 +75,10 @@
 
     <repositories>
         <repository>
+            <id>sk89q-repo</id>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -113,6 +117,13 @@
             <groupId>me.minebuilders</groupId>
             <artifactId>clearlag-core</artifactId>
             <version>3.1.6</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.sk89q.worldguard</groupId>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.3</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

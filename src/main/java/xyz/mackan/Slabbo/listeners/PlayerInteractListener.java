@@ -9,6 +9,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -21,6 +22,7 @@ import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
@@ -162,10 +164,19 @@ public class PlayerInteractListener implements Listener {
 
 		ShopAction pAction = getAction(itemInHand, clickedBlock, player);
 
+		boolean canCreateShop = true;
+		boolean canUseShop = true;
 
+		if (Slabbo.enabledPlugins.worldguard) {
+			canCreateShop = WorldguardSupport.canCreateShop(clickedBlock.getLocation(), player);
+			canUseShop = WorldguardSupport.canUseShop(clickedBlock.getLocation(), player);
+		}
 
 		switch (pAction.type) {
 			case CREATION_LIMIT_HIT: {
+
+				if (!canCreateShop) break;
+
 				int limit = (Integer) pAction.extra;
 
 				HashMap<String, Object> replacementMap = new HashMap<String, Object>();
@@ -177,11 +188,15 @@ public class PlayerInteractListener implements Listener {
 				break;
 			}
 			case CREATE: {
+				if (!canCreateShop) break;
+
 				ShopCreationGUI gui = new ShopCreationGUI(clickedBlock.getLocation());
 				gui.openInventory(e.getPlayer());
 				break;
 			}
 			case OPEN_DELETION_GUI: {
+				if (!canCreateShop) break;
+
 				Shop shop = (Shop) pAction.extra;
 
 				ShopDeletionGUI gui = new ShopDeletionGUI(shop);
@@ -189,6 +204,8 @@ public class PlayerInteractListener implements Listener {
 				break;
 			}
 			case OPEN_CLIENT_GUI: {
+				if (!canUseShop) break;
+
 				Shop shop = (Shop) pAction.extra;
 
 				ShopUserGUI gui = new ShopUserGUI(shop, player);
@@ -196,6 +213,8 @@ public class PlayerInteractListener implements Listener {
 				break;
 			}
 			case OPEN_ADMIN_GUI: {
+				if (!canCreateShop) break;
+
 				Shop shop = (Shop) pAction.extra;
 
 				ShopAdminGUI gui = new ShopAdminGUI(shop, player);

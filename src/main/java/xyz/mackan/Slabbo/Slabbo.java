@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
+import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -53,6 +54,8 @@ public class Slabbo extends JavaPlugin {
 
 	public static boolean hasUpdate = false;
 
+	public static EnabledPlugins enabledPlugins = new EnabledPlugins();
+
 	@Override
 	public void onEnable () {
 		dataPath = this.getDataFolder().getPath();
@@ -60,6 +63,10 @@ public class Slabbo extends JavaPlugin {
 			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
+		}
+
+		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+			enabledPlugins.worldguard = true;
 		}
 
 		new File(getDataPath()).mkdirs();
