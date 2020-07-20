@@ -99,6 +99,20 @@ public class PlayerInteractListener implements Listener {
 
 		e.setCancelled(true);
 
+		boolean canCreateShop = true;
+
+		if (Slabbo.enabledPlugins.worldguard) {
+			canCreateShop = WorldguardSupport.canCreateShop(clickedBlock.getLocation(), p);
+		}
+
+		if (Slabbo.enabledPlugins.griefprevention) {
+			canCreateShop = GriefPreventionSupport.canCreateShop(clickedBlock.getLocation(), p);
+		}
+
+		if (!canCreateShop) {
+			return;
+		}
+
 		String linkingShopLocation = Slabbo.chestLinkUtil.pendingLinks.get(p.getUniqueId());
 		String linkingChestLocation = ShopUtil.locationToString(clickedBlock.getLocation());
 
