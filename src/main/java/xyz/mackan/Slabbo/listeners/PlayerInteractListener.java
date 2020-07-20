@@ -22,6 +22,7 @@ import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.pluginsupport.GriefPreventionSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
@@ -145,6 +146,7 @@ public class PlayerInteractListener implements Listener {
 		ItemStack itemInHand = e.getItem();
 		Player player = e.getPlayer();
 
+
 		Action action = e.getAction();
 
 		Block clickedBlock = e.getClickedBlock();
@@ -170,6 +172,11 @@ public class PlayerInteractListener implements Listener {
 		if (Slabbo.enabledPlugins.worldguard) {
 			canCreateShop = WorldguardSupport.canCreateShop(clickedBlock.getLocation(), player);
 			canUseShop = WorldguardSupport.canUseShop(clickedBlock.getLocation(), player);
+		}
+
+		if (Slabbo.enabledPlugins.griefprevention) {
+			canCreateShop = GriefPreventionSupport.canCreateShop(clickedBlock.getLocation(), player);
+			canUseShop = GriefPreventionSupport.canUseShop(clickedBlock.getLocation(), player);
 		}
 
 		switch (pAction.type) {

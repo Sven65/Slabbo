@@ -5,7 +5,7 @@ description: ${project.description}
 author: Mackan
 api-version: 1.16
 depend: [Vault]
-softdepend: [ClearLag, WorldGuard]
+softdepend: [ClearLag, WorldGuard, GriefPrevention]
 permissions:
   slabbo.use:
     default: op

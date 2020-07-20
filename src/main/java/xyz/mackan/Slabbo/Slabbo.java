@@ -65,9 +65,7 @@ public class Slabbo extends JavaPlugin {
 			return;
 		}
 
-		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-			enabledPlugins.worldguard = true;
-		}
+		setupPluginSupport();
 
 		new File(getDataPath()).mkdirs();
 
@@ -93,6 +91,16 @@ public class Slabbo extends JavaPlugin {
 
 	@Override
 	public void onDisable () { log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion())); }
+
+	private void setupPluginSupport () {
+		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+			enabledPlugins.worldguard = true;
+		}
+
+		if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
+			enabledPlugins.griefprevention = true;
+		}
+	}
 
 	private void checkUpdates () {
 		boolean doCheck = getConfig().getBoolean("checkupdates", true);
