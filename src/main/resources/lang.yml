@@ -47,6 +47,7 @@ success-message:
     sell-success: "{user} sold {count} {item} for a total of {cost} at your shop."
 
 general:
+  currency-format: ${amount}
   chestlink:
     chest-name: "Chest [{location}]"
     crouch-to-link: Please crouch and punch the chest you want to link.

@@ -16,7 +16,7 @@ public class GriefPreventionSupport {
 
 		String error = claim.allowBuild(player, Material.AIR);
 
-		if (error.equalsIgnoreCase("")) {
+		if (error == null || error.equalsIgnoreCase("")) {
 			return true;
 		}
 
@@ -32,7 +32,7 @@ public class GriefPreventionSupport {
 
 		String error = claim.allowAccess(player);
 
-		if (error.equalsIgnoreCase("")) {
+		if (error == null || error.equalsIgnoreCase("")) {
 			return true;
 		}
 

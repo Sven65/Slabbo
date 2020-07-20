@@ -236,7 +236,7 @@ public class SlabboCommand extends BaseCommand {
 
 			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-			replacementMap.put("price", newBuyingPrice);
+			replacementMap.put("price", Slabbo.localeManager.getCurrencyString(newBuyingPrice));
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.buyprice-set", replacementMap));
 
@@ -283,7 +283,7 @@ public class SlabboCommand extends BaseCommand {
 
 			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-			replacementMap.put("price", newSellingPrice);
+			replacementMap.put("price", Slabbo.localeManager.getCurrencyString(newSellingPrice));
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.sellprice-set", replacementMap));
 

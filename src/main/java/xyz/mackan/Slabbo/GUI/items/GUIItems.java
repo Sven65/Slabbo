@@ -27,7 +27,9 @@ public class GUIItems {
 		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
 		String explainer = Slabbo.localeManager.getString("general.general.not-for-sale-explain");
 
-		meta.setLore(Arrays.asList("§r$"+buyPrice, clickToSet, "§r"+explainer));
+		String currencyString = Slabbo.localeManager.getCurrencyString(buyPrice);
+
+		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
 		item.setItemMeta(meta);
 
@@ -43,7 +45,10 @@ public class GUIItems {
 		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
 		String explainer = Slabbo.localeManager.getString("general.general.not-buying-explain");
 
-		meta.setLore(Arrays.asList("§r$"+sellPrice, clickToSet, "§r"+explainer));
+		String currencyString = Slabbo.localeManager.getCurrencyString(sellPrice);
+
+
+		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
 		item.setItemMeta(meta);
 
@@ -103,7 +108,7 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-		replacementMap.put("price", price);
+		replacementMap.put("price", Slabbo.localeManager.getCurrencyString(price));
 
 		if (isAdmin) {
 			replacementMap.put("count", "∞");
@@ -138,7 +143,7 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-		replacementMap.put("price", price);
+		replacementMap.put("price", Slabbo.localeManager.getCurrencyString(price));
 
 		if (isAdmin) {
 			replacementMap.put("count", "∞");
@@ -177,7 +182,7 @@ public class GUIItems {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		replacementMap.put("funds", "§a$"+formatter.format(funds));
+		replacementMap.put("funds", "§a"+Slabbo.localeManager.getCurrencyString(formatter.format(funds)));
 
 		meta.setLore(Arrays.asList(Slabbo.localeManager.replaceKey("general.general.funds-message", replacementMap)));
 
@@ -210,8 +215,8 @@ public class GUIItems {
 		replacementMap.put("quantity", shop.quantity);
 		replacementMap.put("buyPrice", shop.buyPrice);
 		replacementMap.put("sellPrice", shop.sellPrice);
-		replacementMap.put("buyPerItem", "$"+formatter.format(buyPerItem)); // TODO: Think over whether to move the currency symbol to a resolver, or to put it in the lang file
-		replacementMap.put("sellPerItem", "$"+formatter.format(sellPerItem));
+		replacementMap.put("buyPerItem", Slabbo.localeManager.getCurrencyString(formatter.format(buyPerItem)));
+		replacementMap.put("sellPerItem", Slabbo.localeManager.getCurrencyString(formatter.format(sellPerItem)));
 
 		String ownerString = Slabbo.localeManager.replaceKey("gui.items.info.owned-by", replacementMap);
 		String sellingString = Slabbo.localeManager.replaceKey("gui.items.info.selling-item", replacementMap);

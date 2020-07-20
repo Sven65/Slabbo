@@ -92,4 +92,28 @@ public class LocaleManager {
 
 		return replaceString;
 	}
+
+	/**
+	 * Replaces a single key in a string from tlKey
+	 * @param tlKey The key to use for getting the replacement string
+	 * @param replaceKey The key to replace
+	 * @param replaceValue The value to replace with
+	 * @return String
+	 */
+	public String replaceSingleKey (String tlKey, String replaceKey, Object replaceValue) {
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put(replaceKey, replaceValue);
+
+		return replaceKey(tlKey, replacementMap);
+	}
+
+	/**
+	 * Gets the currency string with the amount
+	 * @param amount The amount of currency
+	 * @return String
+	 */
+	public String getCurrencyString (Object amount) {
+		return replaceSingleKey("general.currency-format", "amount", amount);
+	}
 }
