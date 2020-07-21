@@ -33,6 +33,7 @@ success-message:
   general:
     admin-create: The shop is now an admin shop!
     admin-destroy: The shop is no longer an admin shop
+    shops-saved: Saved shops!
   import:
     importing: Importing shops!
     success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.
@@ -40,6 +41,8 @@ success-message:
     buyprice-set: Buy price set to {price}
     sellprice-set: Sell price set to {price}
     quantity-set: Quantity set to {quantity}
+    owner-set: Owner set to {owner}
+    stock-set: Stock set to {stock}
   client:
     buy-success: Bought {count} {item} for a total of {cost}
     sell-success: Sold {count} {item} for a total of {cost}

@@ -3,14 +3,12 @@ package xyz.mackan.Slabbo.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.SoundCategory;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import scala.Int;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.importers.ImportResult;
@@ -194,9 +192,18 @@ public class SlabboCommand extends BaseCommand {
 		player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.import.success", replacementMap));
 	}
 
+	@Subcommand("save")
+	@Description("Saves slabbo shops")
+	@CommandPermission("slabbo.save")
+	public void onSave (Player player) {
+		DataUtil.saveShops();
+
+		player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.shops-saved"));
+	}
+
 	@Subcommand("modify")
 	@Description("Modifies the shop")
-	@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.self.sellprice|slabbo.modify.self.quantity|slabbo.modify.others.buyprice|slabbo.modify.others.sellprice|slabbo.modify.others.quantity")
+	@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.self.sellprice|slabbo.modify.self.quantity|slabbo.modify.others.buyprice|slabbo.modify.others.sellprice|slabbo.modify.others.quantity|slabbo.modify.admin.owner|slabbo.modify.admin.stock")
 	public class SlabboModifyCommand extends BaseCommand {
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
@@ -344,5 +351,62 @@ public class SlabboCommand extends BaseCommand {
 			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
 
 		}
+
+		@Subcommand("owner")
+		@Description("Sets the owner for the shop")
+		@CommandPermission("slabbo.modify.admin.owner")
+		@CommandCompletion("@players")
+		public void onChangeOwner (Player player, OfflinePlayer newOwner) {
+
+			Shop lookingAtShop = getLookingAtShop(player);
+			if (lookingAtShop == null) {
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
+				return;
+			}
+
+			UUID newOwnerID = newOwner.getUniqueId();
+
+
+			lookingAtShop.ownerId = newOwnerID;
+
+			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+			DataUtil.saveShops();
+
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("owner", newOwner.getName());
+
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.owner-set", replacementMap));
+		}
+
+		@Subcommand("stock")
+		@Description("Sets the stock for the shop")
+		@CommandPermission("slabbo.modify.admin.stock")
+		public void onSetStock (Player player, int newStock) {
+
+			Shop lookingAtShop = getLookingAtShop(player);
+			if (lookingAtShop == null) {
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+
+				return;
+			}
+
+			lookingAtShop.stock = newStock;
+
+			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+			DataUtil.saveShops();
+
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("stock", newStock);
+
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.stock-set", replacementMap));
+		}
+
 	}
 }

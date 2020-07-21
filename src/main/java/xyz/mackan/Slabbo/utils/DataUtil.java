@@ -16,6 +16,7 @@ public class DataUtil {
 			@Override
 			public void run () {
 				File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
+				File backupFile = new File(Slabbo.getDataPath(), "shops-backup.yml");
 
 				FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
@@ -23,6 +24,7 @@ public class DataUtil {
 
 				try {
 					configFile.save(dataFile);
+					configFile.save(backupFile);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
