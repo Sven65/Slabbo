@@ -24,10 +24,14 @@ Destroying: Right click existing shop with stick
 |  slabbo.modify.others.buyprice | Lets a player use `/slabbo modify buyprice` to modify the buy price of other peoples shops   |
 | slabbo.modify.others.sellprice | Lets a player use `/slabbo modify sellprice` to modify the sell price of other peoples shops |
 |  slabbo.modify.others.quantity | Lets a player use `/slabbo modify quantity` to modify the quantity of other peoples shops    |
+| slabbo.modify.admin.owner      | Lets a player use `/slabbo modify owner` to change the owner of a shop                       |
+| slabbo.modify.admin.stock      | Lets a player use `/slabbo modify stock` to set the stock of a shop |
+| slabbo.save                    | Lets a player use `/slabbo save` to save the shops |
 |                    slabbo.info | Lets players use `/slabbo info`                                                              |
 |                  slabbo.reload | Lets players use `/slabbo reload`                                                            |
 |                    slabbo.link | Lets players link chests and shops                                                           |
 |            slabbo.notifyupdate | Shows a player Slabbo update notifications on join                                           |
+
 
 ## Commands
 
@@ -39,5 +43,8 @@ Destroying: Right click existing shop with stick
 - /slabbo modify buyprice
 - /slabbo modify sellprice
 - /slabbo modify quantity
+- /slabbo modify owner
+- /slabbo modify stock
+- /slabbo save
 - /slabbo reload
 - /slabbo info
