@@ -3,17 +3,10 @@
 // TODO: Docs
 package xyz.mackan.Slabbo;
 
-import co.aikar.commands.BukkitLocales;
 import co.aikar.commands.PaperCommandManager;
-import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
@@ -22,14 +15,12 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
+import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.utils.locale.LocaleManager;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.logging.Logger;
 
 public class Slabbo extends JavaPlugin {
@@ -68,6 +59,8 @@ public class Slabbo extends JavaPlugin {
 		setupPluginSupport();
 
 		new File(getDataPath()).mkdirs();
+//		new File(getDataPath()+"/backups/").mkdirs();
+
 
 		this.saveDefaultConfig();
 
@@ -77,10 +70,11 @@ public class Slabbo extends JavaPlugin {
 
 		localeManager = new LocaleManager();
 
-//		setupChat();
 		setupPermissions();
 		setupCommands();
 		setupListeners();
+
+//		setupBackup();
 
 		checkUpdates();
 
@@ -90,7 +84,27 @@ public class Slabbo extends JavaPlugin {
 	}
 
 	@Override
-	public void onDisable () { log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion())); }
+	public void onDisable () {
+		log.info("Saving shops before disabling Slabbo");
+
+		DataUtil.saveShopsOnMainThread();
+
+		log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
+	}
+
+//	private void setupBackup () {
+//		if (!getConfig().getBoolean("backupfiles.enabled", true)) return;
+//
+//		int repeatTime = getConfig().getInt("backupfiles.savetime", 300);
+//
+//		long repeatTicks = repeatTime * 20;
+//
+//		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
+//			public void run () {
+//				DataUtil.saveShopsBackup();
+//			}
+//		}, repeatTicks, repeatTicks);
+//	}
 
 	private void setupPluginSupport () {
 		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
@@ -160,12 +174,6 @@ public class Slabbo extends JavaPlugin {
 		return perms != null;
 	}
 
-//	private boolean setupChat() {
-//		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-//		chat = rsp.getProvider();
-//		return chat != null;
-//	}
-
 	public static String getDataPath () {
 		return dataPath;
 	}
@@ -177,8 +185,6 @@ public class Slabbo extends JavaPlugin {
 	public static Permission getPermissions() {
 		return perms;
 	}
-
-//	public static Chat getChat () { return chat; }
 
 	public static Slabbo getInstance() { return instance; }
 }

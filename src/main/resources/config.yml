@@ -13,7 +13,3 @@ chestlinks: # Linking chests
 itemdisplay: quantity # Quantity (The amount the shop sells) / Full (A full stack (64 items))
 
 checkupdates: true
-
-backupfiles: # If slabbo should create extra files with the shops in
-  enabled: true # If it's enabled
-  savetime: 300 # How often the files should be created in seconds
