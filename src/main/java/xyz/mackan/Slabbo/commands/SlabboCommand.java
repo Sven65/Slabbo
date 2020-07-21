@@ -50,6 +50,9 @@ public class SlabboCommand extends BaseCommand {
 	@CommandPermission("slabbo.reload")
 	public void onReload (Player player) {
 		player.sendMessage(Slabbo.localeManager.getString("general.general.reloading")+" Slabbo");
+
+		Slabbo.getInstance().reloadConfig();
+
 		for (String shopKey : Slabbo.shopUtil.shops.keySet()) {
 			Shop shop = Slabbo.shopUtil.shops.get(shopKey);
 

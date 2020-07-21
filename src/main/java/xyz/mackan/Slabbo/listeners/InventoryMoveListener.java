@@ -27,6 +27,10 @@ public class InventoryMoveListener implements Listener {
 
 		ItemStack item = e.getItem();
 
+		if (destinationInventory == null) return;
+
+		if (destinationInventory.getLocation() == null) return;
+
 		Block destinationBlock = destinationInventory.getLocation().getBlock();
 
 		if (!Slabbo.chestLinkUtil.isChestLinked(destinationBlock)) return;

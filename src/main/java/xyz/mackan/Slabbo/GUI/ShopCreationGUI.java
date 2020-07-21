@@ -250,7 +250,13 @@ public class ShopCreationGUI implements Listener {
 
 		e.setCancelled(true);
 
-		int value = Integer.parseInt(e.getMessage());
+		int value = 0;
+
+		try {
+			value = Integer.parseInt(e.getMessage());
+		} catch (NumberFormatException error) {
+			e.getPlayer().sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.not-a-valid-number"));
+		}
 
 		if (value < -1) { value = -1; }
 

@@ -16,6 +16,7 @@ error-message:
     invalid-buy-price: Please provide a positive buy price or -1 for not buying.
     invalid-sell-price: Please provide a positive sell price or -1 for not selling.
     invalid-quantity: Please provide a positive quantity
+    not-a-valid-number: That's not a valid number!
   shop-errors:
     out-of-stock: This shop is out of stock!
     not-enough-funds: You don't have enough funds!
