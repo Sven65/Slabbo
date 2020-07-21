@@ -23,6 +23,7 @@ import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.pluginsupport.GriefPreventionSupport;
+import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
@@ -47,8 +48,8 @@ public class PlayerInteractListener implements Listener {
 
 		boolean isShopOwner = false;
 
-		boolean canCreateShop = PermissionUtil.canCreateShop(player);
-		boolean canUseShop = PermissionUtil.canUseShop(player);
+		boolean canCreateShop = PermissionUtil.canCreateShop(player) && PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
+		boolean canUseShop = PermissionUtil.canUseShop(player) && PluginSupport.canUseShop(clickedBlock.getLocation(), player);
 
 		if (shopExists) {
 			isShopOwner = shop.ownerId.equals(player.getUniqueId());
@@ -180,24 +181,8 @@ public class PlayerInteractListener implements Listener {
 
 		ShopAction pAction = getAction(itemInHand, clickedBlock, player);
 
-		boolean canCreateShop = true;
-		boolean canUseShop = true;
-
-		if (Slabbo.enabledPlugins.worldguard) {
-			canCreateShop = WorldguardSupport.canCreateShop(clickedBlock.getLocation(), player);
-			canUseShop = WorldguardSupport.canUseShop(clickedBlock.getLocation(), player);
-		}
-
-		if (Slabbo.enabledPlugins.griefprevention) {
-			canCreateShop = GriefPreventionSupport.canCreateShop(clickedBlock.getLocation(), player);
-			canUseShop = GriefPreventionSupport.canUseShop(clickedBlock.getLocation(), player);
-		}
-
 		switch (pAction.type) {
 			case CREATION_LIMIT_HIT: {
-
-				if (!canCreateShop) break;
-
 				int limit = (Integer) pAction.extra;
 
 				HashMap<String, Object> replacementMap = new HashMap<String, Object>();
@@ -209,15 +194,11 @@ public class PlayerInteractListener implements Listener {
 				break;
 			}
 			case CREATE: {
-				if (!canCreateShop) break;
-
 				ShopCreationGUI gui = new ShopCreationGUI(clickedBlock.getLocation());
 				gui.openInventory(e.getPlayer());
 				break;
 			}
 			case OPEN_DELETION_GUI: {
-				if (!canCreateShop) break;
-
 				Shop shop = (Shop) pAction.extra;
 
 				ShopDeletionGUI gui = new ShopDeletionGUI(shop);
@@ -225,8 +206,6 @@ public class PlayerInteractListener implements Listener {
 				break;
 			}
 			case OPEN_CLIENT_GUI: {
-				if (!canUseShop) break;
-
 				Shop shop = (Shop) pAction.extra;
 
 				ShopUserGUI gui = new ShopUserGUI(shop, player);
@@ -234,8 +213,6 @@ public class PlayerInteractListener implements Listener {
 				break;
 			}
 			case OPEN_ADMIN_GUI: {
-				if (!canCreateShop) break;
-
 				Shop shop = (Shop) pAction.extra;
 
 				ShopAdminGUI gui = new ShopAdminGUI(shop, player);
