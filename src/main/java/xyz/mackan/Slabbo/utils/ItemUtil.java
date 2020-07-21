@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.utils;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
@@ -14,7 +15,10 @@ import org.bukkit.persistence.PersistentDataType;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.AttributeKey;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class ItemUtil {
 
@@ -75,12 +79,43 @@ public class ItemUtil {
 		itemEnt.teleport(dropLocation);
 	}
 
-	public static Item findShopItem (Location location) {
+	public static List<Item> findSlabboItemsInWorld (World world) {
+		Collection<Entity> worldEntities = world.getEntities();
+
+		List<Item> shopItems = new ArrayList<Item>();
+
+		for (Entity entity : worldEntities) {
+			boolean isItem = (entity instanceof Item) || (entity instanceof CraftItem);
+
+			if (!isItem) continue;
+
+			Item item = (Item) entity;
+
+			ItemStack itemStack = item.getItemStack();
+
+			if (!itemStack.hasItemMeta()) continue;
+
+			ItemMeta meta = itemStack.getItemMeta();
+
+			PersistentDataContainer container = meta.getPersistentDataContainer();
+
+			int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
+			int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
+
+			if (!(noPickup == 1 && noDespawn == 1)) continue;
+
+			shopItems.add(item);
+		}
+
+		return shopItems;
+	}
+
+	public static List<Item> findShopItems (Location location) {
 		Collection<Entity> nearbyEntites = location.getWorld().getNearbyEntities(location, 0.5, 2, 0.5);
 
 		String locationString = ShopUtil.locationToString(location);
 
-		Item returnItem = null;
+		List<Item> shopItems = new ArrayList<Item>();
 
 		for (Entity entity : nearbyEntites) {
 			boolean isItem = (entity instanceof Item) || (entity instanceof CraftItem);
@@ -102,11 +137,28 @@ public class ItemUtil {
 			if (itemLocationString == null || itemLocationString.equals("")) continue;
 
 			if (itemLocationString.equals(locationString)) {
-				returnItem = item;
-				break;
+				shopItems.add(item);
 			}
 		}
 
-		return returnItem;
+		return shopItems;
 	}
+
+	public static void removeShopItemsAtLocation (Location location) {
+		List<Item> shopItems = findShopItems(location);
+
+		for (Item shopItem : shopItems) {
+			shopItem.remove();
+		}
+	}
+
+	public static void removeShopItems (World world) {
+		List<Item> shopItems = findSlabboItemsInWorld(world);
+
+		for (Item shopItem : shopItems) {
+			shopItem.remove();
+		}
+	}
+
+
 }

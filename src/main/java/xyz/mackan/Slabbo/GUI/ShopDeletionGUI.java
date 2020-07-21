@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,13 +37,15 @@ public class ShopDeletionGUI  implements Listener {
 
 	public void handleDestroy (HumanEntity humanEntity) {
 		UUID userId = humanEntity.getUniqueId();
-		Item itemEnt = ItemUtil.findShopItem(shop.location);
+		//Item itemEnt = ItemUtil.findShopItem(shop.location);
 
 		String shopLocationString = ShopUtil.locationToString(shop.location);
 
-		if (itemEnt != null) {
-			itemEnt.remove();
-		}
+//		if (itemEnt != null) {
+//			itemEnt.remove();
+//		}
+
+		ItemUtil.removeShopItemsAtLocation(shop.location);
 
 		Slabbo.shopUtil.removeShop(shop);
 

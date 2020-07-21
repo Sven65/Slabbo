@@ -2,7 +2,6 @@ package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -194,11 +193,13 @@ public class ShopCreationGUI implements Listener {
 					e.getWhoClicked().closeInventory();
 
 					if (isModifying) {
-						Item itemEnt = ItemUtil.findShopItem(slabLocation);
+//						Item itemEnt = ItemUtil.findShopItem(slabLocation);
+//
+//						if (itemEnt != null) {
+//							itemEnt.remove();
+//						}
 
-						if (itemEnt != null) {
-							itemEnt.remove();
-						}
+						ItemUtil.removeShopItemsAtLocation(slabLocation);
 
 
 						ItemUtil.dropShopItem(slabLocation, shopItem, quantity);

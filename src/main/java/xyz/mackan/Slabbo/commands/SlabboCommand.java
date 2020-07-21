@@ -6,9 +6,7 @@ import co.aikar.commands.annotation.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import scala.Int;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.importers.ImportResult;
@@ -51,14 +49,12 @@ public class SlabboCommand extends BaseCommand {
 
 		Slabbo.getInstance().reloadConfig();
 
+		ItemUtil.removeShopItems(player.getWorld());
+
 		for (String shopKey : Slabbo.shopUtil.shops.keySet()) {
 			Shop shop = Slabbo.shopUtil.shops.get(shopKey);
 
-			Item droppedItem = ItemUtil.findShopItem(shop.location);
-
-			if (droppedItem != null) {
-				droppedItem.remove();
-			}
+			//ItemUtil.removeShopItemsAtLocation(shop.location);
 		}
 
 		Slabbo.chestLinkUtil.links = new HashMap<String, Shop>();
