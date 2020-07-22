@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Slabbo.iml" filepath="$PROJECT_DIR$/Slabbo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/Dist/Slabbo-dist.iml" filepath="$PROJECT_DIR$/modules/Dist/Slabbo-dist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Slabbo-parent.iml" filepath="$PROJECT_DIR$/Slabbo-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/Plugin/Slabbo-plugin.iml" filepath="$PROJECT_DIR$/modules/Plugin/Slabbo-plugin.iml" />
     </modules>
   </component>
 </project>

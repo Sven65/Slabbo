@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>Slabbo-parent</artifactId>
+    <groupId>xyz.mackan</groupId>
+    <version>1.0.10</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>xyz.mackan</groupId>
-  <artifactId>Slabbo</artifactId>
-  <name>Slabbo</name>
-  <version>1.0.10</version>
+  <artifactId>Slabbo-plugin</artifactId>
+  <version>${project.parent.version}</version>
   <description>Slab shops for spigot</description>
   <build>
     <resources>
@@ -19,7 +24,6 @@
         </includes>
       </resource>
     </resources>
-    <finalName>Slabbo-${project.version}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -75,8 +79,8 @@
   </repositories>
   <dependencies>
     <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>craftbukkit</artifactId>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot</artifactId>
       <version>1.16.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>

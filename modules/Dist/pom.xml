@@ -13,10 +13,11 @@
         <groupId>xyz.mackan</groupId>
         <artifactId>Slabbo-parent</artifactId>
         <version>1.0.10</version>
+        <relativePath>../../</relativePath>
     </parent>
 
     <build>
-        <directory>../target</directory>
+        <directory>../../target</directory>
         <finalName>Slabbo-${project.parent.version}</finalName>
         <plugins>
             <plugin>

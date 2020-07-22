@@ -1,7 +1,7 @@
-name: ${project.name}
-version: ${project.version}
+name: ${project.parent.name}
+version: ${project.parent.version}
 main: xyz.mackan.Slabbo.Slabbo
-description: ${project.description}
+description: ${project.parent.description}
 author: Mackan
 api-version: 1.16
 depend: [Vault]

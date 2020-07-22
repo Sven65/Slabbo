@@ -13,6 +13,7 @@
         <artifactId>Slabbo-parent</artifactId>
         <groupId>xyz.mackan</groupId>
         <version>1.0.10</version>
+        <relativePath>../../</relativePath>
     </parent>
 
     <groupId>xyz.mackan</groupId>
@@ -20,7 +21,6 @@
     <version>${project.parent.version}</version>
     <packaging>jar</packaging>
 
-    <name>Slabbo</name>
     <description>Slab shops for spigot</description>
 
     <build>
