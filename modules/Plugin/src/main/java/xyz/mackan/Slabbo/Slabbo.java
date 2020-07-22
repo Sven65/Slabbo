@@ -11,7 +11,9 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
@@ -99,14 +101,22 @@ public class Slabbo extends JavaPlugin {
 
 	private void loadAPI () {
 		SlabboAPI api = null;
+		SlabboItemAPI itemApi = null;
+		ISlabboSound slabboSound = null;
 
 		String packageName = Slabbo.class.getPackage().getName();
 		String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
-
 		try {
 			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_v" + internalsName).newInstance();
+			itemApi = (SlabboItemAPI) Class.forName(packageName + ".abstractions.SlabboItemAPI_v" + internalsName).newInstance();
+			slabboSound = (ISlabboSound) Class.forName(packageName + ".abstractions.SlabboSound_v" + internalsName).newInstance();
+
 			Bukkit.getServicesManager().register(SlabboAPI.class, api, this, ServicePriority.Highest);
+			Bukkit.getServicesManager().register(SlabboItemAPI.class, itemApi, this, ServicePriority.Highest);
+			Bukkit.getServicesManager().register(ISlabboSound.class, slabboSound, this, ServicePriority.Highest);
+			
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException exception) {
+			exception.printStackTrace();
 			Bukkit.getLogger().log(Level.SEVERE, "Slabbo could not find a valid implementation for this server version.");
 		}
 	}

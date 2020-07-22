@@ -11,5 +11,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Slabbo-plugin" />
     <orderEntry type="library" name="Maven: co.aikar:acf-paper:0.5.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="Slabbo-1_16_R1" />
+    <orderEntry type="module" module-name="Slabbo-1_8_R1" />
   </component>
 </module>

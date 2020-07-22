@@ -38,6 +38,25 @@
                             </artifactSet>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>ACF-Shade</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>co.aikar.commands</pattern>
+                                    <shadedPattern>xyz.mackan.Slabbo.acf</shadedPattern> <!-- Replace this -->
+                                </relocation>
+                                <relocation>
+                                    <pattern>co.aikar.locales</pattern>
+                                    <shadedPattern>xyz.mackan.Slabbo.locales</shadedPattern> <!-- Replace this -->
+                                </relocation>
+                            </relocations>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
@@ -50,11 +69,11 @@
             <version>${project.parent.version}</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>xyz.mackan</groupId>-->
-<!--            <artifactId>Slabbo-1_16_R1</artifactId>-->
-<!--            <version>${project.parent.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>xyz.mackan</groupId>
+            <artifactId>Slabbo-1_16_R1</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>xyz.mackan</groupId>-->
@@ -120,10 +139,10 @@
 <!--            <artifactId>Slabbo-1_8_R2</artifactId>-->
 <!--            <version>${project.parent.version}</version>-->
 <!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>xyz.mackan</groupId>-->
-<!--            <artifactId>Slabbo-1_8_R1</artifactId>-->
-<!--            <version>${project.parent.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>xyz.mackan</groupId>
+            <artifactId>Slabbo-1_8_R1</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 </project>

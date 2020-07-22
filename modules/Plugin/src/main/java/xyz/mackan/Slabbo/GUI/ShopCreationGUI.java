@@ -16,6 +16,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -126,7 +129,8 @@ public class ShopCreationGUI implements Listener {
 
 
 	protected ItemStack createGuiItem () {
-		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+		SlabboItemAPI api = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
+		ItemStack item = api.getRedStainedGlassPane();//new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.RED+Slabbo.localeManager.getString("gui.items.new-shop.click-item-below"));
@@ -144,7 +148,9 @@ public class ShopCreationGUI implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(final InventoryClickEvent e) {
-		if (e.getInventory() != inv) return;
+		ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
+		if (!e.getInventory().equals(inv)) return;
 		e.setCancelled(true);
 
 		ItemStack clickedItem = e.getCurrentItem();
@@ -169,7 +175,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-note"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 3) {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
@@ -177,7 +183,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-buy-price"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 4) {
 					//Sell Price
 					waitingType = ChatWaitingType.SELL_PRICE;
@@ -185,7 +191,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-sell-price"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 5) {
 					// Amount
 					waitingType = ChatWaitingType.QUANTITY;
@@ -193,7 +199,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-quantity"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 7) {
 					// Confirm
 					Shop shop = new Shop(buyPrice, sellPrice, quantity, slabLocation, shopItem);
@@ -218,14 +224,14 @@ public class ShopCreationGUI implements Listener {
 
 					ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 
-					p.playSound(this.slabLocation, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(this.slabLocation, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
 					resetGUI();
 
 				} else if (slot == 8) {
 					// Cancel
 
-					p.playSound(this.slabLocation, SlabboSound.CANCEL.sound, SoundCategory.BLOCKS, 1, 1);
+					p.playSound(this.slabLocation, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 
 					resetGUI();
 					e.getWhoClicked().closeInventory();
@@ -235,9 +241,12 @@ public class ShopCreationGUI implements Listener {
 			}
 		}
 
+
 		if (slot <= 8) return; // User clicked shop GUI
 
-		p.playSound(this.slabLocation, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
+		p.playSound(this.slabLocation, slabboSound.getSoundByKey("NAVIGATION"), 1, 1);
+
+		//p.playSound(this.slabLocation, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
 
 		shopItem = clickedItem.clone();
 

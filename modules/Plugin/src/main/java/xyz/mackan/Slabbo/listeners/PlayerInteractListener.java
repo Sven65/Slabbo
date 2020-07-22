@@ -1,6 +1,6 @@
 package xyz.mackan.Slabbo.listeners;
 
-import net.milkbowl.vault.chat.Chat;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.SoundCategory;
@@ -9,19 +9,16 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.pluginsupport.GriefPreventionSupport;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
@@ -34,7 +31,6 @@ import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.PermissionUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 
 public class PlayerInteractListener implements Listener {
@@ -154,13 +150,13 @@ public class PlayerInteractListener implements Listener {
 
 	@EventHandler
 	public void onInteract (PlayerInteractEvent e) {
-		EquipmentSlot hand = e.getHand();
+		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
-		if (hand == null || hand != EquipmentSlot.HAND) return;
+		ItemStack itemInHand = api.getInteractionItemInHand(e);
 
-		ItemStack itemInHand = e.getItem();
+		if (itemInHand == null) return;
+
 		Player player = e.getPlayer();
-
 
 		Action action = e.getAction();
 
@@ -173,9 +169,7 @@ public class PlayerInteractListener implements Listener {
 			return;
 		}
 
-		BlockData blockData = clickedBlock.getBlockData();
-
-		boolean isSlab = (blockData instanceof Slab);
+		boolean isSlab = api.isSlab(clickedBlock);
 
 		if (!isSlab) return;
 

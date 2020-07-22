@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.Misc;
 
@@ -19,7 +21,9 @@ import java.util.HashMap;
 
 public class GUIItems {
 	public static ItemStack getBuyPriceItem (int buyPrice) {
-		ItemStack item = new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
+		SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
+
+		ItemStack item = itemAPI.getGreenStainedGlassPane();//new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GREEN+ Slabbo.localeManager.getString("general.general.buy-price"));
@@ -37,7 +41,11 @@ public class GUIItems {
 	}
 
 	public static ItemStack getSellPriceItem (int sellPrice) {
-		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+		SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
+
+		ItemStack item = itemAPI.getRedStainedGlassPane();
+
+//		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.RED+ Slabbo.localeManager.getString("general.general.sell-price"));
@@ -56,7 +64,11 @@ public class GUIItems {
 	}
 
 	public static ItemStack getAmountItem (int quantity) {
-		ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
+		SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
+
+		ItemStack item = itemAPI.getYellowStainedGlassPane();
+
+//		ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.YELLOW+ Slabbo.localeManager.getString("general.general.quantity"));

@@ -30,6 +30,25 @@
               </artifactSet>
             </configuration>
           </execution>
+          <execution>
+            <id>ACF-Shade</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <relocations>
+                <relocation>
+                  <pattern>co.aikar.commands</pattern>
+                  <shadedPattern>xyz.mackan.Slabbo.acf</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>co.aikar.locales</pattern>
+                  <shadedPattern>xyz.mackan.Slabbo.locales</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
     </plugins>

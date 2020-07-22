@@ -1,9 +1,9 @@
 package xyz.mackan.Slabbo.utils;
 
-import net.minecraft.server.v1_16_R1.LocaleLanguage;
-import org.bukkit.craftbukkit.v1_16_R1.inventory.CraftItemStack;
+import org.bukkit.Bukkit;
 
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 
 public class NameUtil {
 
@@ -11,8 +11,9 @@ public class NameUtil {
 		// return displayname if item has one
 		if(is.hasItemMeta() && is.getItemMeta().hasDisplayName()) return is.getItemMeta().getDisplayName();
 
-		net.minecraft.server.v1_16_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(is);
-		return LocaleLanguage.a().a(nmsStack.getItem().getName());
+		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+
+		return api.getItemName(is);
 	}
 
 }
