@@ -4,5 +4,6 @@ public enum ChatWaitingType {
 	NONE,
 	BUY_PRICE,
 	SELL_PRICE,
-	QUANTITY;
+	QUANTITY,
+	SELLERS_NOTE
 }

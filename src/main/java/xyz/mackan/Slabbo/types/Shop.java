@@ -4,6 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.Serializable;
@@ -28,6 +29,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	public UUID ownerId;
 
 	public boolean admin;
+
+	public String note = "";
 
 	//public UUID droppedItemId;
 
@@ -78,6 +81,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 		result.put("linkedChestLocation", linkedChestLocation);
 
+		result.put("note", note);
+
 		return result;
 	}
 
@@ -92,16 +97,21 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		ItemStack item = (ItemStack) args.get("item");
 
 		String loadedOwnerId = (String) args.get("ownerId");
-		String loadedDroppedItemId = (String) args.get("droppedItemId");
 
 		UUID ownerId = UUID.fromString(loadedOwnerId);
-//		UUID droppedItemId = UUID.fromString(loadedDroppedItemId);
 
 		boolean admin = (boolean) args.get("admin");
 
 		String linkedChestLocation = (String) args.get("linkedChestLocation");
 
-		return new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);
+		String note = (String) args.getOrDefault("note", "Let's trade!");
+
+
+		Shop newShop = new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);
+
+		newShop.note = note;
+
+		return newShop;
 	}
 
 	public String getLocationString () {

@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.*;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,6 +39,8 @@ public class ShopCreationGUI implements Listener {
 	private int quantity = 0;
 	private int stock = 0;
 
+	private String sellersNote;
+
 	private boolean isModifying = false;
 	private boolean isAdmin = false;
 
@@ -58,6 +61,8 @@ public class ShopCreationGUI implements Listener {
 		stock = shop.stock;
 
 		isAdmin = shop.admin;
+
+		sellersNote = shop.note;
 
 		initializeStage2();
 	}
@@ -81,6 +86,8 @@ public class ShopCreationGUI implements Listener {
 		sellPrice = 0;
 		quantity = 0;
 		stock = 0;
+
+		sellersNote = "";
 	}
 
 	public boolean getIsStage2 () {
@@ -105,6 +112,7 @@ public class ShopCreationGUI implements Listener {
 		clearShopInv();
 
 		inv.setItem(0, shopItem);
+		inv.setItem(1, GUIItems.getSellersNoteItem(sellersNote));
 
 
 		inv.setItem(3, GUIItems.getBuyPriceItem(buyPrice));
@@ -152,7 +160,17 @@ public class ShopCreationGUI implements Listener {
 				// User's clicked shop GUI
 
 				// TODO: Move this to a switch
-				if (slot == 3) {
+				if (slot == 1) {
+					// Sellers note
+					waitingType = ChatWaitingType.SELLERS_NOTE;
+
+					waitingPlayerId = e.getWhoClicked().getUniqueId();
+
+					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-note"));
+					e.getWhoClicked().closeInventory();
+
+					p.playSound(this.slabLocation, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+				} else if (slot == 3) {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
@@ -185,6 +203,8 @@ public class ShopCreationGUI implements Listener {
 					shop.admin = isAdmin;
 					shop.stock = stock;
 
+					shop.note = sellersNote;
+
 
 					Slabbo.shopUtil.put(ShopUtil.locationToString(slabLocation), shop);
 
@@ -193,19 +213,10 @@ public class ShopCreationGUI implements Listener {
 					e.getWhoClicked().closeInventory();
 
 					if (isModifying) {
-//						Item itemEnt = ItemUtil.findShopItem(slabLocation);
-//
-//						if (itemEnt != null) {
-//							itemEnt.remove();
-//						}
-
 						ItemUtil.removeShopItemsAtLocation(slabLocation);
-
-
-						ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
-					} else {
-						ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 					}
+
+					ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 
 					p.playSound(this.slabLocation, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
 
@@ -253,13 +264,21 @@ public class ShopCreationGUI implements Listener {
 
 		int value = 0;
 
-		try {
-			value = Integer.parseInt(e.getMessage());
-		} catch (NumberFormatException error) {
-			e.getPlayer().sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.not-a-valid-number"));
-		}
+		String shopNoteInput = "";
 
-		if (value < -1) { value = -1; }
+		if (waitingType != ChatWaitingType.SELLERS_NOTE) {
+			try {
+				value = Integer.parseInt(e.getMessage());
+			} catch (NumberFormatException error) {
+				e.getPlayer().sendMessage(ChatColor.RED + Slabbo.localeManager.getString("error-message.modify.not-a-valid-number"));
+			}
+
+			if (value < -1) {
+				value = -1;
+			}
+		} else {
+			shopNoteInput = e.getMessage();
+		}
 
 		switch (waitingType) {
 			case SELL_PRICE:
@@ -274,6 +293,17 @@ public class ShopCreationGUI implements Listener {
 				}
 
 				quantity = value;
+				break;
+			case SELLERS_NOTE:
+				if (shopNoteInput.equalsIgnoreCase("#")) {
+					if (sellersNote != null && !sellersNote.equalsIgnoreCase("")) {
+						shopNoteInput = sellersNote;
+					} else {
+						shopNoteInput = null;
+					}
+				}
+
+				sellersNote = shopNoteInput;
 				break;
 		}
 

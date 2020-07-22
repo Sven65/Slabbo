@@ -84,6 +84,7 @@ general:
     type-new-buy-price: Please type the new buying price
     type-new-sell-price: Please type the new selling price
     type-new-quantity: Please type the new quantity
+    type-new-note: "Please type the new sellers note. Type # to cancel."
 
     not-for-sale-explain: (-1 means not for sale)
     not-buying-explain: (-1 means not buying)
@@ -96,6 +97,8 @@ general:
     buy-for: "Buy for: {price}"
     sell-for: "Sell for: {price}"
     funds-message: "Funds: {funds}"
+
+    default-shop-note: "Let's trade!"
 
     shift-bulk:
       deposit: +Shift for bulk deposit
@@ -117,6 +120,7 @@ gui:
     user:
       buy-item: Buy {item} * {quantity}
       sell-item: Sell {item} * {quantity}
+      sellers-note: Sellers note
     info:
       owned-by: Owned by {owner}
       selling-item: "Selling: {item}"

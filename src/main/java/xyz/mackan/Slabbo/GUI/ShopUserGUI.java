@@ -49,6 +49,8 @@ public class ShopUserGUI implements Listener {
 
 		inv.setItem(4, shopItem);
 
+
+		inv.setItem(6, GUIItems.getSellersNoteItem(shop.note));
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance(player)));
 		inv.setItem(8, GUIItems.getUserInfoItem(shop));
 	}

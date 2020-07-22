@@ -250,4 +250,23 @@ public class GUIItems {
 
 		return item;
 	}
+
+	public static ItemStack getSellersNoteItem (String sellerNote) {
+		if (sellerNote == null || sellerNote.equalsIgnoreCase("")) {
+			sellerNote = Slabbo.localeManager.getString("general.general.default-shop-note");
+		}
+
+		ItemStack item = new ItemStack(Material.NAME_TAG, 1);
+		ItemMeta meta = item.getItemMeta();
+
+		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("gui.items.user.sellers-note"));
+
+		meta.setLore(Arrays.asList(
+				sellerNote
+		));
+
+		item.setItemMeta(meta);
+
+		return item;
+	}
 }
