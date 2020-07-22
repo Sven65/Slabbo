@@ -13,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -37,12 +38,14 @@ public class ShopDeletionGUI  implements Listener {
 
 	public void handleDestroy (HumanEntity humanEntity) {
 		UUID userId = humanEntity.getUniqueId();
+		ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 
 		ItemUtil.removeShopItemsAtLocation(shop.location);
 
 		Slabbo.shopUtil.removeShop(shop);
 
-		((Player) humanEntity).playSound(shop.location, SlabboSound.DESTROY.sound, SoundCategory.BLOCKS, 1, 1);
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
 
 		DataUtil.saveShops();
 
@@ -50,8 +53,11 @@ public class ShopDeletionGUI  implements Listener {
 	}
 
 	public void handleCancel (HumanEntity humanEntity) {
+		ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 		humanEntity.closeInventory();
-		((Player) humanEntity).playSound(shop.location, SlabboSound.CANCEL.sound, SoundCategory.BLOCKS, 1, 1);
+
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 
 	}
 

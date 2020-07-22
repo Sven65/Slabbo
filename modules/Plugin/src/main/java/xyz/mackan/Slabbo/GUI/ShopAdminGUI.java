@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.GUI.items.AdminGUIItems;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
@@ -28,6 +29,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ShopAdminGUI implements Listener {
+	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 
 	private Shop shop;
 	private Inventory inv;
@@ -122,7 +125,7 @@ public class ShopAdminGUI implements Listener {
 			shop.stock += tempTransferRate;
 		}
 
-		player.playSound(shop.location, SlabboSound.BUY_SELL_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+		player.playSound(shop.location, slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
 		DataUtil.saveShops();
 
@@ -175,7 +178,7 @@ public class ShopAdminGUI implements Listener {
 			shop.stock -= (tempTransferRate - leftoverCount);
 		}
 
-		player.playSound(shop.location, SlabboSound.BUY_SELL_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+		player.playSound(shop.location, slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
 		DataUtil.saveShops();
 
@@ -188,7 +191,7 @@ public class ShopAdminGUI implements Listener {
 		waitingPlayerId = humanEntity.getUniqueId();
 
 		humanEntity.sendMessage(Slabbo.localeManager.getString("general.general.type-new-rate"));
-		((Player) humanEntity).playSound(shop.location, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 
 		humanEntity.closeInventory();
 	}
@@ -196,13 +199,13 @@ public class ShopAdminGUI implements Listener {
 	public void handleModify (HumanEntity humanEntity) {
 		ShopCreationGUI gui = new ShopCreationGUI(shop.location, shop);
 
-		((Player) humanEntity).playSound(shop.location, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("NAVIGATION"), 1, 1);
 
 		gui.openInventory(humanEntity);
 	}
 
 	public void handleViewAsCustomer (HumanEntity humanEntity) {
-		((Player) humanEntity).playSound(shop.location, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("NAVIGATION"), 1, 1);
 
 		ShopUserGUI gui = new ShopUserGUI(shop, (Player)humanEntity);
 
@@ -221,7 +224,7 @@ public class ShopAdminGUI implements Listener {
 			// Current shop's being linked
 			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
 			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.linking-cancelled"));
-			p.playSound(shop.location, SlabboSound.CANCEL.sound, SoundCategory.BLOCKS, 1, 1);
+			p.playSound(shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 			return;
 		} else if (!hasPendingLink && hasExistingLink) {
@@ -241,7 +244,7 @@ public class ShopAdminGUI implements Listener {
 			p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.chestlink.linking-removed"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 
-			p.playSound(shop.location, SlabboSound.DESTROY.sound, SoundCategory.BLOCKS, 1, 1);
+			p.playSound(shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
 
 			DataUtil.saveShops();
 
@@ -259,7 +262,7 @@ public class ShopAdminGUI implements Listener {
 		p.sendMessage(Slabbo.localeManager.getString("general.chestlink.crouch-to-link"));
 		p.closeInventory();
 
-		p.playSound(shop.location, SlabboSound.QUESTION.sound, SoundCategory.BLOCKS, 1, 1);
+		p.playSound(shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 	}
 
 	@EventHandler
@@ -331,7 +334,7 @@ public class ShopAdminGUI implements Listener {
 
 			new BukkitRunnable() {
 				public void run () {
-					e.getPlayer().playSound(shop.location, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+					e.getPlayer().playSound(shop.location, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 					inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
 					openInventory(e.getPlayer());
 				}

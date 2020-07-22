@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class ShopCreationGUI implements Listener {
+	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 	private Inventory inv;
 	private Location slabLocation;
 
@@ -148,8 +150,6 @@ public class ShopCreationGUI implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(final InventoryClickEvent e) {
-		ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
-
 		if (!e.getInventory().equals(inv)) return;
 		e.setCancelled(true);
 
@@ -321,7 +321,7 @@ public class ShopCreationGUI implements Listener {
 
 		new BukkitRunnable() {
 			public void run () {
-				e.getPlayer().playSound(slabLocation, SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+				e.getPlayer().playSound(slabLocation, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				openInventory(e.getPlayer());
 				initializeStage2();
 			}

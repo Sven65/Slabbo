@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.importers.ImportResult;
 import xyz.mackan.Slabbo.importers.UShopImporter;
 import xyz.mackan.Slabbo.types.Shop;
@@ -23,6 +24,8 @@ import java.util.*;
 @CommandAlias("slabbo")
 @Description("Base command for slabbo")
 public class SlabboCommand extends BaseCommand {
+	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 	public Shop getLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
@@ -96,7 +99,7 @@ public class SlabboCommand extends BaseCommand {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
 			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-			player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -112,7 +115,7 @@ public class SlabboCommand extends BaseCommand {
 
 		DataUtil.saveShops();
 
-		player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+		player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 	}
 
 	@Subcommand("destroy")
@@ -122,7 +125,7 @@ public class SlabboCommand extends BaseCommand {
 		Shop lookingAtShop = getLookingAtShop(player);
 		if (lookingAtShop == null) {
 			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-			player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 			return;
 		}
@@ -133,7 +136,7 @@ public class SlabboCommand extends BaseCommand {
 		if (!isShopOwner) {
 			if (!canDestroyOthers) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -213,7 +216,7 @@ public class SlabboCommand extends BaseCommand {
 		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
 			if (newBuyingPrice < -1) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-buy-price"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -221,7 +224,7 @@ public class SlabboCommand extends BaseCommand {
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -232,7 +235,7 @@ public class SlabboCommand extends BaseCommand {
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 					return;
 				}
@@ -250,7 +253,7 @@ public class SlabboCommand extends BaseCommand {
 
 			DataUtil.saveShops();
 
-			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
 		}
 
@@ -260,7 +263,7 @@ public class SlabboCommand extends BaseCommand {
 		public void onModifySellPrice(Player player, int newSellingPrice) {
 			if (newSellingPrice < -1) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-sell-price"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -268,7 +271,7 @@ public class SlabboCommand extends BaseCommand {
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -279,7 +282,7 @@ public class SlabboCommand extends BaseCommand {
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 					return;
 				}
@@ -297,7 +300,7 @@ public class SlabboCommand extends BaseCommand {
 
 			DataUtil.saveShops();
 
-			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
 		}
 
@@ -307,7 +310,7 @@ public class SlabboCommand extends BaseCommand {
 		public void onModifyQuantity(Player player, int newQuantity) {
 			if (newQuantity < 0) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-quantity"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -315,7 +318,7 @@ public class SlabboCommand extends BaseCommand {
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -326,7 +329,7 @@ public class SlabboCommand extends BaseCommand {
 			if (!isShopOwner) {
 				if (!canModifyOthers) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 					return;
 				}
@@ -344,7 +347,7 @@ public class SlabboCommand extends BaseCommand {
 
 			DataUtil.saveShops();
 
-			player.playSound(player.getLocation(), SlabboSound.MODIFY_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
 		}
 
@@ -357,7 +360,7 @@ public class SlabboCommand extends BaseCommand {
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}
@@ -386,7 +389,7 @@ public class SlabboCommand extends BaseCommand {
 			Shop lookingAtShop = getLookingAtShop(player);
 			if (lookingAtShop == null) {
 				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
 				return;
 			}

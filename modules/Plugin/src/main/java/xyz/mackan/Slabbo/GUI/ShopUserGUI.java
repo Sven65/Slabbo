@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -20,6 +21,8 @@ import xyz.mackan.Slabbo.utils.NameUtil;
 import java.util.HashMap;
 
 public class ShopUserGUI implements Listener {
+	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 
 	private Shop shop;
 	private Inventory inv;
@@ -64,7 +67,7 @@ public class ShopUserGUI implements Listener {
 
 		if (shop.stock <= 0 && !shop.admin) {
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.out-of-stock"));
-			((Player) humanEntity).playSound(shop.location, SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -78,7 +81,7 @@ public class ShopUserGUI implements Listener {
 
 		if (playerFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-funds"));
-			((Player) humanEntity).playSound(shop.location, SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -105,7 +108,7 @@ public class ShopUserGUI implements Listener {
 			pInv.removeItem(shopItemClone);
 
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-inventory-space"));
-			((Player) humanEntity).playSound(shop.location, SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -128,7 +131,7 @@ public class ShopUserGUI implements Listener {
 
 		humanEntity.sendMessage(ChatColor.GREEN+userMessage);
 
-		((Player) humanEntity).playSound(shop.location, SlabboSound.BUY_SELL_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
 
 		Slabbo.getEconomy().withdrawPlayer((OfflinePlayer)humanEntity, actualCost);
@@ -179,7 +182,7 @@ public class ShopUserGUI implements Listener {
 			// TODO: Make this configurable
 			// I.E, If selling quantities that aren't the full of what the shop wants
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-items"));
-			((Player) humanEntity).playSound(shop.location, SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -190,7 +193,7 @@ public class ShopUserGUI implements Listener {
 
 		if (shopFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-shop-funds"));
-			((Player) humanEntity).playSound(shop.location, SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -220,7 +223,7 @@ public class ShopUserGUI implements Listener {
 
 		humanEntity.sendMessage(ChatColor.GREEN+userMessage);
 
-		((Player) humanEntity).playSound(shop.location, SlabboSound.BUY_SELL_SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
 		if (!shop.admin) {
 			Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);

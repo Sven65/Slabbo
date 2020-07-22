@@ -3,10 +3,7 @@ package xyz.mackan.Slabbo.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.SoundCategory;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +15,7 @@ import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.pluginsupport.GriefPreventionSupport;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
@@ -25,7 +23,6 @@ import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.PermissionUtil;
@@ -34,6 +31,8 @@ import xyz.mackan.Slabbo.utils.ShopUtil;
 import java.util.HashMap;
 
 public class PlayerInteractListener implements Listener {
+	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
 	public ShopAction getAction (ItemStack itemInHand, Block clickedBlock, Player player) {
 		boolean holdingStick = itemInHand != null && itemInHand.getType() == Material.STICK;
 
@@ -119,7 +118,7 @@ public class PlayerInteractListener implements Listener {
 			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.chestlink.already-linked"));
 			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
 
-			p.playSound(clickedBlock.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+			p.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -141,7 +140,7 @@ public class PlayerInteractListener implements Listener {
 
 		ChestLinkUtil.setChestName(clickedBlock, "Slabbo "+Slabbo.localeManager.replaceKey("general.chestlink.chest-name", replacementMap));
 
-		p.playSound(clickedBlock.getLocation(), SlabboSound.SUCCESS.sound, SoundCategory.BLOCKS, 1, 1);
+		p.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("SUCCESS"), 1, 1);
 
 		DataUtil.saveShops();
 
@@ -184,7 +183,7 @@ public class PlayerInteractListener implements Listener {
 
 				player.sendMessage(ChatColor.RED + Slabbo.localeManager.replaceKey("error-message.general.limit-hit", replacementMap));
 
-				player.playSound(clickedBlock.getLocation(), SlabboSound.BLOCKED.sound, SoundCategory.BLOCKS, 1, 1);
+				player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 				break;
 			}
 			case CREATE: {
