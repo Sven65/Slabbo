@@ -1,6 +1,4 @@
-package xyz.mackan.Slabbo.API;
-
-import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+package xyz.mackan.Slabbo.abstractions;
 
 
 public class SlabboAPI_v1_13_R2 implements SlabboAPI {

@@ -6,9 +6,12 @@ package xyz.mackan.Slabbo;
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
@@ -21,6 +24,7 @@ import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.utils.locale.LocaleManager;
 
 import java.io.File;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Slabbo extends JavaPlugin {
@@ -56,6 +60,7 @@ public class Slabbo extends JavaPlugin {
 			return;
 		}
 
+		loadAPI();
 		setupPluginSupport();
 
 		new File(getDataPath()).mkdirs();
@@ -92,19 +97,20 @@ public class Slabbo extends JavaPlugin {
 		log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
 	}
 
-//	private void setupBackup () {
-//		if (!getConfig().getBoolean("backupfiles.enabled", true)) return;
-//
-//		int repeatTime = getConfig().getInt("backupfiles.savetime", 300);
-//
-//		long repeatTicks = repeatTime * 20;
-//
-//		Bukkit.getScheduler().runTaskTimerAsynchronously(this, new Runnable() {
-//			public void run () {
-//				DataUtil.saveShopsBackup();
-//			}
-//		}, repeatTicks, repeatTicks);
-//	}
+	private void loadAPI () {
+		SlabboAPI api = null;
+
+		String packageName = Slabbo.class.getPackage().getName();
+		String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
+
+		try {
+			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_v" + internalsName).newInstance();
+			Bukkit.getServicesManager().register(SlabboAPI.class, api, this, ServicePriority.Highest);
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | ClassCastException exception) {
+			Bukkit.getLogger().log(Level.SEVERE, "Slabbo could not find a valid implementation for this server version.");
+		}
+	}
+
 
 	private void setupPluginSupport () {
 		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
