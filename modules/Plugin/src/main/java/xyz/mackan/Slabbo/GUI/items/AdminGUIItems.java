@@ -1,19 +1,25 @@
 package xyz.mackan.Slabbo.GUI.items;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.data.type.Slab;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.utils.Misc;
 
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class AdminGUIItems {
+	private static SlabboItemAPI itemAPI = (SlabboItemAPI) Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
+
+
 	public static ItemStack getDepositItem (String itemName, int stock, boolean isAdmin) {
-		ItemStack item = new ItemStack(Material.CHEST_MINECART, 1);
+		ItemStack item = itemAPI.getChestMinecart();
 		ItemMeta meta = item.getItemMeta();
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
@@ -96,7 +102,7 @@ public class AdminGUIItems {
 	}
 
 	public static ItemStack getModifyItem () {
-		ItemStack item = new ItemStack(Material.COMPARATOR, 1);
+		ItemStack item = itemAPI.getComparator();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD + Slabbo.localeManager.getString("gui.items.admin.modify-shop"));
@@ -107,7 +113,7 @@ public class AdminGUIItems {
 	}
 
 	public static ItemStack getViewAsCustomerItem () {
-		ItemStack item = new ItemStack(Material.OAK_SIGN, 1);
+		ItemStack item = itemAPI.getOakSign();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD + Slabbo.localeManager.getString("gui.items.admin.view-as-customer"));

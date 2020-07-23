@@ -22,11 +22,7 @@ public class ItemMergeListener implements Listener {
 			return;
 		}
 
-		ItemMeta meta = stack.getItemMeta();
-
-		PersistentDataContainer container = meta.getPersistentDataContainer();
-
-		boolean hasKey = container.has(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER);
+		boolean hasKey = source.hasMetadata(AttributeKey.NO_MERGE.getKey());
 
 		if (hasKey) {
 			e.setCancelled(true);

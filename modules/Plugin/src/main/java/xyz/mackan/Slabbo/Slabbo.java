@@ -145,6 +145,7 @@ public class Slabbo extends JavaPlugin {
 	}
 
 	private void setupListeners () {
+		// TODO: Remove listeners that don't exist in certain versions
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
 		getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
 		getServer().getPluginManager().registerEvents(new ItemDespawnListener(), this);
@@ -153,6 +154,7 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BlockEventListeners(), this);
 		getServer().getPluginManager().registerEvents(new InventoryMoveListener(), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
 		if (getServer().getPluginManager().getPlugin("ClearLag") != null) {
 			getServer().getPluginManager().registerEvents(new ClearlagItemRemoveListener(), this);

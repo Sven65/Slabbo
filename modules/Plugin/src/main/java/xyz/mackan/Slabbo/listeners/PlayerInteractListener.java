@@ -89,7 +89,7 @@ public class PlayerInteractListener implements Listener {
 
 		Block clickedBlock = e.getClickedBlock();
 
-		Material clickedBlockMaterial = clickedBlock.getBlockData().getMaterial();
+		Material clickedBlockMaterial = clickedBlock.getState().getType();
 
 		if (clickedBlockMaterial != Material.CHEST && clickedBlockMaterial != Material.TRAPPED_CHEST) return;
 
@@ -152,8 +152,6 @@ public class PlayerInteractListener implements Listener {
 		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
 		ItemStack itemInHand = api.getInteractionItemInHand(e);
-
-		if (itemInHand == null) return;
 
 		Player player = e.getPlayer();
 

@@ -1,7 +1,6 @@
 package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.*;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,10 +16,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
-import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -258,7 +255,7 @@ public class ShopCreationGUI implements Listener {
 	// Cancel dragging in our inventory
 	@EventHandler
 	public void onInventoryClick(final InventoryDragEvent e) {
-		if (e.getInventory() == inv) {
+		if (e.getInventory().equals(inv)) {
 			e.setCancelled(true);
 		}
 	}

@@ -4,11 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
@@ -38,11 +41,19 @@ public class InventoryClickListener implements Listener {
 			action != InventoryAction.MOVE_TO_OTHER_INVENTORY
 		) return;
 
-		if(e.getInventory().getLocation() == null) return;
+		InventoryHolder holder = e.getInventory().getHolder();
 
-		Block chestBlock = e.getInventory().getLocation().getBlock();
+		if (!(holder instanceof BlockState)) return;
+
+		Block chestBlock = ((BlockState) holder).getBlock();
 
 		if (chestBlock == null) return;
+
+//		if(e.getInventory().getLocation() == null) return;
+//
+//		Block chestBlock = e.getInventory().getLocation().getBlock();
+//
+//		if (chestBlock == null) return;
 
 		if (!Slabbo.chestLinkUtil.isChestLinked(chestBlock)) return;
 
@@ -115,14 +126,17 @@ public class InventoryClickListener implements Listener {
 
 		if (inv == null) return;
 
-		Location invLocation = inv.getLocation();
+		InventoryHolder holder = e.getInventory().getHolder();
 
-		if (invLocation == null) return;
+		if (!(holder instanceof BlockState)) return;
 
-
-		Block chestBlock = invLocation.getBlock(); // TODO check this
+		Block chestBlock = ((BlockState) holder).getBlock();
 
 		if (chestBlock == null) return;
+
+		Location invLocation = chestBlock.getLocation();
+
+		if (invLocation == null) return;
 
 		if (!Slabbo.chestLinkUtil.isChestLinked(chestBlock)) return;
 

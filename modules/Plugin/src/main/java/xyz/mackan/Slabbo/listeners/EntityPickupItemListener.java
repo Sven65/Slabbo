@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.w3c.dom.Attr;
 import xyz.mackan.Slabbo.types.AttributeKey;
 
 public class EntityPickupItemListener implements Listener {
@@ -21,11 +22,15 @@ public class EntityPickupItemListener implements Listener {
 			return;
 		}
 
-		ItemMeta meta = stack.getItemMeta();
+//		ItemMeta meta = stack.getItemMeta();
+//
+//		PersistentDataContainer container = meta.getPersistentDataContainer();
+//
+//		boolean hasKey = container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
 
-		PersistentDataContainer container = meta.getPersistentDataContainer();
+		System.out.println("NO PICKUP: "+entItem.getMetadata(AttributeKey.NO_PICKUP.getKey()));
 
-		boolean hasKey = container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
+		boolean hasKey = entItem.hasMetadata(AttributeKey.NO_PICKUP.getKey());
 
 		if (hasKey) {
 			e.setCancelled(true);

@@ -14,7 +14,6 @@ import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 
@@ -248,7 +247,7 @@ public class ShopUserGUI implements Listener {
 
 	@EventHandler
 	public void onInventoryClick (final InventoryClickEvent e) {
-		if (e.getInventory() != inv) return;
+		if (!e.getInventory().equals(inv)) return;
 		e.setCancelled(true);
 
 		ItemStack clickedItem = e.getCurrentItem();
@@ -274,7 +273,7 @@ public class ShopUserGUI implements Listener {
 	// Cancel dragging in our inventory
 	@EventHandler
 	public void onInventoryClick(final InventoryDragEvent e) {
-		if (e.getInventory() == inv) {
+		if (e.getInventory().equals(inv)) {
 			e.setCancelled(true);
 		}
 	}

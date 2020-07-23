@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.listeners;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -10,20 +11,25 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Iterator;
 import java.util.Set;
 
 public class BlockEventListeners implements Listener {
+	SlabboAPI api = (SlabboAPI) Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+
 	public boolean isLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-		BlockData blockData = lookingAt.getBlockData();
+//		BlockData blockData = lookingAt.getBlockData();
+//
+//		boolean isSlab = (blockData instanceof Slab);
+//
+//		if (!isSlab) return false;
 
-		boolean isSlab = (blockData instanceof Slab);
-
-		if (!isSlab) return false;
+		if (!api.isSlab(lookingAt)) return false;
 
 		String locationString = ShopUtil.locationToString(lookingAt.getLocation());
 
@@ -52,14 +58,15 @@ public class BlockEventListeners implements Listener {
 	public void onBreak (BlockBreakEvent e) {
 		if (isLookingAtShop(e.getPlayer())) {
 			e.setCancelled(true);
-			e.setDropItems(false);
+
+			//e.setDropItems(false);
 		}
 
 		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 			if (isLookingAtLinkedChest(e.getPlayer())) {
 				e.getPlayer().sendMessage(Slabbo.localeManager.getString("error-message.chestlink.no-destroy-linked"));
 				e.setCancelled(true);
-				e.setDropItems(false);
+				//e.setDropItems(false);
 			}
 		}
 	}

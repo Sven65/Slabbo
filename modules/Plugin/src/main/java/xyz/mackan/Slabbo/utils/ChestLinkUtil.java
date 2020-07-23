@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -11,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.HashMap;
@@ -56,16 +58,14 @@ public class ChestLinkUtil {
 	}
 
 	public static void setChestName (Block chestBlock, String name) {
+		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+
 		if (chestBlock == null) return;
 		BlockState blockState = chestBlock.getState();
 
 		if (!(blockState instanceof Chest)) return;
 
-		Chest chest = (Chest) blockState;
-
-		chest.setCustomName(name);
-
-		chest.update();
+		api.setChestName(chestBlock, name);
 	}
 
 	public static void removeItemsFromChest (Block chestBlock, ItemStack item) {

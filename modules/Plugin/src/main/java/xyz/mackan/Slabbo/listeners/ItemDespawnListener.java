@@ -16,17 +16,13 @@ public class ItemDespawnListener implements Listener {
 	public void onDespawn (ItemDespawnEvent e) {
 		Item entItem = e.getEntity();
 
-		ItemStack stack = entItem.getItemStack();
+//		ItemStack stack = entItem.getItemStack();
 
-		if (!stack.hasItemMeta()) {
-			return;
-		}
+//		if (!stack.hasItemMeta()) {
+//			return;
+//		}
 
-		ItemMeta meta = stack.getItemMeta();
-
-		PersistentDataContainer container = meta.getPersistentDataContainer();
-
-		boolean hasKey = container.has(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
+		boolean hasKey = entItem.hasMetadata(AttributeKey.NO_DESPAWN.getKey());
 
 		if (hasKey) {
 			e.setCancelled(true);

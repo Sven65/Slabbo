@@ -20,9 +20,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class GUIItems {
-	public static ItemStack getBuyPriceItem (int buyPrice) {
-		SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
+	private static SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
 
+
+	public static ItemStack getBuyPriceItem (int buyPrice) {
 		ItemStack item = itemAPI.getGreenStainedGlassPane();//new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
@@ -41,8 +42,6 @@ public class GUIItems {
 	}
 
 	public static ItemStack getSellPriceItem (int sellPrice) {
-		SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
-
 		ItemStack item = itemAPI.getRedStainedGlassPane();
 
 //		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
@@ -64,8 +63,6 @@ public class GUIItems {
 	}
 
 	public static ItemStack getAmountItem (int quantity) {
-		SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
-
 		ItemStack item = itemAPI.getYellowStainedGlassPane();
 
 //		ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
@@ -204,7 +201,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getUserInfoItem (Shop shop) {
-		ItemStack item = new ItemStack(Material.COMMAND_BLOCK, 1);
+		ItemStack item = itemAPI.getCommandBlock();//new ItemStack(Material.COMMAND_BLOCK, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Slabbo "+Slabbo.localeManager.getString("general.general.shop"));
@@ -249,7 +246,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getDestroyConfirmItem () {
-		ItemStack item = new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
+		ItemStack item = itemAPI.getLimeStainedGlassPane();//new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("general.general.destroy-shop"));

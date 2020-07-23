@@ -2,7 +2,6 @@ package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.SoundCategory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,14 +14,15 @@ import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.types.SlabboSound;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.UUID;
 
 public class ShopDeletionGUI  implements Listener {
+	private ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
+
 	private Shop shop;
 	private Inventory inv;
 
@@ -38,8 +38,6 @@ public class ShopDeletionGUI  implements Listener {
 
 	public void handleDestroy (HumanEntity humanEntity) {
 		UUID userId = humanEntity.getUniqueId();
-		ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
-
 
 		ItemUtil.removeShopItemsAtLocation(shop.location);
 
@@ -53,8 +51,6 @@ public class ShopDeletionGUI  implements Listener {
 	}
 
 	public void handleCancel (HumanEntity humanEntity) {
-		ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
-
 		humanEntity.closeInventory();
 
 		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
@@ -73,7 +69,7 @@ public class ShopDeletionGUI  implements Listener {
 
 	@EventHandler
 	public void onInventoryClick (final InventoryClickEvent e) {
-		if (e.getInventory() != inv) return;
+		if (!e.getInventory().equals(inv)) return;
 		e.setCancelled(true);
 
 		ItemStack clickedItem = e.getCurrentItem();
@@ -99,7 +95,7 @@ public class ShopDeletionGUI  implements Listener {
 	// Cancel dragging in our inventory
 	@EventHandler
 	public void onInventoryClick(final InventoryDragEvent e) {
-		if (e.getInventory() == inv) {
+		if (e.getInventory().equals(inv)) {
 			e.setCancelled(true);
 		}
 	}
