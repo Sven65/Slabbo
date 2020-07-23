@@ -37,4 +37,10 @@ public interface SlabboAPI {
 	boolean getNoMerge (Item item);
 
 	String getShopLocation (Item item);
+
+	void setNoPickup (Item item, int value);
+	void setNoDespawn (Item item, int value);
+	void setNoMerge (Item item, int value);
+	void setShopLocation (Item item, Location location);
+
 }

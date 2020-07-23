@@ -36,15 +36,12 @@ public class ClearlagItemRemoveListener implements Listener {
 
 			ItemStack itemStack = item.getItemStack();
 
+			boolean noDespawn = api.getNoDespawn(item);
 
 
-			if (!item.hasMetadata(MetaKey.NO_DESPAWN.getKey())) continue;
+			if (!noDespawn) continue;
 
-//			boolean noDespawn = itemEntity.hasMetadata(AttributeKey.NO_DESPAWN.getKey());
-//
-//			if (noDespawn) {
-				entitiesToKeep.add(itemEntity);
-//			}
+			entitiesToKeep.add(itemEntity);
 		}
 
 

@@ -44,12 +44,11 @@ public class ItemUtil {
 		}
 	}
 
-	// TODO: Make this API method
 	public static void setEntityToShopItem (Item item, Location location) {
-		item.setMetadata(MetaKey.NO_PICKUP.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
-		item.setMetadata(MetaKey.NO_DESPAWN.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
-		item.setMetadata(MetaKey.NO_MERGE.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
-		item.setMetadata(MetaKey.SHOP_LOCATION.getKey(), new FixedMetadataValue(Slabbo.getInstance(), ShopUtil.locationToString(location)));
+		api.setNoPickup(item, 1);
+		api.setNoDespawn(item, 1);
+		api.setNoMerge(item, 1);
+		api.setShopLocation(item, location);
 	}
 
 	public static void dropShopItem (Location location, ItemStack item, int quantity) {
@@ -115,8 +114,6 @@ public class ItemUtil {
 //
 //			int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
 //			int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
-
-			// TODO: Move this to api.isSlabboItem(Item)
 
 			boolean isSlabboItem = api.isSlabboItem(item);
 

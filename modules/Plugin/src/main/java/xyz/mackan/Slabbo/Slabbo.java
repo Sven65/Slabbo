@@ -1,5 +1,3 @@
-// TODO: Delete shop
-// TODO: Admin shops
 // TODO: Docs
 package xyz.mackan.Slabbo;
 

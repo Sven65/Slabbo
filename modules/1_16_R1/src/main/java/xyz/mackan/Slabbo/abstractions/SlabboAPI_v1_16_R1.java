@@ -15,8 +15,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
+import org.w3c.dom.Attr;
+import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.types.AttributeKey;
+import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
+import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Collection;
 
@@ -66,6 +75,7 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 	@Override
 	public void setGravity (Item item, boolean gravity) {
 		item.setGravity(gravity);
+
 	}
 
 	public Collection<Entity> getNearbyEntities (Location location, double x, double y, double z) {
@@ -82,5 +92,111 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 		chest.setCustomName(name);
 
 		chest.update();
+	}
+
+	public boolean getNoPickup (Item item) {
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		if (container == null || !container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER)) {
+			int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
+
+			return noPickup == 1;
+		}
+
+		int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
+
+		return noPickup == 1;
+	}
+
+	public boolean getNoDespawn (Item item) {
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
+		return noDespawn == 1;
+	}
+
+	public boolean getNoMerge (Item item) {
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		int noMerge = container.get(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER);
+
+		return noMerge == 1;
+	}
+
+	public String getShopLocation (Item item) {
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		String shopLocation = container.get(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING);
+
+		return shopLocation;
+	}
+
+	public void setNoPickup (Item item, int value) {
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		container.set(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER, value);
+
+		itemStack.setItemMeta(itemMeta);
+
+		item.setItemStack(itemStack);
+	}
+
+
+	public void setNoDespawn (Item item, int value) {
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		container.set(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER, value);
+
+		itemStack.setItemMeta(itemMeta);
+
+		item.setItemStack(itemStack);
+	}
+
+	public void setNoMerge (Item item, int value) {
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		container.set(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER, value);
+
+		itemStack.setItemMeta(itemMeta);
+
+		item.setItemStack(itemStack);
+	}
+
+	public void setShopLocation (Item item, Location location) {
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		container.set(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING, ShopUtil.locationToString(location));
+
+		itemStack.setItemMeta(itemMeta);
+
+		item.setItemStack(itemStack);
+	}
+
+	public boolean isSlabboItem (Item item) {
+		return getNoPickup(item) && getNoDespawn(item);
 	}
 }

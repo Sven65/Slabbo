@@ -13,9 +13,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.util.Vector;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
+import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Collection;
 
@@ -26,10 +29,6 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 		net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
 
 		return nmsStack.getName();
-
-//		LocaleLanguage lang = new LocaleLanguage();
-//
-//		return lang.a(nmsStack.getItem().getName());
 	}
 
 	public ItemStack getInteractionItemInHand (PlayerInteractEvent e) {
@@ -113,11 +112,24 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 		return item.getMetadata(MetaKey.SHOP_LOCATION.getKey()).get(0).asString();
 	}
 
-	@Override
-	public boolean isSlabboItem (Item item) {
-		int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
-		int noDespawn = item.getMetadata(MetaKey.NO_DESPAWN.getKey()).get(0).asInt();
+	public void setNoPickup (Item item, int value) {
+		item.setMetadata(MetaKey.NO_PICKUP.getKey(), new FixedMetadataValue(Slabbo.getInstance(), value));
+	}
 
-		return (noPickup == 1 && noDespawn == 1);
+
+	public void setNoDespawn (Item item, int value) {
+		item.setMetadata(MetaKey.NO_DESPAWN.getKey(), new FixedMetadataValue(Slabbo.getInstance(), value));
+	}
+
+	public void setNoMerge (Item item, int value) {
+		item.setMetadata(MetaKey.NO_MERGE.getKey(), new FixedMetadataValue(Slabbo.getInstance(), value));
+	}
+
+	public void setShopLocation (Item item, Location location) {
+		item.setMetadata(MetaKey.SHOP_LOCATION.getKey(), new FixedMetadataValue(Slabbo.getInstance(), ShopUtil.locationToString(location)));
+	}
+
+	public boolean isSlabboItem (Item item) {
+		return getNoPickup(item) && getNoDespawn(item);
 	}
 }
