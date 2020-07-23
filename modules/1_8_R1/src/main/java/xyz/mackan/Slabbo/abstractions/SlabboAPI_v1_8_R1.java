@@ -6,7 +6,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.block.CraftChest;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
@@ -15,7 +14,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import xyz.mackan.Slabbo.listeners.PlayerPickupItemListener;
+import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 
 import java.util.Collection;
@@ -90,5 +89,35 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 		((TileEntityChest) tileEntity).a(name);
 
 		chest.update();
+	}
+
+	public boolean getNoPickup (Item item) {
+		int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
+
+		return noPickup == 1;
+	}
+
+	public boolean getNoDespawn (Item item) {
+		int noDespawn = item.getMetadata(MetaKey.NO_DESPAWN.getKey()).get(0).asInt();
+
+		return noDespawn == 1;
+	}
+
+	public boolean getNoMerge (Item item) {
+		int noMerge = item.getMetadata(MetaKey.NO_MERGE.getKey()).get(0).asInt();
+
+		return noMerge == 1;
+	}
+
+	public String getShopLocation (Item item) {
+		return item.getMetadata(MetaKey.SHOP_LOCATION.getKey()).get(0).asString();
+	}
+
+	@Override
+	public boolean isSlabboItem (Item item) {
+		int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
+		int noDespawn = item.getMetadata(MetaKey.NO_DESPAWN.getKey()).get(0).asInt();
+
+		return (noPickup == 1 && noDespawn == 1);
 	}
 }

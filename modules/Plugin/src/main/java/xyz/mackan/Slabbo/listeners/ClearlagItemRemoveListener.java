@@ -1,23 +1,23 @@
 package xyz.mackan.Slabbo.listeners;
 
 import me.minebuilders.clearlag.events.EntityRemoveEvent;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftItem;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import xyz.mackan.Slabbo.types.AttributeKey;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.types.MetaKey;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class ClearlagItemRemoveListener implements Listener {
+	private static SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDespawn (EntityRemoveEvent e) {
 		List<Entity> items = e.getEntityList();
@@ -28,7 +28,7 @@ public class ClearlagItemRemoveListener implements Listener {
 		while (it.hasNext()) {
 			Entity itemEntity = it.next();
 
-			boolean isItem = (itemEntity instanceof Item) || (itemEntity instanceof CraftItem);
+			boolean isItem = api.isItem(itemEntity);
 
 			if (!isItem) continue;
 
@@ -36,7 +36,9 @@ public class ClearlagItemRemoveListener implements Listener {
 
 			ItemStack itemStack = item.getItemStack();
 
-			if (!item.hasMetadata(AttributeKey.NO_DESPAWN.getKey())) continue;
+
+
+			if (!item.hasMetadata(MetaKey.NO_DESPAWN.getKey())) continue;
 
 //			boolean noDespawn = itemEntity.hasMetadata(AttributeKey.NO_DESPAWN.getKey());
 //

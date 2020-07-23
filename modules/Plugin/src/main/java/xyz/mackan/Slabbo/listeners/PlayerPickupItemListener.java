@@ -4,8 +4,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.ItemStack;
-import xyz.mackan.Slabbo.types.AttributeKey;
+import xyz.mackan.Slabbo.types.MetaKey;
 
 // For 1.8
 public class PlayerPickupItemListener implements Listener {
@@ -13,7 +12,7 @@ public class PlayerPickupItemListener implements Listener {
 	public void onPickup(PlayerPickupItemEvent e) {
 		Item entItem = e.getItem();
 
-		boolean hasKey = entItem.hasMetadata(AttributeKey.NO_PICKUP.getKey());
+		boolean hasKey = entItem.hasMetadata(MetaKey.NO_PICKUP.getKey());
 
 		if (hasKey) {
 			e.setCancelled(true);

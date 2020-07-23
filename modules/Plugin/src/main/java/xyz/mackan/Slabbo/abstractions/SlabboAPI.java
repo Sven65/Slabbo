@@ -27,4 +27,14 @@ public interface SlabboAPI {
 	boolean isItem (Entity entity);
 
 	void setChestName (Block chestBlock, String name);
+
+	boolean isSlabboItem (Item item);
+
+	boolean getNoPickup (Item item);
+
+	boolean getNoDespawn (Item item);
+
+	boolean getNoMerge (Item item);
+
+	String getShopLocation (Item item);
 }

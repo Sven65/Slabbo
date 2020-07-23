@@ -4,31 +4,23 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Slab;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftItem;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.w3c.dom.Attr;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
-import xyz.mackan.Slabbo.types.AttributeKey;
+import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 public class ItemUtil {
 
 	private static SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
 	public static double getSlabYOffset (Location location) {
-		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 		Block block = location.getBlock();
 
 		if (block == null) return 0;
@@ -52,11 +44,12 @@ public class ItemUtil {
 		}
 	}
 
+	// TODO: Make this API method
 	public static void setEntityToShopItem (Item item, Location location) {
-		item.setMetadata(AttributeKey.NO_PICKUP.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
-		item.setMetadata(AttributeKey.NO_DESPAWN.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
-		item.setMetadata(AttributeKey.NO_MERGE.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
-		item.setMetadata(AttributeKey.SHOP_LOCATION.getKey(), new FixedMetadataValue(Slabbo.getInstance(), ShopUtil.locationToString(location)));
+		item.setMetadata(MetaKey.NO_PICKUP.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
+		item.setMetadata(MetaKey.NO_DESPAWN.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
+		item.setMetadata(MetaKey.NO_MERGE.getKey(), new FixedMetadataValue(Slabbo.getInstance(), 1));
+		item.setMetadata(MetaKey.SHOP_LOCATION.getKey(), new FixedMetadataValue(Slabbo.getInstance(), ShopUtil.locationToString(location)));
 	}
 
 	public static void dropShopItem (Location location, ItemStack item, int quantity) {
@@ -114,7 +107,7 @@ public class ItemUtil {
 
 			Item item = (Item) entity;
 
-			if (!item.hasMetadata(AttributeKey.NO_PICKUP.getKey())) continue;
+			if (!item.hasMetadata(MetaKey.NO_PICKUP.getKey())) continue;
 
 //			ItemMeta meta = itemStack.getItemMeta();
 //
@@ -123,11 +116,11 @@ public class ItemUtil {
 //			int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
 //			int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
 
-			int noPickup = item.getMetadata(AttributeKey.NO_PICKUP.getKey()).get(0).asInt();
-			int noDespawn = item.getMetadata(AttributeKey.NO_DESPAWN.getKey()).get(0).asInt();
+			// TODO: Move this to api.isSlabboItem(Item)
 
+			boolean isSlabboItem = api.isSlabboItem(item);
 
-			if (!(noPickup == 1 && noDespawn == 1)) continue;
+			if (!isSlabboItem) continue;
 
 			shopItems.add(item);
 		}
@@ -151,7 +144,7 @@ public class ItemUtil {
 
 			ItemStack itemStack = item.getItemStack();
 
-			if (!item.hasMetadata(AttributeKey.NO_PICKUP.getKey())) continue;
+			if (!item.hasMetadata(MetaKey.NO_PICKUP.getKey())) continue;
 
 //			ItemMeta meta = itemStack.getItemMeta();
 //
@@ -159,7 +152,7 @@ public class ItemUtil {
 //
 //			String itemLocationString = container.get(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING);
 
-			String itemLocationString = item.getMetadata(AttributeKey.SHOP_LOCATION.getKey()).get(0).asString();
+			String itemLocationString = item.getMetadata(MetaKey.SHOP_LOCATION.getKey()).get(0).asString();
 
 			if (itemLocationString == null || itemLocationString.equals("")) continue;
 
