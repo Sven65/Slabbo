@@ -42,23 +42,13 @@ public class InventoryClickListener implements Listener {
 			action != InventoryAction.MOVE_TO_OTHER_INVENTORY
 		) return;
 
-		InventoryHolder holder = e.getInventory().getHolder();
+		Location inventoryLocation = Misc.getInventoryLocation(e.getInventory());
 
-		if (!(holder instanceof BlockState)) return;
+		if (inventoryLocation == null) return;
 
-		Block chestBlock = ((BlockState) holder).getBlock();
-
-		if (chestBlock == null) return;
-
-//		if(e.getInventory().getLocation() == null) return;
-//
-//		Block chestBlock = e.getInventory().getLocation().getBlock();
-//
-//		if (chestBlock == null) return;
+		Block chestBlock = inventoryLocation.getBlock();
 
 		if (!Slabbo.chestLinkUtil.isChestLinked(chestBlock)) return;
-
-
 
 		boolean isTopInventory = false;
 		ItemStack item = null;
