@@ -108,7 +108,7 @@ public class ItemUtil {
 		List<Item> shopItems = new ArrayList<Item>();
 
 		for (Entity entity : worldEntities) {
-			boolean isItem = (entity instanceof Item) || (entity instanceof CraftItem);
+			boolean isItem = api.isItem(entity);//(entity instanceof Item) || (entity instanceof CraftItem);
 
 			if (!isItem) continue;
 

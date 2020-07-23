@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.listeners;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
+import xyz.mackan.Slabbo.utils.Misc;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 
@@ -29,9 +31,11 @@ public class InventoryMoveListener implements Listener {
 
 		if (destinationInventory == null) return;
 
-		if (destinationInventory.getLocation() == null) return;
+		Location destinationLocation = Misc.getInventoryLocation(destinationInventory);
 
-		Block destinationBlock = destinationInventory.getLocation().getBlock();
+		if (destinationLocation == null) return;
+
+		Block destinationBlock = destinationLocation.getBlock();
 
 		if (!Slabbo.chestLinkUtil.isChestLinked(destinationBlock)) return;
 

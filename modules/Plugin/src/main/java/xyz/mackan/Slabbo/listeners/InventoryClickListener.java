@@ -17,6 +17,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
+import xyz.mackan.Slabbo.utils.Misc;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.ArrayList;
@@ -126,17 +127,11 @@ public class InventoryClickListener implements Listener {
 
 		if (inv == null) return;
 
-		InventoryHolder holder = e.getInventory().getHolder();
-
-		if (!(holder instanceof BlockState)) return;
-
-		Block chestBlock = ((BlockState) holder).getBlock();
-
-		if (chestBlock == null) return;
-
-		Location invLocation = chestBlock.getLocation();
+		Location invLocation = Misc.getInventoryLocation(inv);
 
 		if (invLocation == null) return;
+
+		Block chestBlock = invLocation.getBlock();
 
 		if (!Slabbo.chestLinkUtil.isChestLinked(chestBlock)) return;
 
