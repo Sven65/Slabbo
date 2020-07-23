@@ -44,10 +44,12 @@
                 <targetPath>.</targetPath>
                 <filtering>true</filtering>
                 <directory>${basedir}/src/main/resources/</directory>
+
                 <includes>
                     <include>plugin.yml</include>
                     <include>config.yml</include>
                     <include>lang.yml</include>
+                    <include>acf_lang.yml</include>
                 </includes>
             </resource>
         </resources>
@@ -80,6 +82,7 @@
             <groupId>co.aikar</groupId>
             <artifactId>acf-paper</artifactId>
             <version>0.5.0-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>

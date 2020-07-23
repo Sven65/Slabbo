@@ -1,7 +1,6 @@
 package xyz.mackan.Slabbo.listeners;
 
 import org.bukkit.ChatColor;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,7 +11,6 @@ import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;

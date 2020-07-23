@@ -28,6 +28,14 @@
                   <include>xyz.mackan:Slabbo-*</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>acf-*.properties</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
           <execution>
@@ -40,13 +48,21 @@
               <relocations>
                 <relocation>
                   <pattern>co.aikar.commands</pattern>
-                  <shadedPattern>xyz.mackan.Slabbo.acf</shadedPattern>
+                  <shadedPattern>xyz.mackan.Slabbo.lib.acf</shadedPattern>
                 </relocation>
                 <relocation>
                   <pattern>co.aikar.locales</pattern>
-                  <shadedPattern>xyz.mackan.Slabbo.locales</shadedPattern>
+                  <shadedPattern>xyz.mackan.Slabbo.lib.locales</shadedPattern>
                 </relocation>
               </relocations>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>acf-*.properties</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>

@@ -3,11 +3,9 @@ package xyz.mackan.Slabbo.GUI.items;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.block.data.type.Slab;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.Slabbo;
-import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.utils.Misc;
 

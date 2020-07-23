@@ -7,6 +7,7 @@ import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.ServicePriority;
@@ -26,6 +27,8 @@ import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.utils.locale.LocaleManager;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -72,6 +75,7 @@ public class Slabbo extends JavaPlugin {
 		this.saveDefaultConfig();
 
 		saveResource("lang.yml", false);
+		saveResource("acf_lang.yml", false);
 
 		instance = this;
 
@@ -166,6 +170,14 @@ public class Slabbo extends JavaPlugin {
 		PaperCommandManager manager = new PaperCommandManager(this);
 
 		manager.enableUnstableAPI("help");
+
+		System.out.println("MANAGER LOC: "+manager.getLocales());
+
+		try {
+			manager.getLocales().loadYamlLanguageFile("acf_lang.yml", Locale.ENGLISH);
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 
 		manager.getCommandCompletions().registerCompletion("importFiles", c -> {
 			return SlabboCommandCompletions.getImportFiles();

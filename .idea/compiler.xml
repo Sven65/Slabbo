@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Slabbo-1_12_R1" />
+        <module name="Slabbo-1_13_R1" />
         <module name="Slabbo-1_11_R1" />
         <module name="Slabbo-1_9_R2" />
         <module name="Slabbo-1_9_R1" />
@@ -18,7 +19,6 @@
         <module name="Slabbo-1_15_R1" />
         <module name="Slabbo-1_14_R1" />
         <module name="Slabbo-1_13_R2" />
-        <module name="Slabbo-1_13_R1" />
         <module name="Slabbo-plugin" />
       </profile>
       <profile name="Annotation profile for Slabbo" enabled="true">
@@ -51,6 +51,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Slabbo" options="-parameters" />
+      <module name="Slabbo-dist" options="" />
       <module name="Slabbo-plugin" options="-parameters" />
     </option>
   </component>

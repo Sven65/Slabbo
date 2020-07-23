@@ -36,6 +36,14 @@
                                     <include>xyz.mackan:Slabbo-*</include>
                                 </includes>
                             </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>acf-*.properties</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                     <execution>
@@ -48,13 +56,21 @@
                             <relocations>
                                 <relocation>
                                     <pattern>co.aikar.commands</pattern>
-                                    <shadedPattern>xyz.mackan.Slabbo.acf</shadedPattern> <!-- Replace this -->
+                                    <shadedPattern>xyz.mackan.Slabbo.lib.acf</shadedPattern> <!-- Replace this -->
                                 </relocation>
                                 <relocation>
                                     <pattern>co.aikar.locales</pattern>
-                                    <shadedPattern>xyz.mackan.Slabbo.locales</shadedPattern> <!-- Replace this -->
+                                    <shadedPattern>xyz.mackan.Slabbo.lib.locales</shadedPattern> <!-- Replace this -->
                                 </relocation>
                             </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>acf-*.properties</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -62,7 +78,22 @@
         </plugins>
     </build>
 
+    <repositories>
+<!--        <repository>-->
+<!--            <id>aikar</id>-->
+<!--            <url>https://repo.aikar.co/content/groups/aikar/</url>-->
+<!--        </repository>-->
+    </repositories>
+
+
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>co.aikar</groupId>-->
+<!--            <artifactId>acf-paper</artifactId>-->
+<!--            <version>0.5.0-SNAPSHOT</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>xyz.mackan</groupId>
             <artifactId>Slabbo-plugin</artifactId>
