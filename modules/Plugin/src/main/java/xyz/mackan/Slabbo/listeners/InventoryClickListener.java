@@ -53,11 +53,8 @@ public class InventoryClickListener implements Listener {
 		boolean isTopInventory = false;
 		ItemStack item = null;
 
-		Inventory chestInv = null;
-
 		if (action == InventoryAction.PLACE_ALL || action == InventoryAction.PLACE_ONE) {
 			isTopInventory = e.getRawSlot() < e.getInventory().getSize();
-			chestInv = e.getClickedInventory();
 			item = e.getCursor();
 
 			if (action == InventoryAction.PLACE_ONE) {
@@ -69,7 +66,6 @@ public class InventoryClickListener implements Listener {
 		if (action == InventoryAction.MOVE_TO_OTHER_INVENTORY && e.getClickedInventory().getType() == InventoryType.PLAYER) {
 			isTopInventory = true;
 			item = e.getCurrentItem();
-			chestInv = e.getInventory();
 		}
 
 		if (!isTopInventory) return;

@@ -45,7 +45,6 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		this.stock = stock;
 		this.ownerId = ownerId;
 		this.admin = admin;
-//		this.droppedItemId = droppedItemId;
 		this.linkedChestLocation = linkedChestLocation;
 	}
 
@@ -77,7 +76,6 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("stock", stock);
 		result.put("admin", admin);
 		result.put("ownerId", ownerId.toString());
-//		result.put("droppedItemId", droppedItemId.toString());
 
 		result.put("linkedChestLocation", linkedChestLocation);
 

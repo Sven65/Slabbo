@@ -143,8 +143,6 @@ public class PlayerInteractListener implements Listener {
 		p.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("SUCCESS"), 1, 1);
 
 		DataUtil.saveShops();
-
-		//p.isSneaking();
 	}
 
 	@EventHandler

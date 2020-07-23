@@ -129,7 +129,7 @@ public class ShopCreationGUI implements Listener {
 
 	protected ItemStack createGuiItem () {
 		SlabboItemAPI api = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
-		ItemStack item = api.getRedStainedGlassPane();//new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
+		ItemStack item = api.getRedStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.RED+Slabbo.localeManager.getString("gui.items.new-shop.click-item-below"));

@@ -188,7 +188,7 @@ public class ShopUserGUI implements Listener {
 		itemCount = Math.min(itemCount, shop.quantity);
 
 
-		int totalCost = shop.sellPrice;// * itemCount;
+		int totalCost = shop.sellPrice;
 
 		if (shopFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.not-enough-shop-funds"));

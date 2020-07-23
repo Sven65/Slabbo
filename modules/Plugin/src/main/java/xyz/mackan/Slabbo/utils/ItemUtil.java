@@ -8,7 +8,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.types.MetaKey;
@@ -24,16 +23,6 @@ public class ItemUtil {
 		Block block = location.getBlock();
 
 		if (block == null) return 0;
-
-//		BlockData blockData = block.getBlockData();
-//
-//		boolean isSlab = (blockData instanceof Slab);
-//
-//		if (!isSlab) return 0;
-//
-//		Slab slab = (Slab) blockData;
-//
-//		Slab.Type slabType = slab.getType();
 
 		SlabType slabType = api.getSlabType(block);
 
@@ -70,13 +59,6 @@ public class ItemUtil {
 			clonedItem.setAmount(64);
 		}
 
-//		meta.getPersistentDataContainer().set(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER, 1);
-//		meta.getPersistentDataContainer().set(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER, 1);
-//		meta.getPersistentDataContainer().set(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER, 1);
-//		meta.getPersistentDataContainer().set(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING, ShopUtil.locationToString(location));
-//
-//		clonedItem.setItemMeta(meta);
-
 		meta.setLore(Arrays.asList("Slabbo Item "+UUID.randomUUID().toString()));
 
 		clonedItem.setItemMeta(meta);
@@ -86,8 +68,6 @@ public class ItemUtil {
 		setEntityToShopItem(itemEnt, location);
 
 		api.setGravity(itemEnt, false);
-
-		//itemEnt.setGravity(false);
 
 		itemEnt.setVelocity(itemEnt.getVelocity().zero());
 
@@ -100,20 +80,13 @@ public class ItemUtil {
 		List<Item> shopItems = new ArrayList<Item>();
 
 		for (Entity entity : worldEntities) {
-			boolean isItem = api.isItem(entity);//(entity instanceof Item) || (entity instanceof CraftItem);
+			boolean isItem = api.isItem(entity);
 
 			if (!isItem) continue;
 
 			Item item = (Item) entity;
 
 			if (!item.hasMetadata(MetaKey.NO_PICKUP.getKey())) continue;
-
-//			ItemMeta meta = itemStack.getItemMeta();
-//
-//			PersistentDataContainer container = meta.getPersistentDataContainer();
-//
-//			int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
-//			int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
 
 			boolean isSlabboItem = api.isSlabboItem(item);
 
@@ -126,7 +99,7 @@ public class ItemUtil {
 	}
 
 	public static List<Item> findShopItems (Location location) {
-		Collection<Entity> nearbyEntites = api.getNearbyEntities(location, 0.5, 2, 0.5);//location.getWorld().getNearbyEntities(location, 0.5, 2, 0.5);
+		Collection<Entity> nearbyEntites = api.getNearbyEntities(location, 0.5, 2, 0.5);
 
 		String locationString = ShopUtil.locationToString(location);
 
@@ -139,17 +112,9 @@ public class ItemUtil {
 
 			Item item = (Item) entity;
 
-			ItemStack itemStack = item.getItemStack();
+			if (!api.isSlabboItem(item)) continue;
 
-			if (!item.hasMetadata(MetaKey.NO_PICKUP.getKey())) continue;
-
-//			ItemMeta meta = itemStack.getItemMeta();
-//
-//			PersistentDataContainer container = meta.getPersistentDataContainer();
-//
-//			String itemLocationString = container.get(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING);
-
-			String itemLocationString = item.getMetadata(MetaKey.SHOP_LOCATION.getKey()).get(0).asString();
+			String itemLocationString = api.getShopLocation(item);
 
 			if (itemLocationString == null || itemLocationString.equals("")) continue;
 

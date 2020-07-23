@@ -21,12 +21,6 @@ public class BlockEventListeners implements Listener {
 	public boolean isLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-//		BlockData blockData = lookingAt.getBlockData();
-//
-//		boolean isSlab = (blockData instanceof Slab);
-//
-//		if (!isSlab) return false;
-
 		if (!api.isSlab(lookingAt)) return false;
 
 		String locationString = ShopUtil.locationToString(lookingAt.getLocation());

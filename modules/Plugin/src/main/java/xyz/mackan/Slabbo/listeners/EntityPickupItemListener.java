@@ -16,13 +16,6 @@ public class EntityPickupItemListener implements Listener {
 	public void onPickup(EntityPickupItemEvent e) {
 		Item entItem = e.getItem();
 
-//		ItemMeta meta = stack.getItemMeta();
-//
-//		PersistentDataContainer container = meta.getPersistentDataContainer();
-//
-//		boolean hasKey = container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
-		boolean hasKey = entItem.hasMetadata(MetaKey.NO_PICKUP.getKey());
-
 		boolean noPickup = api.getNoPickup(entItem);
 
 		if (noPickup) {

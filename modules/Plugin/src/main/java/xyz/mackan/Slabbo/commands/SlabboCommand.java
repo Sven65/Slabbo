@@ -39,7 +39,6 @@ public class SlabboCommand extends BaseCommand {
 
 	@HelpCommand
 	public static void onCommand(CommandSender sender, CommandHelp help) {
-		//sender.sendMessage("=====[ Slabbo ]=====");
 		help.showHelp();
 	}
 
@@ -52,12 +51,6 @@ public class SlabboCommand extends BaseCommand {
 		Slabbo.getInstance().reloadConfig();
 
 		ItemUtil.removeShopItems(player.getWorld());
-
-		for (String shopKey : Slabbo.shopUtil.shops.keySet()) {
-			Shop shop = Slabbo.shopUtil.shops.get(shopKey);
-
-			//ItemUtil.removeShopItemsAtLocation(shop.location);
-		}
 
 		Slabbo.chestLinkUtil.links = new HashMap<String, Shop>();
 		Slabbo.shopUtil.shops = new HashMap<String, Shop>();
@@ -205,7 +198,6 @@ public class SlabboCommand extends BaseCommand {
 	public class SlabboModifyCommand extends BaseCommand {
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
-			//sender.sendMessage("=====[ Slabbo Modification ]=====");
 			help.showHelp();
 		}
 

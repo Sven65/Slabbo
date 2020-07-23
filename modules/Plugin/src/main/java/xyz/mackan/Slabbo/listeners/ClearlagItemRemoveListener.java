@@ -34,10 +34,7 @@ public class ClearlagItemRemoveListener implements Listener {
 
 			Item item = (Item) itemEntity;
 
-			ItemStack itemStack = item.getItemStack();
-
 			boolean noDespawn = api.getNoDespawn(item);
-
 
 			if (!noDespawn) continue;
 

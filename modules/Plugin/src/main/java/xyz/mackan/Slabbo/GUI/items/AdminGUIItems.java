@@ -15,7 +15,6 @@ import java.util.HashMap;
 public class AdminGUIItems {
 	private static SlabboItemAPI itemAPI = (SlabboItemAPI) Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
 
-
 	public static ItemStack getDepositItem (String itemName, int stock, boolean isAdmin) {
 		ItemStack item = itemAPI.getChestMinecart();
 		ItemMeta meta = item.getItemMeta();

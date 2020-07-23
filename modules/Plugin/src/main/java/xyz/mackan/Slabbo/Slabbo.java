@@ -40,8 +40,6 @@ public class Slabbo extends JavaPlugin {
 	private static String dataPath = null;
 
 	private static Economy econ = null;
-	private static Permission perms = null;
-//	private static Chat chat = null;
 
 	private static Slabbo instance;
 
@@ -67,7 +65,6 @@ public class Slabbo extends JavaPlugin {
 		setupPluginSupport();
 
 		new File(getDataPath()).mkdirs();
-//		new File(getDataPath()+"/backups/").mkdirs();
 
 
 		this.saveDefaultConfig();
@@ -79,11 +76,9 @@ public class Slabbo extends JavaPlugin {
 
 		localeManager = new LocaleManager();
 
-		setupPermissions();
 		setupCommands();
 		setupListeners();
 
-//		setupBackup();
 
 		checkUpdates();
 
@@ -174,7 +169,7 @@ public class Slabbo extends JavaPlugin {
 		try {
 			manager.getLocales().loadYamlLanguageFile("acf_lang.yml", Locale.ENGLISH);
 		} catch (IOException | InvalidConfigurationException e) {
-			e.printStackTrace();
+			getLogger().severe("Slabbo couldn't load acf_lang.yml.");
 		}
 
 		manager.getCommandCompletions().registerCompletion("importFiles", c -> {
@@ -196,22 +191,12 @@ public class Slabbo extends JavaPlugin {
 		return econ != null;
 	}
 
-	private boolean setupPermissions() {
-		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-		perms = rsp.getProvider();
-		return perms != null;
-	}
-
 	public static String getDataPath () {
 		return dataPath;
 	}
 
 	public static Economy getEconomy() {
 		return econ;
-	}
-
-	public static Permission getPermissions() {
-		return perms;
 	}
 
 	public static Slabbo getInstance() { return instance; }

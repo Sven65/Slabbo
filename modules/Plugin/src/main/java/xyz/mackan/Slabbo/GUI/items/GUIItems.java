@@ -21,7 +21,7 @@ public class GUIItems {
 
 
 	public static ItemStack getBuyPriceItem (int buyPrice) {
-		ItemStack item = itemAPI.getGreenStainedGlassPane();//new ItemStack(Material.GREEN_STAINED_GLASS_PANE, 1);
+		ItemStack item = itemAPI.getGreenStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GREEN+ Slabbo.localeManager.getString("general.general.buy-price"));
@@ -41,7 +41,6 @@ public class GUIItems {
 	public static ItemStack getSellPriceItem (int sellPrice) {
 		ItemStack item = itemAPI.getRedStainedGlassPane();
 
-//		ItemStack item = new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.RED+ Slabbo.localeManager.getString("general.general.sell-price"));
@@ -62,7 +61,6 @@ public class GUIItems {
 	public static ItemStack getAmountItem (int quantity) {
 		ItemStack item = itemAPI.getYellowStainedGlassPane();
 
-//		ItemStack item = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE, 1);
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.YELLOW+ Slabbo.localeManager.getString("general.general.quantity"));
@@ -198,7 +196,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getUserInfoItem (Shop shop) {
-		ItemStack item = itemAPI.getCommandBlock();//new ItemStack(Material.COMMAND_BLOCK, 1);
+		ItemStack item = itemAPI.getCommandBlock();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+"Slabbo "+Slabbo.localeManager.getString("general.general.shop"));
@@ -243,7 +241,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getDestroyConfirmItem () {
-		ItemStack item = itemAPI.getLimeStainedGlassPane();//new ItemStack(Material.LIME_STAINED_GLASS_PANE, 1);
+		ItemStack item = itemAPI.getLimeStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("general.general.destroy-shop"));

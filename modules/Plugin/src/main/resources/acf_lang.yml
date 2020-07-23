@@ -36,7 +36,7 @@ acf-core:
   no_command_matched_search: "No command matched <c2>{search}</c2>."
   help_page_information: "- Showing page <c2>{page}</c2> of <c2>{totalpages}</c2> (<c3>{results}</c3> results)."
   help_no_results:Error: "No more results."
-  help_header: "<c3>===</c3><c1>Showing help for </c1><c2>{commandprefix}{command}</c2><c3> ===</c3>"
+  help_header: "<c3>=== </c3><c1>Showing help for </c1><c2>{commandprefix}{command}</c2><c3> ===</c3>"
   help_format: "<c1>{command}</c1> <c2>{parameters}</c2> <c3>{separator} {description}</c3>"
   help_detailed_header: "<c3>=== </c3><c1>Showing detailed help for </c1><c2>{commandprefix}{command}</c2><c3> ===</c3>"
   help_detailed_command_format: "<c1>{command}</c1> <c2>{parameters}</c2> <c3>{separator} {description}</c3>"
