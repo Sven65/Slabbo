@@ -132,5 +132,4 @@ public interface SlabboAPI {
 	 * @param location
 	 */
 	void setShopLocation (Item item, Location location);
-
 }

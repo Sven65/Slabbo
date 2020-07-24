@@ -59,7 +59,7 @@ public class ItemUtil {
 			clonedItem.setAmount(64);
 		}
 
-		meta.setLore(Arrays.asList("Slabbo Item "+UUID.randomUUID().toString()));
+		meta.setDisplayName("Slabbo Item "+ShopUtil.locationToString(location));
 
 		clonedItem.setItemMeta(meta);
 

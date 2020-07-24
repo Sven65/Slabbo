@@ -4,18 +4,16 @@ import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_8_R1.util.CraftMagicNumbers;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Step;
 import org.bukkit.material.WoodenStep;
@@ -27,6 +25,7 @@ import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -125,58 +124,170 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 	}
 
 	public boolean getNoPickup (Item item) {
-		List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_PICKUP.getKey());
+		ItemStack itemStack = item.getItemStack();
 
-		if (metaList.size() <= 0) return false;
+		ItemMeta meta = itemStack.getItemMeta();
 
-		int noPickup = metaList.get(0).asInt();
+		if (!meta.hasLore()) return false;
 
-		return noPickup == 1;
+		List<String> lore = meta.getLore();
+
+		boolean noPickup = false;
+
+		for (String line : lore) {
+			if (!line.startsWith(MetaKey.NO_PICKUP.getKey())) continue;
+
+			String value = line.replace(MetaKey.NO_PICKUP.getKey()+"=", "");
+
+			noPickup = Boolean.valueOf(value);
+		}
+
+		return noPickup;
 	}
 
 	public boolean getNoDespawn (Item item) {
-		List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_DESPAWN.getKey());
+		ItemStack itemStack = item.getItemStack();
 
-		if (metaList.size() <= 0) return false;
+		ItemMeta meta = itemStack.getItemMeta();
 
-		int noDespawn = metaList.get(0).asInt();
+		if (!meta.hasLore()) return false;
 
-		return noDespawn == 1;
+		List<String> lore = meta.getLore();
+
+		boolean noDespawn = false;
+
+		for (String line : lore) {
+			if (!line.startsWith(MetaKey.NO_DESPAWN.getKey())) continue;
+
+			String value = line.replace(MetaKey.NO_DESPAWN.getKey()+"=", "");
+
+			noDespawn = Boolean.valueOf(value);
+		}
+
+		return noDespawn;
 	}
 
 	public boolean getNoMerge (Item item) {
-		List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_MERGE.getKey());
+		ItemStack itemStack = item.getItemStack();
 
-		if (metaList.size() <= 0) return false;
+		ItemMeta meta = itemStack.getItemMeta();
 
-		int noMerge = metaList.get(0).asInt();
+		if (!meta.hasLore()) return false;
 
-		return noMerge == 1;
+		List<String> lore = meta.getLore();
+
+		boolean noMerge = true;
+
+		for (String line : lore) {
+				if (!line.startsWith(MetaKey.NO_MERGE.getKey())) continue;
+
+			String value = line.replace(MetaKey.NO_MERGE.getKey()+"=", "");
+
+			noMerge = Boolean.valueOf(value);
+		}
+
+		return noMerge;
 	}
 
 	public String getShopLocation (Item item) {
-		List<MetadataValue> metaList = item.getMetadata(MetaKey.SHOP_LOCATION.getKey());
+		ItemStack itemStack = item.getItemStack();
 
-		if (metaList.size() <= 0) return null;
+		ItemMeta meta = itemStack.getItemMeta();
 
-		return metaList.get(0).asString();
+		if (!meta.hasLore()) return null;
+
+		List<String> lore = meta.getLore();
+
+		String shopLocation = null;
+
+		for (String line : lore) {
+			if (!line.startsWith(MetaKey.SHOP_LOCATION.getKey())) continue;
+
+			shopLocation = line.replace(MetaKey.SHOP_LOCATION.getKey()+"=", "");
+		}
+
+		return shopLocation;
 	}
 
 	public void setNoPickup (Item item, int value) {
-		item.setMetadata(MetaKey.NO_PICKUP.getKey(), new FixedMetadataValue(Slabbo.getInstance(), value));
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta meta = itemStack.getItemMeta();
+
+		List<String> currentLore = new ArrayList<String>();
+
+		if (meta.hasLore()) {
+			currentLore = meta.getLore();
+		}
+
+		currentLore.add(MetaKey.NO_PICKUP.getKey()+"="+value);
+
+		meta.setLore(currentLore);
+
+		itemStack.setItemMeta(meta);
+
+		item.setItemStack(itemStack);
 	}
 
 
 	public void setNoDespawn (Item item, int value) {
-		item.setMetadata(MetaKey.NO_DESPAWN.getKey(), new FixedMetadataValue(Slabbo.getInstance(), value));
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta meta = itemStack.getItemMeta();
+
+		List<String> currentLore = new ArrayList<String>();
+
+		if (meta.hasLore()) {
+			currentLore = meta.getLore();
+		}
+
+		currentLore.add(MetaKey.NO_DESPAWN.getKey()+"="+value);
+
+		meta.setLore(currentLore);
+
+		itemStack.setItemMeta(meta);
+
+		item.setItemStack(itemStack);
 	}
 
 	public void setNoMerge (Item item, int value) {
-		item.setMetadata(MetaKey.NO_MERGE.getKey(), new FixedMetadataValue(Slabbo.getInstance(), value));
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta meta = itemStack.getItemMeta();
+
+		List<String> currentLore = new ArrayList<String>();
+
+		if (meta.hasLore()) {
+			currentLore = meta.getLore();
+		}
+
+		currentLore.add(MetaKey.NO_MERGE.getKey()+"="+value);
+
+		meta.setLore(currentLore);
+
+		itemStack.setItemMeta(meta);
+
+		item.setItemStack(itemStack);
 	}
 
 	public void setShopLocation (Item item, Location location) {
-		item.setMetadata(MetaKey.SHOP_LOCATION.getKey(), new FixedMetadataValue(Slabbo.getInstance(), ShopUtil.locationToString(location)));
+		ItemStack itemStack = item.getItemStack();
+
+		ItemMeta meta = itemStack.getItemMeta();
+
+		List<String> currentLore = new ArrayList<String>();
+
+		if (meta.hasLore()) {
+			currentLore = meta.getLore();
+		}
+
+		currentLore.add(MetaKey.SHOP_LOCATION.getKey()+"="+ShopUtil.locationToString(location));
+
+		meta.setLore(currentLore);
+
+		itemStack.setItemMeta(meta);
+
+		item.setItemStack(itemStack);
 	}
 
 	public boolean isSlabboItem (Item item) {
