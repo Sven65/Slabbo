@@ -139,7 +139,7 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 
 			String value = line.replace(MetaKey.NO_PICKUP.getKey()+"=", "");
 
-			noPickup = Boolean.valueOf(value);
+			noPickup = value.equals("1");
 		}
 
 		return noPickup;
@@ -161,7 +161,7 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 
 			String value = line.replace(MetaKey.NO_DESPAWN.getKey()+"=", "");
 
-			noDespawn = Boolean.valueOf(value);
+			noDespawn = value.equals("1");
 		}
 
 		return noDespawn;
@@ -179,11 +179,11 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 		boolean noMerge = true;
 
 		for (String line : lore) {
-				if (!line.startsWith(MetaKey.NO_MERGE.getKey())) continue;
+			if (!line.startsWith(MetaKey.NO_MERGE.getKey())) continue;
 
 			String value = line.replace(MetaKey.NO_MERGE.getKey()+"=", "");
 
-			noMerge = Boolean.valueOf(value);
+			noMerge = value.equals("1");
 		}
 
 		return noMerge;
