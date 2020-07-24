@@ -164,12 +164,10 @@ public class Slabbo extends JavaPlugin {
 
 		manager.enableUnstableAPI("help");
 
-		System.out.println("MANAGER LOC: "+manager.getLocales());
-
 		try {
 			manager.getLocales().loadYamlLanguageFile("acf_lang.yml", Locale.ENGLISH);
 		} catch (IOException | InvalidConfigurationException e) {
-			getLogger().severe("Slabbo couldn't load acf_lang.yml.");
+			getLogger().severe("Slabbo couldn't load acf_lang.yml");
 		}
 
 		manager.getCommandCompletions().registerCompletion("importFiles", c -> {
