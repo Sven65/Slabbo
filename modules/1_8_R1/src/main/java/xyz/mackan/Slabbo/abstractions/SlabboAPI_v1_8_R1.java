@@ -57,7 +57,6 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 		return slabMaterials.contains(block.getType());
 	}
 
-	@Override
 	public SlabType getSlabType (Block block) {
 
 		if (!isSlab(block)) return null;

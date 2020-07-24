@@ -12,7 +12,9 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
 import org.bukkit.material.Step;
+import org.bukkit.material.WoodenStep;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import xyz.mackan.Slabbo.Slabbo;
@@ -41,9 +43,11 @@ public class SlabboAPI_v1_10_R1 implements SlabboAPI {
 		List<Material> slabMaterials = Arrays.asList(
 				Material.STEP,
 				Material.WOOD_STEP,
+				Material.PURPUR_SLAB,
 				Material.DOUBLE_STEP,
 				Material.WOOD_DOUBLE_STEP,
-				Material.PURPUR_SLAB,
+				Material.STONE_SLAB2,
+				Material.DOUBLE_STONE_SLAB2,
 				Material.PURPUR_DOUBLE_SLAB
 		);
 
@@ -51,22 +55,37 @@ public class SlabboAPI_v1_10_R1 implements SlabboAPI {
 	}
 
 	public SlabType getSlabType (Block block) {
+
 		if (!isSlab(block)) return null;
 
 		Material blockType = block.getType();
 
-		Step step = (Step) block.getState().getData();
+		MaterialData blockData = block.getState().getData();
 
-		switch (blockType) {
-			case STEP:
-			case WOOD_STEP:
-			case PURPUR_SLAB:
-				if (step.isInverted()) return SlabType.TOP;
-				return SlabType.BOTTOM;
-			case DOUBLE_STEP:
-			case WOOD_DOUBLE_STEP:
-			case PURPUR_DOUBLE_SLAB:
-				return SlabType.DOUBLE;
+		if (blockData instanceof Step) {
+			Step step = (Step) blockData;
+
+			switch (blockType) {
+				case STEP:
+				case WOOD_STEP:
+				case PURPUR_SLAB:
+					if (step.isInverted()) return SlabType.TOP;
+					return SlabType.BOTTOM;
+				case DOUBLE_STEP:
+				case WOOD_DOUBLE_STEP:
+				case PURPUR_DOUBLE_SLAB:
+					return SlabType.DOUBLE;
+			}
+		} else if (blockData instanceof WoodenStep) {
+			WoodenStep step = (WoodenStep) blockData;
+
+			switch (blockType) {
+				case WOOD_STEP:
+					if (step.isInverted()) return SlabType.TOP;
+					return SlabType.BOTTOM;
+				case WOOD_DOUBLE_STEP:
+					return SlabType.DOUBLE;
+			}
 		}
 
 		return null;
