@@ -13,13 +13,16 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Step;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Collection;
+import java.util.List;
 
 public class SlabboAPI_v1_9_R2 implements SlabboAPI {
 	public SlabboAPI_v1_9_R2 () {}
@@ -38,16 +41,18 @@ public class SlabboAPI_v1_9_R2 implements SlabboAPI {
 		return (block.getType() == Material.STEP || block.getType() == Material.WOOD_STEP || block.getType() == Material.DOUBLE_STEP || block.getType() == Material.WOOD_DOUBLE_STEP);
 	}
 
-	@Override
 	public SlabType getSlabType (Block block) {
 
 		if (!isSlab(block)) return null;
 
 		Material blockType = block.getType();
 
+		Step step = (Step) block.getState().getData();
+
 		switch (blockType) {
 			case STEP:
 			case WOOD_STEP:
+				if (step.isInverted()) return SlabType.TOP;
 				return SlabType.BOTTOM;
 			case DOUBLE_STEP:
 			case WOOD_DOUBLE_STEP:
@@ -84,25 +89,41 @@ public class SlabboAPI_v1_9_R2 implements SlabboAPI {
 	}
 
 	public boolean getNoPickup (Item item) {
-		int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
+		List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_PICKUP.getKey());
+
+		if (metaList.size() <= 0) return false;
+
+		int noPickup = metaList.get(0).asInt();
 
 		return noPickup == 1;
 	}
 
 	public boolean getNoDespawn (Item item) {
-		int noDespawn = item.getMetadata(MetaKey.NO_DESPAWN.getKey()).get(0).asInt();
+		List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_DESPAWN.getKey());
+
+		if (metaList.size() <= 0) return false;
+
+		int noDespawn = metaList.get(0).asInt();
 
 		return noDespawn == 1;
 	}
 
 	public boolean getNoMerge (Item item) {
-		int noMerge = item.getMetadata(MetaKey.NO_MERGE.getKey()).get(0).asInt();
+		List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_MERGE.getKey());
+
+		if (metaList.size() <= 0) return false;
+
+		int noMerge = metaList.get(0).asInt();
 
 		return noMerge == 1;
 	}
 
 	public String getShopLocation (Item item) {
-		return item.getMetadata(MetaKey.SHOP_LOCATION.getKey()).get(0).asString();
+		List<MetadataValue> metaList = item.getMetadata(MetaKey.SHOP_LOCATION.getKey());
+
+		if (metaList.size() <= 0) return null;
+
+		return metaList.get(0).asString();
 	}
 
 	public void setNoPickup (Item item, int value) {

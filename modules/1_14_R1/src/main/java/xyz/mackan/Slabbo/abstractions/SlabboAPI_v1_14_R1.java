@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.mackan.Slabbo.Slabbo;
@@ -23,6 +24,7 @@ import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Collection;
+import java.util.List;
 
 public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 	public SlabboAPI_v1_14_R1 () {}
@@ -89,7 +91,11 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
 		if (container == null || !container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER)) {
-			int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
+			List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_PICKUP.getKey());
+
+			if (metaList.size() <= 0) return false;
+
+			int noPickup = metaList.get(0).asInt();
 
 			return noPickup == 1;
 		}
