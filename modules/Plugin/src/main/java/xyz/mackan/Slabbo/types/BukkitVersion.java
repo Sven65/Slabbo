@@ -1,0 +1,50 @@
+package xyz.mackan.Slabbo.types;
+
+import org.bukkit.Bukkit;
+
+public enum BukkitVersion {
+	v1_8_R1,
+	v1_8_R2,
+	v1_8_R3,
+	v1_9_R1,
+	v1_9_R2,
+	v1_10_R1,
+	v1_11_R1,
+	v1_12_R1,
+	v1_13_R1,
+	v1_13_R2,
+	v1_14_R1,
+	v1_15_R1,
+	v1_16_R1;
+
+	public int getVersionIndex () {
+		int i = 0;
+
+		for (BukkitVersion version : values()) {
+			if (equals(version)) return i;
+			i++;
+		}
+
+		return -1;
+	}
+
+	public static BukkitVersion getCurrentVersion () {
+		String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
+
+		return BukkitVersion.valueOf("v"+internalsName);
+	}
+
+	public boolean isAfter (BukkitVersion version) {
+		int currentIndex = getVersionIndex();
+		int pIndex = version.getVersionIndex();
+
+		return currentIndex > pIndex;
+	}
+
+	public boolean isSameOrLater (BukkitVersion version) {
+		int currentIndex = getVersionIndex();
+		int pIndex = version.getVersionIndex();
+
+		return currentIndex >= pIndex;
+	}
+}

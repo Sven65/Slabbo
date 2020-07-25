@@ -161,6 +161,10 @@ public class ShopAdminGUI implements Listener {
 
 		}
 
+		if (tempTransferRate <= 0) {
+			return;
+		}
+
 		ItemStack shopItemClone = shop.item.clone();
 
 		shopItemClone.setAmount(tempTransferRate);

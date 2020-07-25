@@ -17,6 +17,7 @@ import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
+import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -142,16 +143,25 @@ public class Slabbo extends JavaPlugin {
 	}
 
 	private void setupListeners () {
-		// TODO: Remove listeners that don't exist in certain versions
 		getServer().getPluginManager().registerEvents(new PlayerInteractListener(), this);
-		getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
 		getServer().getPluginManager().registerEvents(new ItemDespawnListener(), this);
-		getServer().getPluginManager().registerEvents(new ItemMergeListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 		getServer().getPluginManager().registerEvents(new BlockEventListeners(), this);
 		getServer().getPluginManager().registerEvents(new InventoryMoveListener(), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
-		getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
+
+		BukkitVersion version = BukkitVersion.getCurrentVersion();
+
+		if (version.isSameOrLater(BukkitVersion.v1_8_R3)) {
+			// 1.8.8
+			getServer().getPluginManager().registerEvents(new ItemMergeListener(), this);
+		}
+
+		if (version.isSameOrLater(BukkitVersion.v1_12_R1)) {
+			getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
+		} else {
+			getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
+		}
 
 		if (getServer().getPluginManager().getPlugin("ClearLag") != null) {
 			getServer().getPluginManager().registerEvents(new ClearlagItemRemoveListener(), this);
