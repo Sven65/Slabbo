@@ -35,6 +35,9 @@ permissions:
   slabbo.modify.self.quantity:
     default: op
     description: Lets you modify the quantity of shops with a command
+  slabbo.modify.self.note:
+    default: op
+    description: Lets you modify the sellers note of shops with a command
 
   slabbo.modify.self.*:
     default: op
@@ -43,6 +46,7 @@ permissions:
       slabbo.modify.self.buyprice: true
       slabbo.modify.self.sellprice: true
       slabbo.modify.self.quantity: true
+      slabbo.modify.self.note: true
 
   slabbo.modify.others.buyprice:
     default: op
@@ -53,6 +57,9 @@ permissions:
   slabbo.modify.others.quantity:
     default: op
     description: Lets you modify the quantity of other peoples shops.
+  slabbo.modify.others.note:
+    default: op
+    description: Lets you modify the sellers note of other peoples shops
 
   slabbo.modify.others.*:
     default: op
@@ -61,6 +68,7 @@ permissions:
       slabbo.modify.others.buyprice: true
       slabbo.modify.others.sellprice: true
       slabbo.modify.others.quantity: true
+      slabbo.modify.others.note: true
 
   slabbo.modify.admin.owner:
     default: op

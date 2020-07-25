@@ -17,6 +17,7 @@ error-message:
     invalid-sell-price: Please provide a positive sell price or -1 for not selling.
     invalid-quantity: Please provide a positive quantity
     not-a-valid-number: That's not a valid number!
+    invalid-note: That's an invalid sellers note!
   shop-errors:
     out-of-stock: This shop is out of stock!
     not-enough-funds: You don't have enough funds!
@@ -43,6 +44,7 @@ success-message:
     quantity-set: Quantity set to {quantity}
     owner-set: Owner set to {owner}
     stock-set: Stock set to {stock}
+    note-set: Shop note set to {note}
   client:
     buy-success: Bought {count} {item} for a total of {cost}
     sell-success: Sold {count} {item} for a total of {cost}

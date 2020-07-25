@@ -194,7 +194,16 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("modify")
 	@Description("Modifies the shop")
-	@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.self.sellprice|slabbo.modify.self.quantity|slabbo.modify.others.buyprice|slabbo.modify.others.sellprice|slabbo.modify.others.quantity|slabbo.modify.admin.owner|slabbo.modify.admin.stock")
+	@CommandPermission("slabbo.modify.self.buyprice" +
+			"|slabbo.modify.self.sellprice" +
+			"|slabbo.modify.self.quantity" +
+			"|slabbo.modify.self.note" +
+			"|slabbo.modify.others.buyprice" +
+			"|slabbo.modify.others.sellprice" +
+			"|slabbo.modify.others.quantity" +
+			"|slabbo.modify.others.note" +
+			"|slabbo.modify.admin.owner" +
+			"|slabbo.modify.admin.stock")
 	public class SlabboModifyCommand extends BaseCommand {
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
@@ -339,7 +348,6 @@ public class SlabboCommand extends BaseCommand {
 			DataUtil.saveShops();
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
-
 		}
 
 		@Subcommand("owner")
@@ -396,6 +404,52 @@ public class SlabboCommand extends BaseCommand {
 			replacementMap.put("stock", newStock);
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.stock-set", replacementMap));
+		}
+
+		@Subcommand("stock")
+		@Description("Sets the sellers note for the shop")
+		@CommandPermission("slabbo.modify.self.note|slabbo.modify.others.note")
+		public void onSetNote (Player player, String note) {
+			if (note.equals("")) {
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.invalid-note"));
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+				return;
+			}
+
+			Shop lookingAtShop = getLookingAtShop(player);
+			if (lookingAtShop == null) {
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+				return;
+			}
+
+			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.note");
+
+			if (!isShopOwner) {
+				if (!canModifyOthers) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-shop-owner"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+			}
+
+			lookingAtShop.note = note;
+
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("note", note);
+
+			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.note-set", replacementMap));
+
+			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+			DataUtil.saveShops();
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
 
 	}

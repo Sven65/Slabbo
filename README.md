@@ -19,11 +19,13 @@ Destroying: Right click existing shop with stick
 |         slabbo.modify.self.buyprice | Lets a player change the buy price with the modification command                             |
 |        slabbo.modify.self.sellprice | Lets a player change the sell price with the modification command                            |
 |         slabbo.modify.self.quantity | Lets a player change the quantity with the modification command                              |
+|         slabbo.modify.self.note | Lets a player change the sellers note with the modification command                              |
 |                  slabbo.import | Lets a player import shops from another plugin                                               |
 |          slabbo.destroy.others | Lets a player use `/slabbo destroy` to delete other peoples shops                            |
 |  slabbo.modify.others.buyprice | Lets a player use `/slabbo modify buyprice` to modify the buy price of other peoples shops   |
 | slabbo.modify.others.sellprice | Lets a player use `/slabbo modify sellprice` to modify the sell price of other peoples shops |
 |  slabbo.modify.others.quantity | Lets a player use `/slabbo modify quantity` to modify the quantity of other peoples shops    |
+|  slabbo.modify.others.note     | Lets a player use `/slabbo modify note` to modify the sellers note of other peoples shops    |
 | slabbo.modify.admin.owner      | Lets a player use `/slabbo modify owner` to change the owner of a shop                       |
 | slabbo.modify.admin.stock      | Lets a player use `/slabbo modify stock` to set the stock of a shop |
 | slabbo.save                    | Lets a player use `/slabbo save` to save the shops |
@@ -43,6 +45,7 @@ Destroying: Right click existing shop with stick
 - /slabbo modify buyprice
 - /slabbo modify sellprice
 - /slabbo modify quantity
+- /slabbo modify note
 - /slabbo modify owner
 - /slabbo modify stock
 - /slabbo save
