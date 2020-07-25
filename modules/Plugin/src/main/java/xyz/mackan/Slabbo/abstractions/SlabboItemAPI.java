@@ -18,4 +18,6 @@ public interface SlabboItemAPI {
 	ItemStack getComparator ();
 
 	ItemStack getOakSign ();
+
+	ItemStack getDefaultSlab ();
 }

@@ -38,4 +38,7 @@ public class SlabboItemAPI_v1_14_R1 implements SlabboItemAPI {
 	public ItemStack getOakSign () {
 		return new ItemStack(Material.OAK_SIGN, 1);
 	}
+
+	public ItemStack getDefaultSlab () { return new ItemStack(Material.STONE_SLAB, 1); }
+
 }

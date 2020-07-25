@@ -58,7 +58,7 @@ public class SlabboAPI_v1_10_R1 implements SlabboAPI {
 
 	public SlabType getSlabType (Block block) {
 
-		if (!isSlab(block)) return null;
+		if (!isSlab(block)) return SlabType.NONE;
 
 		Material blockType = block.getType();
 

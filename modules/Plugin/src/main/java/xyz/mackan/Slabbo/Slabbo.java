@@ -50,8 +50,11 @@ public class Slabbo extends JavaPlugin {
 	public static LocaleManager localeManager;
 
 	public static boolean hasUpdate = false;
+	private static boolean isEnabled = false;
+
 
 	public static EnabledPlugins enabledPlugins = new EnabledPlugins();
+
 
 	@Override
 	public void onEnable () {
@@ -86,13 +89,17 @@ public class Slabbo extends JavaPlugin {
 		getLogger().info("Slabbo enabled.");
 
 		shopUtil.loadShops();
+
+		isEnabled = true;
 	}
 
 	@Override
 	public void onDisable () {
-		log.info("Saving shops before disabling Slabbo");
 
-		DataUtil.saveShopsOnMainThread();
+		if (isEnabled) {
+			log.info("Saving shops before disabling Slabbo");
+			DataUtil.saveShopsOnMainThread();
+		}
 
 		log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
 	}

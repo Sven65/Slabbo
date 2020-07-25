@@ -45,6 +45,8 @@ public class SlabboAPI_v1_13_R2 implements SlabboAPI {
 
 	@Override
 	public SlabType getSlabType (Block block) {
+		if (!isSlab(block)) return SlabType.NONE;
+
 		BlockData blockData = block.getBlockData();
 
 		Slab slab = (Slab) blockData;

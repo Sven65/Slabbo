@@ -50,7 +50,9 @@ public class SlabboAPI_v1_9_R1 implements SlabboAPI {
 				Material.DOUBLE_STEP,
 				Material.WOOD_DOUBLE_STEP,
 				Material.STONE_SLAB2,
-				Material.DOUBLE_STONE_SLAB2
+				Material.DOUBLE_STONE_SLAB2,
+				Material.PURPUR_SLAB,
+				Material.PURPUR_DOUBLE_SLAB
 		);
 
 		return slabMaterials.contains(block.getType());
@@ -58,7 +60,7 @@ public class SlabboAPI_v1_9_R1 implements SlabboAPI {
 
 	public SlabType getSlabType (Block block) {
 
-		if (!isSlab(block)) return null;
+		if (!isSlab(block)) return SlabType.NONE;
 
 		Material blockType = block.getType();
 
@@ -70,10 +72,12 @@ public class SlabboAPI_v1_9_R1 implements SlabboAPI {
 			switch (blockType) {
 				case STEP:
 				case WOOD_STEP:
+				case PURPUR_SLAB:
 					if (step.isInverted()) return SlabType.TOP;
 					return SlabType.BOTTOM;
 				case DOUBLE_STEP:
 				case WOOD_DOUBLE_STEP:
+				case PURPUR_DOUBLE_SLAB:
 					return SlabType.DOUBLE;
 			}
 		} else if (blockData instanceof WoodenStep) {

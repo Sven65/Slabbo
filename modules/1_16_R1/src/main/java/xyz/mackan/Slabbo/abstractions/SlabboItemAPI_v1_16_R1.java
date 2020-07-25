@@ -3,8 +3,8 @@ package xyz.mackan.Slabbo.abstractions;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public class SlabboItemAPI_v_1_16_R1 implements SlabboItemAPI {
-	public SlabboItemAPI_v_1_16_R1 () {}
+public class SlabboItemAPI_v1_16_R1 implements SlabboItemAPI {
+	public SlabboItemAPI_v1_16_R1 () {}
 
 	public ItemStack getRedStainedGlassPane () {
 		return new ItemStack(Material.RED_STAINED_GLASS_PANE, 1);
@@ -37,4 +37,5 @@ public class SlabboItemAPI_v_1_16_R1 implements SlabboItemAPI {
 		return new ItemStack(Material.OAK_SIGN, 1);
 	}
 
+	public ItemStack getDefaultSlab () { return new ItemStack(Material.STONE_SLAB, 1); }
 }

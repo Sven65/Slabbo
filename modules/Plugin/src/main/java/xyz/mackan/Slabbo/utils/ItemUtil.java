@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 
@@ -18,6 +19,7 @@ import java.util.*;
 public class ItemUtil {
 
 	private static SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+	private static SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
 
 	public static double getSlabYOffset (Location location) {
 		Block block = location.getBlock();
@@ -25,6 +27,12 @@ public class ItemUtil {
 		if (block == null) return 0;
 
 		SlabType slabType = api.getSlabType(block);
+
+		if (slabType == SlabType.NONE) {
+			block.setType(itemAPI.getDefaultSlab().getType());
+
+			slabType = SlabType.BOTTOM;
+		}
 
 		if (slabType == SlabType.BOTTOM) {
 			return 0.5;
@@ -86,11 +94,7 @@ public class ItemUtil {
 
 			Item item = (Item) entity;
 
-			if (!item.hasMetadata(MetaKey.NO_PICKUP.getKey())) continue;
-
-			boolean isSlabboItem = api.isSlabboItem(item);
-
-			if (!isSlabboItem) continue;
+			if (!api.isSlabboItem(item)) continue;;
 
 			shopItems.add(item);
 		}

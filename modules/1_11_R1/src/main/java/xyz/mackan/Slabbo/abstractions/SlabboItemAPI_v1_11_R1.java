@@ -8,19 +8,19 @@ public class SlabboItemAPI_v1_11_R1 implements SlabboItemAPI {
 	public SlabboItemAPI_v1_11_R1 () {}
 
 	public ItemStack getRedStainedGlassPane () {
-		return new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getDyeData());
+		return new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 14);
 	}
 
 	public ItemStack getGreenStainedGlassPane () {
-		return new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GREEN.getDyeData());
+		return new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 13);
 	}
 
 	public ItemStack getYellowStainedGlassPane () {
-		return new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.YELLOW.getDyeData());
+		return new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 4);
 	}
 
 	public ItemStack getLimeStainedGlassPane () {
-		return new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.LIME.getDyeData());
+		return new ItemStack(Material.STAINED_GLASS_PANE, 1, (byte) 5);
 	}
 
 	public ItemStack getCommandBlock () {
@@ -38,4 +38,7 @@ public class SlabboItemAPI_v1_11_R1 implements SlabboItemAPI {
 	public ItemStack getOakSign () {
 		return new ItemStack(Material.SIGN, 1);
 	}
+
+	public ItemStack getDefaultSlab () { return new ItemStack(Material.STEP, 1); }
+
 }

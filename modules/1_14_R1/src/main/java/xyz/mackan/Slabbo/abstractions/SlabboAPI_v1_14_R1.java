@@ -47,6 +47,8 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 
 	@Override
 	public SlabType getSlabType (Block block) {
+		if (!isSlab(block)) return SlabType.NONE;
+
 		BlockData blockData = block.getBlockData();
 
 		Slab slab = (Slab) blockData;
@@ -86,7 +88,13 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 	}
 
 	public boolean getNoPickup (Item item) {
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+		ItemStack itemStack = item.getItemStack();
+
+		if (!itemStack.hasItemMeta()) return false;
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (itemMeta == null) return false;
 
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
@@ -112,18 +120,34 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 	}
 
 	public boolean getNoDespawn (Item item) {
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+		ItemStack itemStack = item.getItemStack();
+
+		if (!itemStack.hasItemMeta()) return false;
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (itemMeta == null) return false;
 
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		if (container == null) return false;
 
 		int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
 		return noDespawn == 1;
 	}
 
 	public boolean getNoMerge (Item item) {
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+		ItemStack itemStack = item.getItemStack();
+
+		if (!itemStack.hasItemMeta()) return false;
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (itemMeta == null) return false;
 
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		if (container == null) return false;
 
 		int noMerge = container.get(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER);
 
@@ -131,9 +155,17 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 	}
 
 	public String getShopLocation (Item item) {
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
+		ItemStack itemStack = item.getItemStack();
+
+		if (!itemStack.hasItemMeta()) return null;
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (itemMeta == null) return null;
 
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		if (container == null) return null;
 
 		String shopLocation = container.get(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING);
 
