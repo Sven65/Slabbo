@@ -6,16 +6,53 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Slabbo" />
+        <module name="Slabbo-1_12_R1" />
+        <module name="Slabbo-1_13_R1" />
+        <module name="Slabbo-1_11_R1" />
+        <module name="Slabbo-1_9_R2" />
+        <module name="Slabbo-1_9_R1" />
+        <module name="Slabbo-1_10_R1" />
+        <module name="Slabbo-1_16_R1" />
+        <module name="Slabbo-1_8_R3" />
+        <module name="Slabbo-1_8_R2" />
+        <module name="Slabbo-1_8_R1" />
+        <module name="Slabbo-1_15_R1" />
+        <module name="Slabbo-1_14_R1" />
+        <module name="Slabbo-1_13_R2" />
+        <module name="Slabbo-plugin" />
+      </profile>
+      <profile name="Annotation profile for Slabbo" enabled="true">
+        <sourceOutputDir name="../../target/generated-sources/annotations" />
+        <sourceTestOutputDir name="../../target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="Slabbo-dist" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="Slabbo" target="1.8" />
+      <module name="Slabbo" target="1.5" />
+      <module name="Slabbo-1_10_R1" target="8" />
+      <module name="Slabbo-1_11_R1" target="8" />
+      <module name="Slabbo-1_12_R1" target="8" />
+      <module name="Slabbo-1_13_R1" target="8" />
+      <module name="Slabbo-1_13_R2" target="8" />
+      <module name="Slabbo-1_14_R1" target="8" />
+      <module name="Slabbo-1_15_R1" target="8" />
+      <module name="Slabbo-1_16_R1" target="8" />
+      <module name="Slabbo-1_8_R1" target="8" />
+      <module name="Slabbo-1_8_R2" target="8" />
+      <module name="Slabbo-1_8_R3" target="8" />
+      <module name="Slabbo-1_9_R1" target="8" />
+      <module name="Slabbo-1_9_R2" target="8" />
+      <module name="Slabbo-dist" target="1.5" />
+      <module name="Slabbo-parent" target="1.5" />
+      <module name="Slabbo-plugin" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="Slabbo" options="-parameters" />
+      <module name="Slabbo-dist" options="" />
+      <module name="Slabbo-plugin" options="-parameters" />
     </option>
   </component>
 </project>
