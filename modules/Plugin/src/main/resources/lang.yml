@@ -8,6 +8,7 @@ error-message:
     limit-hit: You've created all the shops you can! ({limit})
     not-a-shop: That's not a shop.
     not-shop-owner: That's not your shop.
+    no-shops-found: No shops were found!
   import:
     file-not-found: That file can't be found
     plugin-not-supported: That plugin can't be imported
@@ -101,6 +102,8 @@ general:
     funds-message: "Funds: {funds}"
 
     default-shop-note: "Let's trade!"
+
+    pager: "(Page {page} / {pageCount})"
 
     shift-bulk:
       deposit: +Shift for bulk deposit

@@ -1,10 +1,13 @@
 package xyz.mackan.Slabbo.types;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.Serializable;
@@ -114,5 +117,16 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public String getLocationString () {
 		return ShopUtil.locationToString(this.location);
+	}
+
+	public String getInfoString () {
+		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+
+		return String.format(
+			"[%s] | Item: %s | Owner: %s",
+			getLocationString(),
+			api.getItemName(item),
+			Bukkit.getOfflinePlayer(ownerId).getName()
+		);
 	}
 }

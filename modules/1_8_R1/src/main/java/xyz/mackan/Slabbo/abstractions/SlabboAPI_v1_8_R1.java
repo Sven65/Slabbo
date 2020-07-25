@@ -1,5 +1,7 @@
 package xyz.mackan.Slabbo.abstractions;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -3,10 +3,15 @@ package xyz.mackan.Slabbo.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.Optional;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import scala.Int;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
@@ -19,6 +24,7 @@ import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CommandAlias("slabbo")
 @Description("Base command for slabbo")
@@ -452,5 +458,165 @@ public class SlabboCommand extends BaseCommand {
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
 
+	}
+
+	@Subcommand("list")
+	@Description("Commands for listing Slabbo shops")
+	@CommandPermission("slabbo.list.all|slabbo.list.self")
+	public class SlabboListCommand extends BaseCommand {
+		public void sendShopList (Player player, List<Shop> shops, int page, String command) {
+			if (shops.size() <= 0) {
+				player.sendMessage(net.md_5.bungee.api.ChatColor.RED+Slabbo.localeManager.getString("error-message.general.no-shops-found"));
+				return;
+			}
+
+			int perPage = 10;
+
+			if (perPage > shops.size()) {
+				perPage = shops.size();
+			}
+
+			int pageCount = shops.size() / perPage;
+
+			List<Shop> subList = shops.subList((1 * page) - 1, perPage * page);
+
+			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
+
+			for (Shop shop : subList) {
+				component.addExtra("\n"+shop.getInfoString());
+			}
+
+			TextComponent previousPage = new TextComponent("<<<");
+			TextComponent nextPage = new TextComponent(">>>");
+
+			String previousPageCommand = String.format("%s %s", command, page - 1);
+			String nextPageCommand = String.format("%s %s", command, page + 1);
+
+			if (page + 1 <= pageCount) {
+				nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextPageCommand));
+			} else {
+				nextPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+			}
+
+			if (page - 1 >= pageCount) {
+				previousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, previousPageCommand));
+			} else {
+				previousPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+			}
+
+			TextComponent pager = new TextComponent("\n");
+
+			pager.addExtra(previousPage);
+
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+			replacementMap.put("page", page);
+			replacementMap.put("pageCount", pageCount);
+
+			String pagerString = Slabbo.localeManager.replaceKey("general.general.pager", replacementMap);
+
+			pager.addExtra(" "+pagerString+" ");
+
+			pager.addExtra(nextPage);
+
+			component.addExtra(pager);
+
+			player.spigot().sendMessage(component);
+		}
+
+		@HelpCommand
+		public void onCommand(CommandSender sender, CommandHelp help) {
+			help.showHelp();
+		}
+
+		@Subcommand("all radius")
+		@Description("Lists all the Slabbo shops in a radius")
+		@CommandPermission("slabbo.list.all")
+		public void onListAllRadius (Player player, double radius, @Optional String page) {
+			int listPage = 1;
+
+			if (page == null || page.equals("")) {
+				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+			}
+
+			Location playerLocation = player.getLocation();
+
+			ArrayList<Shop> shopsInRadius = new ArrayList<Shop>();
+
+			if (radius <= -1) {
+				shopsInRadius = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+			}
+
+			for (Shop shop : Slabbo.shopUtil.shops.values()) {
+				double distance = playerLocation.distance(shop.location);
+
+				if (distance <= radius) {
+					shopsInRadius.add(shop);
+				}
+			}
+
+			sendShopList(player, shopsInRadius, listPage, "slabbo list all radius "+radius);
+		}
+
+		@Subcommand("all")
+		@Description("Lists all the Slabbo shops")
+		@CommandPermission("slabbo.list.all")
+		public void onListAll (Player player, @Optional String page) {
+			int listPage = 1;
+
+			if (page == null || page.equals("")) {
+				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+			}
+
+			List<Shop> shops = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+
+			sendShopList(player, shops, listPage, "slabbo list all");
+		}
+
+		@Subcommand("mine radius")
+		@Description("Lists all the Slabbo shops you own in a radius")
+		@CommandPermission("slabbo.list.mine")
+		public void onListMineRadius (Player player, double radius, @Optional String page) {
+			int listPage = 1;
+
+			if (page == null || page.equals("")) {
+				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+			}
+
+			Location playerLocation = player.getLocation();
+
+			ArrayList<Shop> shopsInRadius = new ArrayList<Shop>();
+
+			if (radius <= -1) {
+				shopsInRadius = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+			}
+
+			for (Shop shop : Slabbo.shopUtil.shops.values()) {
+				double distance = playerLocation.distance(shop.location);
+
+				if (distance <= radius && shop.ownerId.equals(player.getUniqueId())) {
+					shopsInRadius.add(shop);
+				}
+			}
+
+			sendShopList(player, shopsInRadius, listPage, "slabbo list mine radius "+radius);
+		}
+
+		@Subcommand("mine")
+		@Description("Lists all the Slabbo shops you own")
+		@CommandPermission("slabbo.list.mine")
+		public void onListMine (Player player, @Optional String page) {
+			int listPage = 1;
+
+			if (page == null || page.equals("")) {
+				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+			}
+
+			List<Shop> shops = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+
+			List<Shop> myShops = shops.stream().filter(shop -> shop.ownerId.equals(player.getUniqueId())).collect(Collectors.toList());
+
+			sendShopList(player, myShops, listPage, "slabbo list mine");
+		}
 	}
 }
