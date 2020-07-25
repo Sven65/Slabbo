@@ -123,9 +123,11 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
 		return String.format(
-			"[%s] | Item: %s | Owner: %s",
+			"§d[%s]§r §7| §d%s: §6%s §7| §d%s: §6%s",
 			getLocationString(),
+			Slabbo.localeManager.getString("general.general.item"),
 			api.getItemName(item),
+			Slabbo.localeManager.getString("gui.owner-title"),
 			Bukkit.getOfflinePlayer(ownerId).getName()
 		);
 	}

@@ -67,6 +67,7 @@ general:
     stacks: Stacks
     cancel: Cancel
     confirm: Confirm
+    item: Item
 
 
     buy-price: Buy price
