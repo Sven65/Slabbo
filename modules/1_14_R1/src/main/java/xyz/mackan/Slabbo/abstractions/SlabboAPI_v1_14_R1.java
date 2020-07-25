@@ -91,13 +91,19 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
 		if (container == null || !container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER)) {
-			List<MetadataValue> metaList = item.getMetadata(MetaKey.NO_PICKUP.getKey());
+			List<String> lore = itemMeta.getLore();
 
-			if (metaList.size() <= 0) return false;
+			boolean noPickup = false;
 
-			int noPickup = metaList.get(0).asInt();
+			for (String line : lore) {
+				if (!line.startsWith(MetaKey.NO_PICKUP.getKey())) continue;
 
-			return noPickup == 1;
+				String value = line.replace(MetaKey.NO_PICKUP.getKey()+"=", "");
+
+				noPickup = value.equals("1");
+			}
+
+			return noPickup;
 		}
 
 		int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);

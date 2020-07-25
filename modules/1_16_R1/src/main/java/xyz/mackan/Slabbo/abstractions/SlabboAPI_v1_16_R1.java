@@ -28,6 +28,7 @@ import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Collection;
+import java.util.List;
 
 public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 	public SlabboAPI_v1_16_R1 () {}
@@ -100,9 +101,19 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
 		if (container == null || !container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER)) {
-			int noPickup = item.getMetadata(MetaKey.NO_PICKUP.getKey()).get(0).asInt();
+			List<String> lore = itemMeta.getLore();
 
-			return noPickup == 1;
+			boolean noPickup = false;
+
+			for (String line : lore) {
+				if (!line.startsWith(MetaKey.NO_PICKUP.getKey())) continue;
+
+				String value = line.replace(MetaKey.NO_PICKUP.getKey()+"=", "");
+
+				noPickup = value.equals("1");
+			}
+
+			return noPickup;
 		}
 
 		int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
