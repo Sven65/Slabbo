@@ -9,6 +9,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.Serializable;
@@ -126,9 +127,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	public void doLimitRestock () {
-		this.stock = shopLimit.stock;
-
-		this.shopLimit.lastRestock = Instant.now().getEpochSecond();
+		this.shopLimit.restock();
 	}
 
 	public boolean shouldRestock () {

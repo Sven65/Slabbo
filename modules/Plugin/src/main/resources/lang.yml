@@ -26,6 +26,8 @@ error-message:
     not-enough-items: You don't have enough items!
     not-enough-shop-funds: The shop doesn't have enough funds!
     not-enough-inventory-space: You don't have enough inventory space!
+    buy-limit-reached: The shops buy limit has been reached!
+    sell-limit-reached: The shops sell limit has been reached!
 
 success-message:
   chestlink:
@@ -139,5 +141,11 @@ gui:
       selling-item: "Selling: {item}"
       buy-each: Buy {quantity} for {buyPrice} ({buyPerItem} each)
       sell-each: Sell {quantity} for {sellPrice} ({sellPerItem} each)
+      limit:
+        sell-stock: "Selling stock: {stock}"
+        buy-stock: "Buying stock: {stock}"
+        restock-time: "Restock time: {restockTime} seconds"
+        next-restock: "Next restock: {time}"
+
     new-shop:
       click-item-below: Click item below

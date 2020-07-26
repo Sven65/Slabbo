@@ -26,6 +26,8 @@ import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.*;
 
+import javax.xml.crypto.Data;
+import java.time.Instant;
 import java.util.HashMap;
 
 public class PlayerInteractListener implements Listener {
@@ -296,6 +298,19 @@ public class PlayerInteractListener implements Listener {
 			}
 			case OPEN_CLIENT_GUI: {
 				Shop shop = (Shop) pAction.extra;
+
+				if (shop.admin && shop.shopLimit != null) {
+					if (shop.shopLimit.enabled) {
+						long currentTime = Instant.now().getEpochSecond();
+
+						long nextRestock = shop.shopLimit.lastRestock + (shop.shopLimit.restockTime);
+
+						if (currentTime >= nextRestock) {
+							shop.doLimitRestock();
+							DataUtil.saveShops();
+						}
+					}
+				}
 
 				ShopUserGUI gui = new ShopUserGUI(shop, player);
 				gui.openInventory(e.getPlayer());

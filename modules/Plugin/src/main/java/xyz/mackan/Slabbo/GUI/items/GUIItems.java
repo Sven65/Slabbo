@@ -11,10 +11,14 @@ import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.Misc;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 public class GUIItems {
 	private static SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
@@ -222,18 +226,45 @@ public class GUIItems {
 		replacementMap.put("buyPerItem", Slabbo.localeManager.getCurrencyString(formatter.format(buyPerItem)));
 		replacementMap.put("sellPerItem", Slabbo.localeManager.getCurrencyString(formatter.format(sellPerItem)));
 
+		if (shop.shopLimit != null && shop.shopLimit.enabled) {
+			replacementMap.put("restockTime", shop.shopLimit.restockTime);
+
+			String pattern = "MM-dd-yyyy HH:mm:ss";
+			DateFormat df = new SimpleDateFormat(pattern);
+			long nextRestock = shop.shopLimit.lastRestock + shop.shopLimit.restockTime;
+
+			Date nextRestockDate = new Date(nextRestock * 1000);
+
+			replacementMap.put("time", df.format(nextRestockDate));
+		}
+
 		String ownerString = Slabbo.localeManager.replaceKey("gui.items.info.owned-by", replacementMap);
 		String sellingString = Slabbo.localeManager.replaceKey("gui.items.info.selling-item", replacementMap);
 		String buyEachString = Slabbo.localeManager.replaceKey("gui.items.info.buy-each", replacementMap);
 		String sellEachString = Slabbo.localeManager.replaceKey("gui.items.info.sell-each", replacementMap);
 
-		meta.setLore(Arrays.asList(
+		String sellStockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.sell-stock", replacementMap);
+		String buyStockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.buy-stock", replacementMap);
+		String restockTimeString = Slabbo.localeManager.replaceKey("gui.items.info.limit.restock-time", replacementMap);
+		String nextRestockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.next-restock", replacementMap);
+
+		List<String> lore = Arrays.asList(
 				"§r"+ownerString,
 				"",
 				"§r"+sellingString,
 				buyEachString,
 				sellEachString
-		));
+		);
+
+		if (shop.shopLimit != null && shop.shopLimit.enabled) {
+			lore.add("§r§7-------------");
+			lore.add(sellStockString);
+			lore.add(buyStockString);
+			lore.add(restockTimeString);
+			lore.add(nextRestockString);
+		}
+
+		meta.setLore(lore);
 
 		item.setItemMeta(meta);
 

@@ -3,8 +3,10 @@ package xyz.mackan.Slabbo.types;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.scheduler.BukkitRunnable;
+import scala.Int;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -14,6 +16,9 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 
 	public int buyStock;
 	public int sellStock;
+
+	public int buyStockLeft;
+	public int sellStockLeft;
 
 	public int restockTime;
 
@@ -38,6 +43,8 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 		result.put("restockTime", restockTime);
 		result.put("lastRestock", lastRestock);
 		result.put("enabled", enabled);
+		result.put("sellStockLeft", sellStockLeft);
+		result.put("buyStockLeft", buyStockLeft);
 
 		return result;
 	}
@@ -49,8 +56,21 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 		Number lastRestock = (Number) args.get("lastRestock");
 		boolean enabled = (boolean) args.get("enabled");
 
+		int buyStockLeft = (Integer) args.get("buyStockLeft");
+		int sellStockLeft = (Integer) args.get("sellStockLeft");
 
+		ShopLimit limit = new ShopLimit(buyStock, sellStock, restockTime, lastRestock.longValue(), enabled);
 
-		return new ShopLimit(buyStock, sellStock, restockTime, lastRestock.longValue(), enabled);
+		limit.buyStockLeft = buyStockLeft;
+		limit.sellStockLeft = sellStockLeft;
+
+		return limit;
+	}
+
+	public void restock () {
+		buyStockLeft = buyStock;
+		sellStockLeft = sellStock;
+
+		lastRestock = Instant.now().getEpochSecond();
 	}
 }

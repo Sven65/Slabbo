@@ -37,16 +37,26 @@ public class ShopUserGUI implements Listener {
 	}
 
 	public void initializeItems (Player player) {
+		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
+
 		ItemStack shopItem = shop.item.clone();
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
 		if (shop.buyPrice > -1 && shop.quantity > 0) {
-			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+			if (isLimitedShop) {
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin));
+			} else {
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+			}
 		}
 
 		if (shop.sellPrice > -1 && shop.quantity > 0) {
-			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+			if (isLimitedShop) {
+				inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.shopLimit.sellStockLeft, shop.admin));
+			} else {
+				inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+			}
 		}
 
 		inv.setItem(4, shopItem);
@@ -64,16 +74,30 @@ public class ShopUserGUI implements Listener {
 	public void handleBuy (HumanEntity humanEntity) {
 		double playerFunds = Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity);
 
+		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
+
 		if (shop.stock <= 0 && !shop.admin) {
 			humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.out-of-stock"));
 			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
+		if (isLimitedShop) {
+			if (shop.shopLimit.buyStockLeft <= 0) {
+				humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.buy-limit-reached"));
+				((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+				return;
+			}
+		}
+
 		int itemCount = Math.min(shop.stock, shop.quantity);
 
 		if (shop.admin) {
-			itemCount = shop.quantity;
+			if (isLimitedShop) {
+				itemCount = Math.min(shop.shopLimit.buyStockLeft, shop.quantity);
+			} else {
+				itemCount = shop.quantity;
+			}
 		}
 
 		int totalCost = shop.buyPrice;// * itemCount;
@@ -115,6 +139,10 @@ public class ShopUserGUI implements Listener {
 			shop.stock -= totalBought;
 		}
 
+		if (isLimitedShop) {
+			shop.shopLimit.buyStockLeft -= totalBought;
+		}
+
 		//int actualCost = totalBought * shop.buyPrice;
 		int actualCost = shop.buyPrice;
 
@@ -148,13 +176,23 @@ public class ShopUserGUI implements Listener {
 
 		DataUtil.saveShops();
 
-		inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
-		inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+
+
+		if (isLimitedShop) {
+			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin));
+			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.shopLimit.sellStockLeft, shop.admin));
+		} else {
+			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+		}
+
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
 	}
 
 	public void handleSell (HumanEntity humanEntity) {
 		OfflinePlayer shopOwner = Bukkit.getOfflinePlayer(shop.ownerId);
+
+		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
 
 		double shopFunds = Slabbo.getEconomy().getBalance(shopOwner);
 
@@ -187,6 +225,13 @@ public class ShopUserGUI implements Listener {
 
 		itemCount = Math.min(itemCount, shop.quantity);
 
+		if (isLimitedShop) {
+			if (itemCount > shop.shopLimit.sellStockLeft) {
+				humanEntity.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.shop-errors.sell-limit-reached"));
+				((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+				return;
+			}
+		}
 
 		int totalCost = shop.sellPrice;
 
@@ -200,6 +245,10 @@ public class ShopUserGUI implements Listener {
 
 		if (!shop.admin) {
 			shop.stock += itemCount;
+		}
+
+		if (isLimitedShop) {
+			shop.shopLimit.sellStockLeft -= itemCount;
 		}
 
 		DataUtil.saveShops();
@@ -233,12 +282,19 @@ public class ShopUserGUI implements Listener {
 		}
 
 		if (shop.buyPrice > -1 && shop.quantity > 0) {
-			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
-
+			if (isLimitedShop) {
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin));
+			} else {
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin));
+			}
 		}
 
 		if (shop.sellPrice > -1 && shop.quantity > 0) {
-			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+			if (isLimitedShop) {
+				inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.shopLimit.sellStockLeft, shop.admin));
+			} else {
+				inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin));
+			}
 		}
 
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
