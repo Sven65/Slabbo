@@ -1,17 +1,53 @@
 # Slabbo Config
 
-chestlinks: # Linking chests
-  enabled: true
-  enforcepermission: false # If users need a permission to link a chest
-  hoppers: # Hopper functionality for linked chest
-    enabled: true
-    savetime: 5 # Delay in seconds
-  player: # If the player is able to deposit to the chest
-    enabled: true
-    savetime: 5
+########################
+#       General        #
+########################
 
-itemdisplay: quantity # Quantity (The amount the shop sells) / Full (A full stack (64 items))
+# How the hovering items should be displayed
+# Quantity (The amount the shop sells) / Full (A full stack (64 items))
+itemdisplay: quantity
 
+# If Slabbo should check for updates
 checkupdates: true
 
-stairs: true # If users should be able to use upside down stairs as shops
+# If users should be able to use upside down stairs as shops
+stairs: true
+
+punchRestock:
+  # If a user can punch a shop with the item to restock it
+  single: true
+
+  # If a user can shift punch a shop with the item to restock it with
+  # all matching items in their inventory
+  bulk: true
+
+########################
+#     Chest links      #
+########################
+
+chestlinks:
+
+  # If linking chests is enabled
+  enabled: true
+
+  # If users need a permission to link a chest
+  enforcepermission: false
+
+  # Hopper functionality for linked chest
+  hoppers:
+    # If hoppers are enabled to restock shops via linked chests
+    enabled: true
+
+    # How long Slabbo should wait before saving shops when they've been stocked by a hopper
+    # Delay in seconds
+    savetime: 5
+
+  player:
+    # If the player is able to deposit to the chest
+    enabled: true
+
+    # How long Slabbo should wait before saving shops when they've been stocked by a player through a chest
+    # Delay in seconds
+    savetime: 5
+

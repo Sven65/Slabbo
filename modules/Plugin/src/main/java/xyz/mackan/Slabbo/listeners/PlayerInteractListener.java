@@ -120,6 +120,8 @@ public class PlayerInteractListener implements Listener {
 			boolean isChest = clickedBlockMaterial == Material.CHEST || clickedBlockMaterial == Material.TRAPPED_CHEST;
 
 			if (!isChest) {
+				if (!Slabbo.getInstance().getConfig().getBoolean("punchRestock.bulk", true)) return new ShopAction(ShopActionType.NONE);
+
 				ShopAction action = getRestockAction(itemInHand, player, clickedLocation);
 
 				if (action.type == ShopActionType.STOCK_SHOP) {
@@ -137,6 +139,8 @@ public class PlayerInteractListener implements Listener {
 
 			return new ShopAction(ShopActionType.LINK_CHEST);
 		}
+
+		if (!Slabbo.getInstance().getConfig().getBoolean("punchRestock.single", true)) return new ShopAction(ShopActionType.NONE);
 
 		ShopAction action = getRestockAction(itemInHand, player, clickedLocation);
 
