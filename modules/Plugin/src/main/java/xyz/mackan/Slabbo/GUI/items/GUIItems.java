@@ -127,7 +127,7 @@ public class GUIItems {
 		if (!isLimited) {
 			inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
 		} else {
-			inStock = Slabbo.localeManager.replaceKey("general.general.limited-stock.sell-stock-left", replacementMap);
+			inStock = Slabbo.localeManager.replaceKey("general.general.limited-stock.buy-stock-left", replacementMap);
 		}
 
 		String stacks = Slabbo.localeManager.getString("general.general.stacks");

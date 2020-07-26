@@ -150,10 +150,10 @@ public class SlabboCommand extends BaseCommand {
 					return;
 				}
 
-				ShopLimit limit = new ShopLimit(0, 0, 0, 0L, false);
+				ShopLimit limit = lookingAtShop.shopLimit;
 
-				if (lookingAtShop.shopLimit != null) {
-					limit = lookingAtShop.shopLimit;
+				if (lookingAtShop.shopLimit == null) {
+					limit = new ShopLimit(0, 0, 0, 0L, false);
 				}
 
 				limit.enabled = !limit.enabled;
@@ -195,10 +195,10 @@ public class SlabboCommand extends BaseCommand {
 						return;
 					}
 
-					ShopLimit limit = new ShopLimit(0, 0, 0, 0L, false);
+					ShopLimit limit = lookingAtShop.shopLimit;
 
-					if (lookingAtShop.shopLimit != null) {
-						limit = lookingAtShop.shopLimit;
+					if (lookingAtShop.shopLimit == null) {
+						limit = new ShopLimit(0, 0, 0, 0L, false);
 					}
 
 					limit.buyStock = stock;
@@ -233,10 +233,10 @@ public class SlabboCommand extends BaseCommand {
 						return;
 					}
 
-					ShopLimit limit = new ShopLimit(0, 0, 0, 0L, false);
+					ShopLimit limit = lookingAtShop.shopLimit;
 
-					if (lookingAtShop.shopLimit != null) {
-						limit = lookingAtShop.shopLimit;
+					if (lookingAtShop.shopLimit == null) {
+						limit = new ShopLimit(0, 0, 0, 0L, false);
 					}
 
 					limit.sellStock = stock;
@@ -272,10 +272,10 @@ public class SlabboCommand extends BaseCommand {
 					return;
 				}
 
-				ShopLimit limit = new ShopLimit(0, 0, 0, 0L, false);
+				ShopLimit limit = lookingAtShop.shopLimit;
 
-				if (lookingAtShop.shopLimit != null) {
-					limit = lookingAtShop.shopLimit;
+				if (lookingAtShop.shopLimit == null) {
+					limit = new ShopLimit(0, 0, 0, 0L, false);
 				}
 
 				limit.restockTime = time;
