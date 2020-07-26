@@ -47,17 +47,22 @@ Destroying: Right click existing shop with stick
 
 ## Commands
 
-- /slabbo
-- /slabbo destroy
-- /slabbo import
-- /slabbo toggleadmin
-- /slabbo modify
-- /slabbo modify buyprice
-- /slabbo modify sellprice
-- /slabbo modify quantity
-- /slabbo modify note
-- /slabbo modify owner
-- /slabbo modify stock
-- /slabbo save
-- /slabbo reload
-- /slabbo info
+- `/slabbo`
+- `/slabbo admin`
+- `/slabbo admin toggle`
+- `/slabbo admin limit`
+- `/slabbo admin limit toggle`
+- `/slabbo admin limit stock buy {n}`
+- `/slabbo admin limit stock sell {n}`
+- `/slabbo destroy`
+- `/slabbo import`
+- `/slabbo modify`
+- `/slabbo modify buyprice`
+- `/slabbo modify sellprice`
+- `/slabbo modify quantity`
+- `/slabbo modify note`
+- `/slabbo modify owner`
+- `/slabbo modify stock`
+- `/slabbo save`
+- `/slabbo reload`
+- `/slabbo info`
