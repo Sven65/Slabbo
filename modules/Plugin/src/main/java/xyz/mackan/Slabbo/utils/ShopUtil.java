@@ -6,11 +6,14 @@ import org.bukkit.World;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 
+import java.time.Instant;
 import java.util.*;
 
 public class ShopUtil {
 	public HashMap<String, Shop> shops = new HashMap<String, Shop>();
 	public HashMap<UUID, List<Shop>> shopsByOwnerId = new HashMap<UUID, List<Shop>>();
+
+	public List<String> limitedShops = new ArrayList<String>();
 
 	public ShopUtil () { }
 
@@ -32,6 +35,10 @@ public class ShopUtil {
 		shopList.add(value);
 
 		shopsByOwnerId.put(value.ownerId, shopList);
+
+		if (value.shopLimit != null) {
+			limitedShops.add(key);
+		}
 	}
 
 	public void removeShop(Shop shop) {
@@ -46,6 +53,8 @@ public class ShopUtil {
 
 			shopsByOwnerId.put(shop.ownerId, shopList);
 		}
+
+		limitedShops.remove(locationString);
 	}
 
 	public void loadShops () {
@@ -68,6 +77,10 @@ public class ShopUtil {
 
 				if (v.linkedChestLocation != null) {
 					Slabbo.chestLinkUtil.links.put(v.linkedChestLocation, v);
+				}
+
+				if (v.shopLimit != null) {
+					limitedShops.add(v.getLocationString());
 				}
 			});
 		}

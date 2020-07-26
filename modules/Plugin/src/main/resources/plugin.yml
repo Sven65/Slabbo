@@ -13,9 +13,6 @@ permissions:
   slabbo.create:
     default: op
     description: Lets you create slab shops
-  slabbo.admin:
-    default: op
-    description: Lets you create admin shops
   slabbo.limit.*:
     default: op
     description: Gives you unlimited shops
@@ -84,6 +81,17 @@ permissions:
     children:
       slabbo.modify.admin.owner: true
       slabbo.modify.admin.stock: true
+
+  slabbo.admin.toggle:
+    default: op
+    description: Lets you toggle shops as being admin shops
+
+  slabbo.admin.*:
+    default: op
+    description: Gives you access to all admin commands
+    children:
+      slabbo.admin.toggle: true
+
 
   slabbo.link:
     default: op

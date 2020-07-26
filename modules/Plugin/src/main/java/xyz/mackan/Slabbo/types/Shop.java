@@ -5,12 +5,14 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -38,6 +40,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	//public UUID droppedItemId;
 
 	public String linkedChestLocation;
+
+	public ShopLimit shopLimit = null;
+
 
 	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
 		this.buyPrice = buyPrice;
@@ -79,6 +84,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("stock", stock);
 		result.put("admin", admin);
 		result.put("ownerId", ownerId.toString());
+		result.put("shopLimit", shopLimit);
 
 		result.put("linkedChestLocation", linkedChestLocation);
 
@@ -107,12 +113,30 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 		String note = (String) args.getOrDefault("note", "Let's trade!");
 
+		ShopLimit shopLimit = (ShopLimit) args.get("shopLimit");
+
 
 		Shop newShop = new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);
 
 		newShop.note = note;
 
+		newShop.shopLimit = shopLimit;
+
 		return newShop;
+	}
+
+	public void doLimitRestock () {
+		this.stock = shopLimit.stock;
+
+		this.shopLimit.lastRestock = Instant.now().getEpochSecond();
+	}
+
+	public boolean shouldRestock () {
+		long currentTime = Instant.now().getEpochSecond();
+
+		long restockTime = shopLimit.lastRestock + (shopLimit.restockTime * 1000);
+
+		return currentTime >= restockTime;
 	}
 
 	public String getLocationString () {

@@ -90,30 +90,35 @@ public class SlabboCommand extends BaseCommand {
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 	}
 
-	@Subcommand("toggleadmin")
-	@Description("Toggles the shop as being an item shop")
+	@Subcommand("admin")
+	@Description("Admin shop commands")
 	@CommandPermission("slabbo.admin")
-	public void onToggleAdmin (Player player) {
-		Shop lookingAtShop = getLookingAtShop(player);
-		if (lookingAtShop == null) {
-			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
-			player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-			return;
+	public class SlabboAdminCommand extends BaseCommand {
+		@Subcommand("toggle")
+		@Description("Toggles the shop as being an admin shop")
+		@CommandPermission("slabbo.admin.toggle")
+		public void onToggleAdmin (Player player) {
+			Shop lookingAtShop = getLookingAtShop(player);
+			if (lookingAtShop == null) {
+				player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+				return;
+			}
+
+			lookingAtShop.admin = !lookingAtShop.admin;
+
+			if (lookingAtShop.admin) {
+				player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-create"));
+			} else {
+				player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-destroy"));
+			}
+
+			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+			DataUtil.saveShops();
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
-
-		lookingAtShop.admin = !lookingAtShop.admin;
-
-		if (lookingAtShop.admin) {
-			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-create"));
-		} else {
-			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-destroy"));
-		}
-
-		Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-		DataUtil.saveShops();
-
-		player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 	}
 
 	@Subcommand("destroy")

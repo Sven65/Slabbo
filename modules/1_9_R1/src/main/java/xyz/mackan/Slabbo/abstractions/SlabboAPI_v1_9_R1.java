@@ -183,4 +183,12 @@ public class SlabboAPI_v1_9_R1 implements SlabboAPI {
 	public boolean isStair (Block block) {
 		return (block.getState().getData() instanceof Stairs);
 	}
+
+	public boolean isUpsideDownStair (Block block) {
+		if (!isStair(block)) return false;
+
+		Stairs stairs = (Stairs) block.getState().getData();
+
+		return stairs.isInverted();
+	}
 }
