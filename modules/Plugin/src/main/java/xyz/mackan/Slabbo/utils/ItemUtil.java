@@ -2,15 +2,19 @@ package xyz.mackan.Slabbo.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
+import xyz.mackan.Slabbo.types.AttributeKey;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 
@@ -146,5 +150,93 @@ public class ItemUtil {
 		}
 	}
 
+	public static ItemStack setContainerIntValue(ItemStack itemStack, NamespacedKey key, int value) {
+		ItemMeta itemMeta = itemStack.getItemMeta();
 
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		container.set(key, PersistentDataType.INTEGER, value);
+
+		itemStack.setItemMeta(itemMeta);
+
+		return itemStack;
+	}
+
+	public static ItemStack setContainerStringValue(ItemStack itemStack, NamespacedKey key, String value) {
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		container.set(key, PersistentDataType.STRING, value);
+
+		itemStack.setItemMeta(itemMeta);
+
+		return itemStack;
+	}
+
+	public static int getContainerIntValue (ItemStack itemStack, NamespacedKey key) {
+		if (!itemStack.hasItemMeta()) return -1;
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (itemMeta == null) return -1;
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		if (container == null) return -1;
+
+		return container.get(key, PersistentDataType.INTEGER);
+	}
+
+	public static String getContainerStringValue (ItemStack itemStack, NamespacedKey key) {
+		if (!itemStack.hasItemMeta()) return null;
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (itemMeta == null) return null;
+
+		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
+
+		if (container == null) return null;
+
+		return container.get(key, PersistentDataType.STRING);
+	}
+
+	public static String getLoreValue (ItemStack itemStack, String key) {
+		if (!itemStack.hasItemMeta()) return "";
+
+		ItemMeta itemMeta = itemStack.getItemMeta();
+
+		if (!itemMeta.hasLore()) return "";
+
+		List<String> lore = itemMeta.getLore();
+
+		String value = "";
+
+		for (String line : lore) {
+			if (!line.startsWith(key)) continue;
+
+			value = line.replace(key+"=", "");
+		}
+
+		return value;
+	}
+
+	public static ItemStack setLoreValue (ItemStack itemStack, String key, String value) {
+		ItemMeta meta = itemStack.getItemMeta();
+
+		List<String> currentLore = new ArrayList<String>();
+
+		if (meta.hasLore()) {
+			currentLore = meta.getLore();
+		}
+
+		currentLore.add(key+"="+value);
+
+		meta.setLore(currentLore);
+
+		itemStack.setItemMeta(meta);
+
+		return itemStack;
+	}
 }

@@ -132,4 +132,18 @@ public interface SlabboAPI {
 	 * @param location
 	 */
 	void setShopLocation (Item item, Location location);
+
+	/**
+	 * Gets if the block is a stair
+	 * @param block
+	 * @return
+	 */
+	boolean isStair (Block block);
+
+	/**
+	 * Gets if the block is an upside down stair
+	 * @param block
+	 * @return
+	 */
+	boolean isUpsideDownStair (Block block);
 }

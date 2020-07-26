@@ -4,8 +4,10 @@ import net.minecraft.server.v1_15_R1.*;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
@@ -20,6 +22,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.AttributeKey;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
+import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Collection;
@@ -89,31 +92,13 @@ public class SlabboAPI_v1_15_R1 implements SlabboAPI {
 	public boolean getNoPickup (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		if (!itemStack.hasItemMeta()) return false;
+		int noPickup = ItemUtil.getContainerIntValue(itemStack, AttributeKey.NO_PICKUP.getKey());
 
-		ItemMeta itemMeta = itemStack.getItemMeta();
+		if (noPickup <= -1) {
+			String value = ItemUtil.getLoreValue(itemStack, MetaKey.NO_PICKUP.getKey());
 
-		if (itemMeta == null) return false;
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		if (container == null || !container.has(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER)) {
-			List<String> lore = itemMeta.getLore();
-
-			boolean noPickup = false;
-
-			for (String line : lore) {
-				if (!line.startsWith(MetaKey.NO_PICKUP.getKey())) continue;
-
-				String value = line.replace(MetaKey.NO_PICKUP.getKey()+"=", "");
-
-				noPickup = value.equals("1");
-			}
-
-			return noPickup;
+			return value.equals("1");
 		}
-
-		int noPickup = container.get(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER);
 
 		return noPickup == 1;
 	}
@@ -121,34 +106,15 @@ public class SlabboAPI_v1_15_R1 implements SlabboAPI {
 	public boolean getNoDespawn (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		if (!itemStack.hasItemMeta()) return false;
+		int noDespawn = ItemUtil.getContainerIntValue(itemStack, AttributeKey.NO_DESPAWN.getKey());
 
-		ItemMeta itemMeta = itemStack.getItemMeta();
-
-		if (itemMeta == null) return false;
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		if (container == null) return false;
-
-		int noDespawn = container.get(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER);
 		return noDespawn == 1;
 	}
 
 	public boolean getNoMerge (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		if (!itemStack.hasItemMeta()) return false;
-
-		ItemMeta itemMeta = itemStack.getItemMeta();
-
-		if (itemMeta == null) return false;
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		if (container == null) return false;
-
-		int noMerge = container.get(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER);
+		int noMerge = ItemUtil.getContainerIntValue(itemStack, AttributeKey.NO_MERGE.getKey());
 
 		return noMerge == 1;
 	}
@@ -156,17 +122,7 @@ public class SlabboAPI_v1_15_R1 implements SlabboAPI {
 	public String getShopLocation (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		if (!itemStack.hasItemMeta()) return null;
-
-		ItemMeta itemMeta = itemStack.getItemMeta();
-
-		if (itemMeta == null) return null;
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		if (container == null) return null;
-
-		String shopLocation = container.get(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING);
+		String shopLocation = ItemUtil.getContainerStringValue(itemStack, AttributeKey.SHOP_LOCATION.getKey());
 
 		return shopLocation;
 	}
@@ -174,61 +130,41 @@ public class SlabboAPI_v1_15_R1 implements SlabboAPI {
 	public void setNoPickup (Item item, int value) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		container.set(AttributeKey.NO_PICKUP.getKey(), PersistentDataType.INTEGER, value);
-
-		itemStack.setItemMeta(itemMeta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setContainerIntValue(itemStack, AttributeKey.NO_PICKUP.getKey(), value));
 	}
 
 
 	public void setNoDespawn (Item item, int value) {
 		ItemStack itemStack = item.getItemStack();
-
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		container.set(AttributeKey.NO_DESPAWN.getKey(), PersistentDataType.INTEGER, value);
-
-		itemStack.setItemMeta(itemMeta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setContainerIntValue(itemStack, AttributeKey.NO_DESPAWN.getKey(), value));
 	}
 
 	public void setNoMerge (Item item, int value) {
 		ItemStack itemStack = item.getItemStack();
-
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		container.set(AttributeKey.NO_MERGE.getKey(), PersistentDataType.INTEGER, value);
-
-		itemStack.setItemMeta(itemMeta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setContainerIntValue(itemStack, AttributeKey.NO_MERGE.getKey(), value));
 	}
 
 	public void setShopLocation (Item item, Location location) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta itemMeta = item.getItemStack().getItemMeta();
-
-		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
-
-		container.set(AttributeKey.SHOP_LOCATION.getKey(), PersistentDataType.STRING, ShopUtil.locationToString(location));
-
-		itemStack.setItemMeta(itemMeta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setContainerStringValue(itemStack, AttributeKey.SHOP_LOCATION.getKey(), ShopUtil.locationToString(location)));
 	}
 
 	public boolean isSlabboItem (Item item) {
 		return getNoPickup(item) && getNoDespawn(item);
+	}
+
+	public boolean isStair (Block block) {
+		BlockData blockData = block.getBlockData();
+
+		return (blockData instanceof Stairs);
+	}
+
+	public boolean isUpsideDownStair (Block block) {
+		if (!isStair(block)) return false;
+
+		Stairs stairs = (Stairs) block.getBlockData();
+
+		return stairs.getHalf() == Bisected.Half.TOP;
 	}
 }

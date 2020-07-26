@@ -165,6 +165,9 @@ public class PlayerInteractListener implements Listener {
 		}
 
 		boolean isSlab = api.isSlab(clickedBlock);
+		boolean isStairs = api.isStair(clickedBlock);
+
+		System.out.println("is Stairs: "+isStairs);
 
 		if (!isSlab) return;
 

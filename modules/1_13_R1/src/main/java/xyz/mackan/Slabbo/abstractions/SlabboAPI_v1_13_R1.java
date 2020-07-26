@@ -5,8 +5,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.craftbukkit.v1_13_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_13_R1.entity.CraftItem;
@@ -21,6 +23,7 @@ import org.bukkit.metadata.MetadataValue;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
+import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.ArrayList;
@@ -92,171 +95,71 @@ public class SlabboAPI_v1_13_R1 implements SlabboAPI {
 	public boolean getNoPickup (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		if (!meta.hasLore()) return false;
-
-		List<String> lore = meta.getLore();
-
-		boolean noPickup = false;
-
-		for (String line : lore) {
-			if (!line.startsWith(MetaKey.NO_PICKUP.getKey())) continue;
-
-			String value = line.replace(MetaKey.NO_PICKUP.getKey()+"=", "");
-
-			noPickup = value.equals("1");
-		}
-
-		return noPickup;
+		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_PICKUP.getKey()).equals("1");
 	}
 
 	public boolean getNoDespawn (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		if (!meta.hasLore()) return false;
-
-		List<String> lore = meta.getLore();
-
-		boolean noDespawn = false;
-
-		for (String line : lore) {
-			if (!line.startsWith(MetaKey.NO_DESPAWN.getKey())) continue;
-
-			String value = line.replace(MetaKey.NO_DESPAWN.getKey()+"=", "");
-
-			noDespawn = value.equals("1");
-		}
-
-		return noDespawn;
+		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_DESPAWN.getKey()).equals("1");
 	}
 
 	public boolean getNoMerge (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		if (!meta.hasLore()) return false;
-
-		List<String> lore = meta.getLore();
-
-		boolean noMerge = true;
-
-		for (String line : lore) {
-			if (!line.startsWith(MetaKey.NO_MERGE.getKey())) continue;
-
-			String value = line.replace(MetaKey.NO_MERGE.getKey()+"=", "");
-
-			noMerge = value.equals("1");
-		}
-
-		return noMerge;
+		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_MERGE.getKey()).equals("1");
 	}
 
 	public String getShopLocation (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
+		String value = ItemUtil.getLoreValue(itemStack, MetaKey.SHOP_LOCATION.getKey());
 
-		if (!meta.hasLore()) return null;
+		if (value.equals("")) return null;
 
-		List<String> lore = meta.getLore();
-
-		String shopLocation = null;
-
-		for (String line : lore) {
-			if (!line.startsWith(MetaKey.SHOP_LOCATION.getKey())) continue;
-
-			shopLocation = line.replace(MetaKey.SHOP_LOCATION.getKey()+"=", "");
-		}
-
-		return shopLocation;
+		return value;
 	}
 
 	public void setNoPickup (Item item, int value) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		List<String> currentLore = new ArrayList<String>();
-
-		if (meta.hasLore()) {
-			currentLore = meta.getLore();
-		}
-
-		currentLore.add(MetaKey.NO_PICKUP.getKey()+"="+value);
-
-		meta.setLore(currentLore);
-
-		itemStack.setItemMeta(meta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.NO_PICKUP.getKey(), ""+value));
 	}
 
 
 	public void setNoDespawn (Item item, int value) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		List<String> currentLore = new ArrayList<String>();
-
-		if (meta.hasLore()) {
-			currentLore = meta.getLore();
-		}
-
-		currentLore.add(MetaKey.NO_DESPAWN.getKey()+"="+value);
-
-		meta.setLore(currentLore);
-
-		itemStack.setItemMeta(meta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.NO_DESPAWN.getKey(), ""+value));
 	}
 
 	public void setNoMerge (Item item, int value) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		List<String> currentLore = new ArrayList<String>();
-
-		if (meta.hasLore()) {
-			currentLore = meta.getLore();
-		}
-
-		currentLore.add(MetaKey.NO_MERGE.getKey()+"="+value);
-
-		meta.setLore(currentLore);
-
-		itemStack.setItemMeta(meta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.NO_MERGE.getKey(), ""+value));
 	}
 
 	public void setShopLocation (Item item, Location location) {
 		ItemStack itemStack = item.getItemStack();
 
-		ItemMeta meta = itemStack.getItemMeta();
-
-		List<String> currentLore = new ArrayList<String>();
-
-		if (meta.hasLore()) {
-			currentLore = meta.getLore();
-		}
-
-		currentLore.add(MetaKey.SHOP_LOCATION.getKey()+"="+ShopUtil.locationToString(location));
-
-		meta.setLore(currentLore);
-
-		itemStack.setItemMeta(meta);
-
-		item.setItemStack(itemStack);
+		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.SHOP_LOCATION.getKey(), ShopUtil.locationToString(location)));
 	}
 
 	public boolean isSlabboItem (Item item) {
 		return getNoPickup(item) && getNoDespawn(item);
+	}
+
+	public boolean isStair (Block block) {
+		BlockData blockData = block.getBlockData();
+
+		return (blockData instanceof Stairs);
+	}
+
+	public boolean isUpsideDownStair (Block block) {
+		if (!isStair(block)) return false;
+
+		Stairs stairs = (Stairs) block.getBlockData();
+
+		return stairs.getHalf() == Bisected.Half.TOP;
 	}
 }

@@ -13,3 +13,5 @@ chestlinks: # Linking chests
 itemdisplay: quantity # Quantity (The amount the shop sells) / Full (A full stack (64 items))
 
 checkupdates: true
+
+stairs: true # If users should be able to use upside down stairs as shops
