@@ -15,10 +15,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.time.Instant;
+import java.util.*;
 
 public class GUIItems {
 	private static SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
@@ -108,7 +106,7 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getUserBuyItem (String itemName, int quantity, int price, int stock, boolean isAdmin) {
+	public static ItemStack getUserBuyItem (String itemName, int quantity, int price, int stock, boolean isAdmin, boolean isLimited) {
 		ItemStack item = new ItemStack(Material.GOLD_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
@@ -118,13 +116,19 @@ public class GUIItems {
 		replacementMap.put("quantity", quantity);
 		replacementMap.put("price", Slabbo.localeManager.getCurrencyString(price));
 
-		if (isAdmin) {
+		if (isAdmin && !isLimited) {
 			replacementMap.put("count", "∞");
 		} else {
 			replacementMap.put("count", stock);
 		}
 
-		String inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+		String inStock = "";
+
+		if (!isLimited) {
+			inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+		} else {
+			inStock = Slabbo.localeManager.replaceKey("general.general.limited-stock.sell-stock-left", replacementMap);
+		}
 
 		String stacks = Slabbo.localeManager.getString("general.general.stacks");
 
@@ -132,7 +136,7 @@ public class GUIItems {
 
 		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.user.buy-item", replacementMap));
 
-		if (isAdmin) {
+		if (isAdmin && !isLimited) {
 			meta.setLore(Arrays.asList("§r"+buyFor, inStock, "(∞ "+stacks+")"));
 		} else {
 			meta.setLore(Arrays.asList("§r"+buyFor, inStock, "("+Misc.countStacks(stock)+" "+stacks+")"));
@@ -143,7 +147,7 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getUserSellItem (String itemName, int quantity, int price, int stock, boolean isAdmin) {
+	public static ItemStack getUserSellItem (String itemName, int quantity, int price, int stock, boolean isAdmin, boolean isLimited) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
@@ -153,13 +157,20 @@ public class GUIItems {
 		replacementMap.put("quantity", quantity);
 		replacementMap.put("price", Slabbo.localeManager.getCurrencyString(price));
 
-		if (isAdmin) {
+		if (isAdmin && !isLimited) {
 			replacementMap.put("count", "∞");
 		} else {
 			replacementMap.put("count", stock);
 		}
 
-		String inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+		String inStock = "";
+
+		if (!isLimited) {
+			inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+		} else {
+			inStock = Slabbo.localeManager.replaceKey("general.general.limited-stock.sell-stock-left", replacementMap);
+		}
+
 
 		String stacks = Slabbo.localeManager.getString("general.general.stacks");
 
@@ -167,7 +178,7 @@ public class GUIItems {
 
 		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.user.sell-item", replacementMap));
 
-		if (isAdmin) {
+		if (isAdmin && !isLimited) {
 			meta.setLore(Arrays.asList("§r"+sellFor, inStock, "(∞ "+stacks+")"));
 		} else {
 			meta.setLore(Arrays.asList("§r"+sellFor, inStock, "("+Misc.countStacks(stock)+" "+stacks+")"));
@@ -228,10 +239,19 @@ public class GUIItems {
 
 		if (shop.shopLimit != null && shop.shopLimit.enabled) {
 			replacementMap.put("restockTime", shop.shopLimit.restockTime);
+			replacementMap.put("sellStock", shop.shopLimit.sellStock);
+			replacementMap.put("buyStock", shop.shopLimit.buyStock);
 
 			String pattern = "MM-dd-yyyy HH:mm:ss";
 			DateFormat df = new SimpleDateFormat(pattern);
+
 			long nextRestock = shop.shopLimit.lastRestock + shop.shopLimit.restockTime;
+
+			if (shop.shopLimit.lastRestock == 0) {
+				long currentTime = Instant.now().getEpochSecond();
+
+				nextRestock = currentTime + shop.shopLimit.restockTime;
+			}
 
 			Date nextRestockDate = new Date(nextRestock * 1000);
 
@@ -248,13 +268,13 @@ public class GUIItems {
 		String restockTimeString = Slabbo.localeManager.replaceKey("gui.items.info.limit.restock-time", replacementMap);
 		String nextRestockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.next-restock", replacementMap);
 
-		List<String> lore = Arrays.asList(
-				"§r"+ownerString,
-				"",
-				"§r"+sellingString,
-				buyEachString,
-				sellEachString
-		);
+		List<String> lore = new ArrayList<String>();
+
+		lore.add("§r"+ownerString);
+		lore.add("");
+		lore.add("§r"+sellingString);
+		lore.add(buyEachString);
+		lore.add(sellEachString);
 
 		if (shop.shopLimit != null && shop.shopLimit.enabled) {
 			lore.add("§r§7-------------");

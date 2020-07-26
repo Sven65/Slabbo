@@ -131,11 +131,17 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	public boolean shouldRestock () {
-		long currentTime = Instant.now().getEpochSecond();
+		if (admin && shopLimit != null) {
+			if (shopLimit.enabled) {
+				long currentTime = Instant.now().getEpochSecond();
 
-		long restockTime = shopLimit.lastRestock + (shopLimit.restockTime * 1000);
+				long nextRestock = shopLimit.lastRestock + (shopLimit.restockTime);
 
-		return currentTime >= restockTime;
+				return currentTime >= nextRestock;
+			}
+		}
+
+		return false;
 	}
 
 	public String getLocationString () {

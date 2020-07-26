@@ -299,17 +299,9 @@ public class PlayerInteractListener implements Listener {
 			case OPEN_CLIENT_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
-				if (shop.admin && shop.shopLimit != null) {
-					if (shop.shopLimit.enabled) {
-						long currentTime = Instant.now().getEpochSecond();
-
-						long nextRestock = shop.shopLimit.lastRestock + (shop.shopLimit.restockTime);
-
-						if (currentTime >= nextRestock) {
-							shop.doLimitRestock();
-							DataUtil.saveShops();
-						}
-					}
+				if (shop.shouldRestock()) {
+					shop.doLimitRestock();
+					DataUtil.saveShops();
 				}
 
 				ShopUserGUI gui = new ShopUserGUI(shop, player);
@@ -318,6 +310,11 @@ public class PlayerInteractListener implements Listener {
 			}
 			case OPEN_ADMIN_GUI: {
 				Shop shop = (Shop) pAction.extra;
+
+				if (shop.shouldRestock()) {
+					shop.doLimitRestock();
+					DataUtil.saveShops();
+				}
 
 				ShopAdminGUI gui = new ShopAdminGUI(shop, player);
 				gui.openInventory(e.getPlayer());

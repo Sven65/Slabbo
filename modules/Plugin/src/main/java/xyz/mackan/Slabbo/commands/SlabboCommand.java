@@ -161,6 +161,7 @@ public class SlabboCommand extends BaseCommand {
 				lookingAtShop.shopLimit = limit;
 
 				if (limit.enabled) {
+					limit.restock();
 					player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.limited-stock.create"));
 				} else {
 					player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.limited-stock.destroy"));
@@ -202,6 +203,8 @@ public class SlabboCommand extends BaseCommand {
 
 					limit.buyStock = stock;
 
+					limit.restock();
+
 					lookingAtShop.shopLimit = limit;
 
 					player.sendMessage(ChatColor.GREEN + Slabbo.localeManager.replaceSingleKey("success-message.general.limited-stock.set-buy-stock", "stock", stock));
@@ -237,6 +240,8 @@ public class SlabboCommand extends BaseCommand {
 					}
 
 					limit.sellStock = stock;
+
+					limit.restock();
 
 					lookingAtShop.shopLimit = limit;
 
