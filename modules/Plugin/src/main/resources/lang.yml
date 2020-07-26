@@ -41,7 +41,8 @@ success-message:
       create: The shop now has a limited stock!
       destroy: The shop no longer has a limited stock!
       set-time: Restock time has been set to {time} seconds!
-      set-stock: Stock has been set to {stock}!
+      set-sell-stock: Selling stock has been set to {stock}!
+      set-buy-stock: Buying stock has been set to {stock}!
   import:
     importing: Importing shops!
     success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.

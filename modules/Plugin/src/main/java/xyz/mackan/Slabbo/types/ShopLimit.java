@@ -12,15 +12,18 @@ import java.util.Map;
 public class ShopLimit implements Cloneable, ConfigurationSerializable {
 	private static final long serialVersionUID = 8716065921653425642L;
 
-	public int stock;
+	public int buyStock;
+	public int sellStock;
+
 	public int restockTime;
 
 	public long lastRestock;
 
 	public boolean enabled = false;
 
-	public ShopLimit (int stock, int restockTime, long lastRestock, boolean enabled) {
-		this.stock = stock;
+	public ShopLimit (int buyStock, int sellStock, int restockTime, long lastRestock, boolean enabled) {
+		this.buyStock = buyStock;
+		this.sellStock = sellStock;
 		this.restockTime = restockTime;
 		this.lastRestock = lastRestock;
 		this.enabled = enabled;
@@ -30,7 +33,8 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 	public Map<String, Object> serialize () {
 		LinkedHashMap result = new LinkedHashMap();
 
-		result.put("stock", stock);
+		result.put("buyStock", buyStock);
+		result.put("sellStock", sellStock);
 		result.put("restockTime", restockTime);
 		result.put("lastRestock", lastRestock);
 		result.put("enabled", enabled);
@@ -39,13 +43,14 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 	}
 
 	public static ShopLimit deserialize(Map<String, Object> args) {
-		int stock = (Integer) args.get("stock");
+		int buyStock = (Integer) args.get("buyStock");
+		int sellStock = (Integer) args.get("sellStock");
 		int restockTime = (Integer) args.get("restockTime");
 		Number lastRestock = (Number) args.get("lastRestock");
 		boolean enabled = (boolean) args.get("enabled");
 
 
 
-		return new ShopLimit(stock, restockTime, lastRestock.longValue(), enabled);
+		return new ShopLimit(buyStock, sellStock, restockTime, lastRestock.longValue(), enabled);
 	}
 }
