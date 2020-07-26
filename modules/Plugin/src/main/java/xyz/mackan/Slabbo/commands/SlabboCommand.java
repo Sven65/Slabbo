@@ -18,6 +18,7 @@ import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.importers.ImportResult;
 import xyz.mackan.Slabbo.importers.UShopImporter;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.types.ShopLimit;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -142,6 +143,28 @@ public class SlabboCommand extends BaseCommand {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-admin-shop"));
 					return;
 				}
+
+				ShopLimit limit = new ShopLimit(0, 0, 0, false);
+
+				if (lookingAtShop.shopLimit != null) {
+					limit = lookingAtShop.shopLimit;
+				}
+
+				limit.enabled = !limit.enabled;
+
+				lookingAtShop.shopLimit = limit;
+
+				if (limit.enabled) {
+					player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.limited-stock.create"));
+				} else {
+					player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.limited-stock.destroy"));
+				}
+
+				Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
 		}
 	}

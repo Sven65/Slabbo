@@ -37,6 +37,9 @@ success-message:
     admin-create: The shop is now an admin shop!
     admin-destroy: The shop is no longer an admin shop
     shops-saved: Saved shops!
+    limited-stock:
+      create: The shop now has a limited stock!
+      destroy: The shop no longer has a limited stock!
   import:
     importing: Importing shops!
     success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.
