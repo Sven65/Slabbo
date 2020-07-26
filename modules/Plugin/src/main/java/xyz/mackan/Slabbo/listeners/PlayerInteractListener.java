@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
@@ -29,8 +30,10 @@ import java.util.HashMap;
 
 public class PlayerInteractListener implements Listener {
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+	SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
-	public ShopAction getAction (ItemStack itemInHand, Block clickedBlock, Player player) {
+
+	public ShopAction getRightClickAction (ItemStack itemInHand, Block clickedBlock, Player player) {
 		boolean holdingStick = itemInHand != null && itemInHand.getType() == Material.STICK;
 
 		String clickedLocation = ShopUtil.locationToString(clickedBlock.getLocation());
@@ -77,45 +80,80 @@ public class PlayerInteractListener implements Listener {
 		return new ShopAction(ShopActionType.NONE);
 	}
 
-	public void handleLeftClick (PlayerInteractEvent e) {
-		Player p = e.getPlayer();
+	public ShopAction getRestockAction (ItemStack itemInHand, Player player, String clickedLocation) {
+		if (itemInHand == null) return new ShopAction(ShopActionType.NONE);
 
-		if (!p.isSneaking()) return;
+		boolean shopExists = Slabbo.shopUtil.shops.containsKey(clickedLocation);
 
-		if (!Slabbo.chestLinkUtil.hasPendingLink(p)) return;
+		Shop shop = Slabbo.shopUtil.shops.get(clickedLocation);
 
-		Block clickedBlock = e.getClickedBlock();
+		boolean isShopOwner = false;
 
-		Material clickedBlockMaterial = clickedBlock.getState().getType();
-
-		if (clickedBlockMaterial != Material.CHEST && clickedBlockMaterial != Material.TRAPPED_CHEST) return;
-
-		e.setCancelled(true);
-
-		boolean canCreateShop = true;
-
-		if (Slabbo.enabledPlugins.worldguard) {
-			canCreateShop = WorldguardSupport.canCreateShop(clickedBlock.getLocation(), p);
+		if (shopExists) {
+			isShopOwner = shop.ownerId.equals(player.getUniqueId());
 		}
 
-		if (Slabbo.enabledPlugins.griefprevention) {
-			canCreateShop = GriefPreventionSupport.canCreateShop(clickedBlock.getLocation(), p);
+		if (!isShopOwner) return new ShopAction(ShopActionType.NONE);
+
+		ItemStack clonedShopItem = shop.item.clone();
+		ItemStack clonedHandItem = itemInHand.clone();
+
+		clonedHandItem.setAmount(1);
+		clonedShopItem.setAmount(1);
+
+		boolean isShopItem = clonedShopItem.equals(clonedHandItem);
+
+		if (!isShopItem) return new ShopAction(ShopActionType.NONE);
+
+		return new ShopAction(ShopActionType.STOCK_SHOP, shop);
+	}
+
+	public ShopAction getLeftClickAction (ItemStack itemInHand, Block clickedBlock, Player player) {
+		boolean isSneaking = player.isSneaking();
+
+		String clickedLocation = ShopUtil.locationToString(clickedBlock.getLocation());
+
+
+		if (isSneaking) {
+			Material clickedBlockMaterial = clickedBlock.getState().getType();
+
+			boolean isChest = clickedBlockMaterial == Material.CHEST || clickedBlockMaterial == Material.TRAPPED_CHEST;
+
+			if (!isChest) {
+				ShopAction action = getRestockAction(itemInHand, player, clickedLocation);
+
+				if (action.type == ShopActionType.STOCK_SHOP) {
+					return new ShopAction(ShopActionType.BULK_RESTOCK_SHOP, action.extra);
+				}
+
+				return new ShopAction(ShopActionType.NONE);
+			}
+
+			if (!Slabbo.chestLinkUtil.hasPendingLink(player)) return new ShopAction(ShopActionType.NONE);
+
+			boolean canCreateShop = PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
+
+			if (!canCreateShop) return new ShopAction(ShopActionType.NONE);
+
+			return new ShopAction(ShopActionType.LINK_CHEST);
 		}
 
-		if (!canCreateShop) {
-			return;
-		}
+		ShopAction action = getRestockAction(itemInHand, player, clickedLocation);
 
-		String linkingShopLocation = Slabbo.chestLinkUtil.pendingLinks.get(p.getUniqueId());
+		return action;
+	}
+
+	public void linkChest (Player player, Block clickedBlock) {
+		String linkingShopLocation = Slabbo.chestLinkUtil.pendingLinks.get(player.getUniqueId());
 		String linkingChestLocation = ShopUtil.locationToString(clickedBlock.getLocation());
 
 		boolean isLinked = Slabbo.chestLinkUtil.isChestLinked(clickedBlock);
 
 		if (isLinked) {
-			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.chestlink.already-linked"));
-			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.chestlink.already-linked"));
+			Slabbo.chestLinkUtil.pendingLinks.remove(player.getUniqueId());
 
-			p.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+			player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
@@ -125,7 +163,7 @@ public class PlayerInteractListener implements Listener {
 
 		Slabbo.shopUtil.put(linkingShopLocation, linkingShop);
 
-		Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+		Slabbo.chestLinkUtil.pendingLinks.remove(player.getUniqueId());
 
 		Slabbo.chestLinkUtil.links.put(linkingChestLocation, linkingShop);
 
@@ -133,19 +171,82 @@ public class PlayerInteractListener implements Listener {
 
 		replacementMap.put("location", linkingShopLocation);
 
-		p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.chestlink.link-success", replacementMap));
+		player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.chestlink.link-success", replacementMap));
 
 		ChestLinkUtil.setChestName(clickedBlock, "Slabbo "+Slabbo.localeManager.replaceKey("general.chestlink.chest-name", replacementMap));
 
-		p.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("SUCCESS"), 1, 1);
+		player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("SUCCESS"), 1, 1);
 
 		DataUtil.saveShops();
 	}
 
+	public void stockShop (Player player, ItemStack itemInHand, Shop shop) {
+		PlayerInventory pInv = player.getInventory();
+
+		pInv.removeItem(itemInHand);
+
+		shop.stock += itemInHand.getAmount();
+
+		Slabbo.shopUtil.put(shop.getLocationString(), shop);
+
+		DataUtil.saveShops();
+	}
+
+	public void bulkStockShop (Player player, ItemStack itemInHand, Shop shop) {
+		PlayerInventory pInv = player.getInventory();
+
+		int itemCount = 0;
+
+		ItemStack[] itemStacks = pInv.getContents();
+
+		for (ItemStack inventoryItem : itemStacks) {
+			if (inventoryItem == null || inventoryItem.getType() == Material.AIR) continue;
+			ItemStack clonedItem = inventoryItem.clone();
+			clonedItem.setAmount(1);
+			if (clonedItem.equals(shop.item)) {
+				itemCount += inventoryItem.getAmount();
+			}
+		}
+
+		ItemStack clonedItem = itemInHand.clone();
+
+		clonedItem.setAmount(itemCount);
+
+		pInv.removeItem(clonedItem);
+
+		shop.stock += itemCount;
+
+		Slabbo.shopUtil.put(shop.getLocationString(), shop);
+
+		DataUtil.saveShops();
+	}
+
+	public void handleLeftClick (PlayerInteractEvent e) {
+		Player player = e.getPlayer();
+		Block clickedBlock = e.getClickedBlock();
+		ItemStack itemInHand = api.getInteractionItemInHand(e);
+
+		ShopAction action = getLeftClickAction(itemInHand, clickedBlock, player);
+
+		if (action.type == ShopActionType.NONE) return;
+
+		e.setCancelled(true);
+
+		switch (action.type) {
+			case LINK_CHEST:
+				linkChest(player, clickedBlock);
+				break;
+			case STOCK_SHOP:
+				stockShop(player, itemInHand, (Shop) action.extra);
+				break;
+			case BULK_RESTOCK_SHOP:
+				bulkStockShop(player, itemInHand, (Shop) action.extra);
+				break;
+		}
+	}
+
 	@EventHandler
 	public void onInteract (PlayerInteractEvent e) {
-		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
-
 		ItemStack itemInHand = api.getInteractionItemInHand(e);
 
 		Player player = e.getPlayer();
@@ -163,7 +264,7 @@ public class PlayerInteractListener implements Listener {
 
 		if (!Misc.isValidShopBlock(clickedBlock)) return;
 
-		ShopAction pAction = getAction(itemInHand, clickedBlock, player);
+		ShopAction pAction = getRightClickAction(itemInHand, clickedBlock, player);
 
 		switch (pAction.type) {
 			case CREATION_LIMIT_HIT: {

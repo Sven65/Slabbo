@@ -51,15 +51,12 @@ public class BlockEventListeners implements Listener {
 	public void onBreak (BlockBreakEvent e) {
 		if (isLookingAtShop(e.getPlayer())) {
 			e.setCancelled(true);
-
-			//e.setDropItems(false);
 		}
 
 		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
 			if (isLookingAtLinkedChest(e.getPlayer())) {
 				e.getPlayer().sendMessage(Slabbo.localeManager.getString("error-message.chestlink.no-destroy-linked"));
 				e.setCancelled(true);
-				//e.setDropItems(false);
 			}
 		}
 	}
