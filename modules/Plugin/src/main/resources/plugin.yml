@@ -90,11 +90,21 @@ permissions:
     default: op
     description: Lets you toggle admin shops to have limited stock
 
+  slabbo.admin.limit.stock:
+    default: op
+    description: Lets you set the stock of limited shops
+
+  slabbo.admin.limit.time:
+    default: op
+    description: Lets you set the time between restocks for limited shops
+
   slabbo.admin.limit.*:
     default: op
     description: Gives you access to all the limiting stock commands
     children:
       slabbo.admin.limit.toggle: true
+      slabbo.admin.limit.stock: true
+      slabbo.admin.limit.time: true
 
   slabbo.admin.*:
     default: op

@@ -96,7 +96,9 @@ public class SlabboCommand extends BaseCommand {
 	@CommandPermission("slabbo.admin" +
 			"|slabbo.admin.toggle" +
 			"|slabbo.admin.limit" +
-			"|slabbo.admin.limit.toggle")
+			"|slabbo.admin.limit.toggle" +
+			"|slabbo.admin.limit.stock" +
+			"|slabbo.admin.limit.time")
 	public class SlabboAdminCommand extends BaseCommand {
 		@Subcommand("toggle")
 		@Description("Toggles the shop as being an admin shop")
@@ -126,7 +128,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("limit")
 		@Description("Commands for setting the shop to have a limited stock")
-		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle")
+		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle|slabbo.admin.limit.stock|slabbo.admin.limit.time")
 		public class SlabboAdminLimitCommand extends BaseCommand {
 			@Subcommand("toggle")
 			@Description("Toggles the admin shop as having limited stock")
@@ -141,10 +143,11 @@ public class SlabboCommand extends BaseCommand {
 
 				if (!lookingAtShop.admin) {
 					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-admin-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 					return;
 				}
 
-				ShopLimit limit = new ShopLimit(0, 0, 0, false);
+				ShopLimit limit = new ShopLimit(0, 0, 0L, false);
 
 				if (lookingAtShop.shopLimit != null) {
 					limit = lookingAtShop.shopLimit;
@@ -165,6 +168,20 @@ public class SlabboCommand extends BaseCommand {
 				DataUtil.saveShops();
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+			}
+
+			@Subcommand("stock")
+			@Description("Sets the limited stock the shop has")
+			@CommandPermission("slabbo.admin.limit.stock")
+			public void onSetStock (Player player, int stock) {
+
+			}
+
+			@Subcommand("time")
+			@Description("Sets the time before the shop restocks, in seconds")
+			@CommandPermission("slabbo.admin.limit.time")
+			public void onSetTime (Player player, int time) {
+
 			}
 		}
 	}
