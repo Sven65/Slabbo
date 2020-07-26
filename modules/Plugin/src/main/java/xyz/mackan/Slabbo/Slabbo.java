@@ -19,6 +19,7 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.types.ShopLimit;
 import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ShopUtil;
@@ -34,6 +35,7 @@ import java.util.logging.Logger;
 public class Slabbo extends JavaPlugin {
 	static {
 		ConfigurationSerialization.registerClass(Shop.class, "Shop");
+		ConfigurationSerialization.registerClass(ShopLimit.class, "ShopLimit");
 	}
 
 	private static final Logger log = Logger.getLogger("Minecraft");

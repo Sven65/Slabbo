@@ -41,9 +41,11 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 	public static ShopLimit deserialize(Map<String, Object> args) {
 		int stock = (Integer) args.get("stock");
 		int restockTime = (Integer) args.get("restockTime");
-		long lastRestock = (long) args.get("lastRestock");
+		Number lastRestock = (Number) args.get("lastRestock");
 		boolean enabled = (boolean) args.get("enabled");
 
-		return new ShopLimit(stock, restockTime, lastRestock, enabled);
+
+
+		return new ShopLimit(stock, restockTime, lastRestock.longValue(), enabled);
 	}
 }

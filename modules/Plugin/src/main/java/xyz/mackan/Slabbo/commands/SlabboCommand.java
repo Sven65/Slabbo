@@ -174,14 +174,72 @@ public class SlabboCommand extends BaseCommand {
 			@Description("Sets the limited stock the shop has")
 			@CommandPermission("slabbo.admin.limit.stock")
 			public void onSetStock (Player player, int stock) {
+				Shop lookingAtShop = getLookingAtShop(player);
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
 
+				if (!lookingAtShop.admin) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-admin-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				ShopLimit limit = new ShopLimit(0, 0, 0L, false);
+
+				if (lookingAtShop.shopLimit != null) {
+					limit = lookingAtShop.shopLimit;
+				}
+
+				limit.stock = stock;
+
+				lookingAtShop.shopLimit = limit;
+
+				player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceSingleKey("success-message.general.limited-stock.set-stock", "stock", stock));
+
+				Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
 
 			@Subcommand("time")
 			@Description("Sets the time before the shop restocks, in seconds")
 			@CommandPermission("slabbo.admin.limit.time")
 			public void onSetTime (Player player, int time) {
+				Shop lookingAtShop = getLookingAtShop(player);
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
 
+				if (!lookingAtShop.admin) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-admin-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				ShopLimit limit = new ShopLimit(0, 0, 0L, false);
+
+				if (lookingAtShop.shopLimit != null) {
+					limit = lookingAtShop.shopLimit;
+				}
+
+				limit.restockTime = time;
+
+				lookingAtShop.shopLimit = limit;
+
+				player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceSingleKey("success-message.general.limited-stock.set-time", "time", time));
+
+				Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
 		}
 	}
