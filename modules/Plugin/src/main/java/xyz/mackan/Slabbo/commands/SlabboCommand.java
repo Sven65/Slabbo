@@ -92,7 +92,10 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("admin")
 	@Description("Admin shop commands")
-	@CommandPermission("slabbo.admin")
+	@CommandPermission("slabbo.admin" +
+			"|slabbo.admin.toggle" +
+			"|slabbo.admin.limit" +
+			"|slabbo.admin.limit.toggle")
 	public class SlabboAdminCommand extends BaseCommand {
 		@Subcommand("toggle")
 		@Description("Toggles the shop as being an admin shop")
@@ -118,6 +121,28 @@ public class SlabboCommand extends BaseCommand {
 			DataUtil.saveShops();
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+		}
+
+		@Subcommand("limit")
+		@Description("Commands for setting the shop to have a limited stock")
+		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle")
+		public class SlabboAdminLimitCommand extends BaseCommand {
+			@Subcommand("toggle")
+			@Description("Toggles the admin shop as having limited stock")
+			@CommandPermission("slabbo.admin.limit.toggle")
+			public void onToggleLimit (Player player) {
+				Shop lookingAtShop = getLookingAtShop(player);
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				if (!lookingAtShop.admin) {
+					player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.general.not-admin-shop"));
+					return;
+				}
+			}
 		}
 	}
 

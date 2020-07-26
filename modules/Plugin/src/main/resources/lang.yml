@@ -9,6 +9,7 @@ error-message:
     not-a-shop: That's not a shop.
     not-shop-owner: That's not your shop.
     no-shops-found: No shops were found!
+    not-admin-shop: That's not an admin shop.
   import:
     file-not-found: That file can't be found
     plugin-not-supported: That plugin can't be imported

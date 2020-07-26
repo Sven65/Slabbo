@@ -86,11 +86,22 @@ permissions:
     default: op
     description: Lets you toggle shops as being admin shops
 
+  slabbo.admin.limit.toggle:
+    default: op
+    description: Lets you toggle admin shops to have limited stock
+
+  slabbo.admin.limit.*:
+    default: op
+    description: Gives you access to all the limiting stock commands
+    children:
+      slabbo.admin.limit.toggle: true
+
   slabbo.admin.*:
     default: op
     description: Gives you access to all admin commands
     children:
       slabbo.admin.toggle: true
+      slabbo.admin.limit.*: true
 
 
   slabbo.link:

@@ -17,10 +17,13 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 
 	public long lastRestock;
 
-	public ShopLimit (int stock, int restockTime, long lastRestock) {
+	public boolean enabled = false;
+
+	public ShopLimit (int stock, int restockTime, long lastRestock, boolean enabled) {
 		this.stock = stock;
 		this.restockTime = restockTime;
 		this.lastRestock = lastRestock;
+		this.enabled = enabled;
 	}
 
 	@Override
@@ -30,6 +33,7 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 		result.put("stock", stock);
 		result.put("restockTime", restockTime);
 		result.put("lastRestock", lastRestock);
+		result.put("enabled", enabled);
 
 		return result;
 	}
@@ -38,7 +42,8 @@ public class ShopLimit implements Cloneable, ConfigurationSerializable {
 		int stock = (Integer) args.get("stock");
 		int restockTime = (Integer) args.get("restockTime");
 		long lastRestock = (long) args.get("lastRestock");
+		boolean enabled = (boolean) args.get("enabled");
 
-		return new ShopLimit(stock, restockTime, lastRestock);
+		return new ShopLimit(stock, restockTime, lastRestock, enabled);
 	}
 }
