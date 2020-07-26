@@ -30,7 +30,15 @@ public class ItemUtil {
 
 		if (block == null) return 0;
 
+		boolean stairsEnabled = Slabbo.getInstance().getConfig().getBoolean("stairs", true);
+		boolean isUpsideDownStair = api.isUpsideDownStair(block);
+
+		if (stairsEnabled && isUpsideDownStair) {
+			return 1.0;
+		}
+
 		SlabType slabType = api.getSlabType(block);
+
 
 		if (slabType == SlabType.NONE) {
 			block.setType(itemAPI.getDefaultSlab().getType());

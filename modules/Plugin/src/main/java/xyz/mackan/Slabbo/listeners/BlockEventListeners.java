@@ -10,6 +10,7 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.utils.Misc;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.util.Iterator;
@@ -21,7 +22,7 @@ public class BlockEventListeners implements Listener {
 	public boolean isLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-		if (!api.isSlab(lookingAt)) return false;
+		if (!Misc.isValidShopBlock(lookingAt)) return false;
 
 		String locationString = ShopUtil.locationToString(lookingAt.getLocation());
 

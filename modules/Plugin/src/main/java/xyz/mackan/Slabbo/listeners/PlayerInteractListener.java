@@ -23,10 +23,7 @@ import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.types.ShopActionType;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.ChestLinkUtil;
-import xyz.mackan.Slabbo.utils.DataUtil;
-import xyz.mackan.Slabbo.utils.PermissionUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.utils.*;
 
 import java.util.HashMap;
 
@@ -164,12 +161,7 @@ public class PlayerInteractListener implements Listener {
 			return;
 		}
 
-		boolean isSlab = api.isSlab(clickedBlock);
-		boolean isStairs = api.isStair(clickedBlock);
-
-		System.out.println("is Stairs: "+isStairs);
-
-		if (!isSlab) return;
+		if (!Misc.isValidShopBlock(clickedBlock)) return;
 
 		ShopAction pAction = getAction(itemInHand, clickedBlock, player);
 
