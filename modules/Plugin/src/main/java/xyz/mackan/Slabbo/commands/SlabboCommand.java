@@ -732,7 +732,7 @@ public class SlabboCommand extends BaseCommand {
 				}
 			}
 
-			sendShopList(player, shopsInRadius, listPage, "slabbo list all radius "+radius);
+			sendShopList(player, shopsInRadius, listPage, "/slabbo list all radius "+radius);
 		}
 
 		@Subcommand("all")
@@ -747,12 +747,12 @@ public class SlabboCommand extends BaseCommand {
 
 			List<Shop> shops = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
 
-			sendShopList(player, shops, listPage, "slabbo list all");
+			sendShopList(player, shops, listPage, "/slabbo list all");
 		}
 
 		@Subcommand("mine radius")
 		@Description("Lists all the Slabbo shops you own in a radius")
-		@CommandPermission("slabbo.list.mine")
+		@CommandPermission("slabbo.list.self")
 		public void onListMineRadius (Player player, double radius, @Optional String page) {
 			int listPage = 1;
 
@@ -776,12 +776,12 @@ public class SlabboCommand extends BaseCommand {
 				}
 			}
 
-			sendShopList(player, shopsInRadius, listPage, "slabbo list mine radius "+radius);
+			sendShopList(player, shopsInRadius, listPage, "/slabbo list mine radius "+radius);
 		}
 
 		@Subcommand("mine")
 		@Description("Lists all the Slabbo shops you own")
-		@CommandPermission("slabbo.list.mine")
+		@CommandPermission("slabbo.list.self")
 		public void onListMine (Player player, @Optional String page) {
 			int listPage = 1;
 
@@ -793,7 +793,7 @@ public class SlabboCommand extends BaseCommand {
 
 			List<Shop> myShops = shops.stream().filter(shop -> shop.ownerId.equals(player.getUniqueId())).collect(Collectors.toList());
 
-			sendShopList(player, myShops, listPage, "slabbo list mine");
+			sendShopList(player, myShops, listPage, "/slabbo list mine");
 		}
 	}
 }

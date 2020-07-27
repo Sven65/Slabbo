@@ -137,3 +137,11 @@ permissions:
   slabbo.save:
     default: op
     description: Saves the slabbo shops to disk
+
+  slabbo.list.all:
+    default: op
+    description: Lets a user list all shops on the server
+
+  slabbo.list.self:
+    default: op
+    description: Lets a user list all their shops

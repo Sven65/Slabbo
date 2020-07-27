@@ -17,6 +17,8 @@ import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
+import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
+import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
@@ -57,6 +59,13 @@ public class Slabbo extends JavaPlugin {
 
 	public static EnabledPlugins enabledPlugins = new EnabledPlugins();
 
+
+	@Override
+	public void onLoad () {
+		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+			WorldguardSupport.registerFlags();
+		}
+	}
 
 	@Override
 	public void onEnable () {

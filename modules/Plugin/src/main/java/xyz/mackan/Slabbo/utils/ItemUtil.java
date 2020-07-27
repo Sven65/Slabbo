@@ -183,6 +183,8 @@ public class ItemUtil {
 	}
 
 	public static int getContainerIntValue (ItemStack itemStack, NamespacedKey key) {
+		if (itemStack == null || key == null) return -1;
+
 		if (!itemStack.hasItemMeta()) return -1;
 
 		ItemMeta itemMeta = itemStack.getItemMeta();
@@ -192,6 +194,8 @@ public class ItemUtil {
 		PersistentDataContainer container = itemMeta.getPersistentDataContainer();
 
 		if (container == null) return -1;
+
+		if (!container.has(key, PersistentDataType.INTEGER)) return -1;
 
 		return container.get(key, PersistentDataType.INTEGER);
 	}
