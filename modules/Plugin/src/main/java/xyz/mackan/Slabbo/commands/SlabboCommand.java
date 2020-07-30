@@ -6,7 +6,9 @@ import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Optional;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -21,6 +23,7 @@ import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
+import xyz.mackan.Slabbo.utils.Misc;
 import xyz.mackan.Slabbo.utils.ShopUtil;
 
 import java.io.File;
@@ -647,13 +650,9 @@ public class SlabboCommand extends BaseCommand {
 
 			int perPage = 10;
 
-			if (perPage > shops.size()) {
-				perPage = shops.size();
-			}
+			int pageCount = (int) Math.ceil((double)shops.size() / (double)perPage);
 
-			int pageCount = shops.size() / perPage;
-
-			List<Shop> subList = shops.subList((1 * page) - 1, perPage * page);
+			List<Shop> subList = Misc.getPage(shops, page, perPage);
 
 			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
 
@@ -669,12 +668,24 @@ public class SlabboCommand extends BaseCommand {
 
 			if (page + 1 <= pageCount) {
 				nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextPageCommand));
+
+				BaseComponent[] hoverEventComponents = new BaseComponent[]{
+						new TextComponent("Next Page")
+				};
+
+				nextPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents));
 			} else {
 				nextPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
 			}
 
-			if (page - 1 >= pageCount) {
+			if (page > pageCount - 1) {
 				previousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, previousPageCommand));
+
+				BaseComponent[] hoverEventComponents = new BaseComponent[]{
+						new TextComponent("Previous Page")
+				};
+
+				previousPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents));
 			} else {
 				previousPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
 			}
@@ -739,7 +750,7 @@ public class SlabboCommand extends BaseCommand {
 		public void onListAll (Player player, @Optional String page) {
 			int listPage = 1;
 
-			if (page == null || page.equals("")) {
+			if (page != null && !page.equals("")) {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
