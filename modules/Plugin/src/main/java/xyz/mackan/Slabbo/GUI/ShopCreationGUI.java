@@ -17,6 +17,8 @@ import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
+import xyz.mackan.Slabbo.manager.LocaleManager;
+import xyz.mackan.Slabbo.types.ChatWaitingType;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
@@ -50,7 +52,7 @@ public class ShopCreationGUI implements Listener {
 		isModifying = true;
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("gui.editing-shop"));
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+ LocaleManager.getString("gui.editing-shop"));
 
 		this.slabLocation = slabLocation;
 
@@ -72,7 +74,7 @@ public class ShopCreationGUI implements Listener {
 	public ShopCreationGUI (Location slabLocation) {
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("general.general.new-shop"));
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("general.general.new-shop"));
 
 		this.slabLocation = slabLocation;
 
@@ -132,9 +134,9 @@ public class ShopCreationGUI implements Listener {
 		ItemStack item = api.getRedStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.RED+Slabbo.localeManager.getString("gui.items.new-shop.click-item-below"));
+		meta.setDisplayName(ChatColor.RED+LocaleManager.getString("gui.items.new-shop.click-item-below"));
 
-		meta.setLore(Arrays.asList(Slabbo.localeManager.getString("general.general.new-shop"), ShopManager.locationToString(slabLocation)));
+		meta.setLore(Arrays.asList(LocaleManager.getString("general.general.new-shop"), ShopManager.locationToString(slabLocation)));
 
 		item.setItemMeta(meta);
 
@@ -169,7 +171,7 @@ public class ShopCreationGUI implements Listener {
 
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
 
-					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-note"));
+					p.sendMessage(LocaleManager.getString("general.general.type-new-note"));
 					e.getWhoClicked().closeInventory();
 
 					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
@@ -177,7 +179,7 @@ public class ShopCreationGUI implements Listener {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
-					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-buy-price"));
+					p.sendMessage(LocaleManager.getString("general.general.type-new-buy-price"));
 					e.getWhoClicked().closeInventory();
 
 					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
@@ -185,7 +187,7 @@ public class ShopCreationGUI implements Listener {
 					//Sell Price
 					waitingType = ChatWaitingType.SELL_PRICE;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
-					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-sell-price"));
+					p.sendMessage(LocaleManager.getString("general.general.type-new-sell-price"));
 					e.getWhoClicked().closeInventory();
 
 					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
@@ -193,7 +195,7 @@ public class ShopCreationGUI implements Listener {
 					// Amount
 					waitingType = ChatWaitingType.QUANTITY;
 					waitingPlayerId = e.getWhoClicked().getUniqueId();
-					p.sendMessage(Slabbo.localeManager.getString("general.general.type-new-quantity"));
+					p.sendMessage(LocaleManager.getString("general.general.type-new-quantity"));
 					e.getWhoClicked().closeInventory();
 
 					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
@@ -276,7 +278,7 @@ public class ShopCreationGUI implements Listener {
 			try {
 				value = Integer.parseInt(e.getMessage());
 			} catch (NumberFormatException error) {
-				e.getPlayer().sendMessage(ChatColor.RED + Slabbo.localeManager.getString("error-message.modify.not-a-valid-number"));
+				e.getPlayer().sendMessage(ChatColor.RED + LocaleManager.getString("error-message.modify.not-a-valid-number"));
 			}
 
 			if (value < -1) {

@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
@@ -33,7 +34,7 @@ public class ShopDeletionGUI  implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("general.general.destroy-shop"));
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+ LocaleManager.getString("general.general.destroy-shop"));
 
 		initializeItems();
 	}

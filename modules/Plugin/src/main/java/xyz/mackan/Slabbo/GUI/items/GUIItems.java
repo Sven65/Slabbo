@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.Misc;
 
@@ -26,12 +27,12 @@ public class GUIItems {
 		ItemStack item = itemAPI.getGreenStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+ Slabbo.localeManager.getString("general.general.buy-price"));
+		meta.setDisplayName(ChatColor.GREEN+ LocaleManager.getString("general.general.buy-price"));
 
-		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
-		String explainer = Slabbo.localeManager.getString("general.general.not-for-sale-explain");
+		String clickToSet = LocaleManager.getString("general.general.click-to-set");
+		String explainer = LocaleManager.getString("general.general.not-for-sale-explain");
 
-		String currencyString = Slabbo.localeManager.getCurrencyString(buyPrice);
+		String currencyString = LocaleManager.getCurrencyString(buyPrice);
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
@@ -45,12 +46,12 @@ public class GUIItems {
 
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.RED+ Slabbo.localeManager.getString("general.general.sell-price"));
+		meta.setDisplayName(ChatColor.RED+ LocaleManager.getString("general.general.sell-price"));
 
-		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
-		String explainer = Slabbo.localeManager.getString("general.general.not-buying-explain");
+		String clickToSet = LocaleManager.getString("general.general.click-to-set");
+		String explainer = LocaleManager.getString("general.general.not-buying-explain");
 
-		String currencyString = Slabbo.localeManager.getCurrencyString(sellPrice);
+		String currencyString = LocaleManager.getCurrencyString(sellPrice);
 
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
@@ -65,15 +66,15 @@ public class GUIItems {
 
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.YELLOW+ Slabbo.localeManager.getString("general.general.quantity"));
+		meta.setDisplayName(ChatColor.YELLOW+ LocaleManager.getString("general.general.quantity"));
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
 		replacementMap.put("count", quantity);
 
-		String amountPerTransaction = Slabbo.localeManager.replaceKey("general.general.amount-per-transaction", replacementMap);
-		String clickToSet = Slabbo.localeManager.getString("general.general.click-to-set");
-		String explainer = Slabbo.localeManager.getString("general.general.quantity-explain");
+		String amountPerTransaction = LocaleManager.replaceKey("general.general.amount-per-transaction", replacementMap);
+		String clickToSet = LocaleManager.getString("general.general.click-to-set");
+		String explainer = LocaleManager.getString("general.general.quantity-explain");
 
 		meta.setLore(Arrays.asList("§r"+amountPerTransaction, clickToSet, "§r"+explainer));
 
@@ -86,7 +87,7 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.BARRIER, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.RED + Slabbo.localeManager.getString("general.general.cancel"));
+		meta.setDisplayName(ChatColor.RED + LocaleManager.getString("general.general.cancel"));
 
 		item.setItemMeta(meta);
 
@@ -97,9 +98,9 @@ public class GUIItems {
 		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("general.general.confirm"));
+		meta.setDisplayName(ChatColor.GREEN+LocaleManager.getString("general.general.confirm"));
 
-		meta.setLore(Arrays.asList(Slabbo.localeManager.getString("general.general.new-shop"), locationString));
+		meta.setLore(Arrays.asList(LocaleManager.getString("general.general.new-shop"), locationString));
 
 		item.setItemMeta(meta);
 
@@ -114,7 +115,7 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-		replacementMap.put("price", Slabbo.localeManager.getCurrencyString(price));
+		replacementMap.put("price", LocaleManager.getCurrencyString(price));
 
 		if (isAdmin && !isLimited) {
 			replacementMap.put("count", "∞");
@@ -125,16 +126,16 @@ public class GUIItems {
 		String inStock = "";
 
 		if (!isLimited) {
-			inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+			inStock = LocaleManager.replaceKey("general.general.in-stock", replacementMap);
 		} else {
-			inStock = Slabbo.localeManager.replaceKey("general.general.limited-stock.buy-stock-left", replacementMap);
+			inStock = LocaleManager.replaceKey("general.general.limited-stock.buy-stock-left", replacementMap);
 		}
 
-		String stacks = Slabbo.localeManager.getString("general.general.stacks");
+		String stacks = LocaleManager.getString("general.general.stacks");
 
-		String buyFor = Slabbo.localeManager.replaceKey("general.general.buy-for", replacementMap);
+		String buyFor = LocaleManager.replaceKey("general.general.buy-for", replacementMap);
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.user.buy-item", replacementMap));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.replaceKey("gui.items.user.buy-item", replacementMap));
 
 		if (isAdmin && !isLimited) {
 			meta.setLore(Arrays.asList("§r"+buyFor, inStock, "(∞ "+stacks+")"));
@@ -155,7 +156,7 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-		replacementMap.put("price", Slabbo.localeManager.getCurrencyString(price));
+		replacementMap.put("price", LocaleManager.getCurrencyString(price));
 
 		if (isAdmin && !isLimited) {
 			replacementMap.put("count", "∞");
@@ -166,17 +167,17 @@ public class GUIItems {
 		String inStock = "";
 
 		if (!isLimited) {
-			inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+			inStock = LocaleManager.replaceKey("general.general.in-stock", replacementMap);
 		} else {
-			inStock = Slabbo.localeManager.replaceKey("general.general.limited-stock.sell-stock-left", replacementMap);
+			inStock = LocaleManager.replaceKey("general.general.limited-stock.sell-stock-left", replacementMap);
 		}
 
 
-		String stacks = Slabbo.localeManager.getString("general.general.stacks");
+		String stacks = LocaleManager.getString("general.general.stacks");
 
-		String sellFor = Slabbo.localeManager.replaceKey("general.general.sell-for", replacementMap);
+		String sellFor = LocaleManager.replaceKey("general.general.sell-for", replacementMap);
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.user.sell-item", replacementMap));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.replaceKey("gui.items.user.sell-item", replacementMap));
 
 		if (isAdmin && !isLimited) {
 			meta.setLore(Arrays.asList("§r"+sellFor, inStock, "(∞ "+stacks+")"));
@@ -197,13 +198,13 @@ public class GUIItems {
 
 		// TODO: Think over whether we need to show what's essentially "current funds" twice
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.getString("general.general.current-funds"));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.getString("general.general.current-funds"));
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		replacementMap.put("funds", "§a"+Slabbo.localeManager.getCurrencyString(formatter.format(funds)));
+		replacementMap.put("funds", "§a"+LocaleManager.getCurrencyString(formatter.format(funds)));
 
-		meta.setLore(Arrays.asList(Slabbo.localeManager.replaceKey("general.general.funds-message", replacementMap)));
+		meta.setLore(Arrays.asList(LocaleManager.replaceKey("general.general.funds-message", replacementMap)));
 
 		item.setItemMeta(meta);
 
@@ -214,7 +215,7 @@ public class GUIItems {
 		ItemStack item = itemAPI.getCommandBlock();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+"Slabbo "+Slabbo.localeManager.getString("general.general.shop"));
+		meta.setDisplayName(ChatColor.GOLD+"Slabbo "+LocaleManager.getString("general.general.shop"));
 
 		double buyPerItem = 0;
 		double sellPerItem = 0;
@@ -234,8 +235,8 @@ public class GUIItems {
 		replacementMap.put("quantity", shop.quantity);
 		replacementMap.put("buyPrice", shop.buyPrice);
 		replacementMap.put("sellPrice", shop.sellPrice);
-		replacementMap.put("buyPerItem", Slabbo.localeManager.getCurrencyString(formatter.format(buyPerItem)));
-		replacementMap.put("sellPerItem", Slabbo.localeManager.getCurrencyString(formatter.format(sellPerItem)));
+		replacementMap.put("buyPerItem", LocaleManager.getCurrencyString(formatter.format(buyPerItem)));
+		replacementMap.put("sellPerItem", LocaleManager.getCurrencyString(formatter.format(sellPerItem)));
 
 		if (shop.shopLimit != null && shop.shopLimit.enabled) {
 			replacementMap.put("restockTime", shop.shopLimit.restockTime);
@@ -258,15 +259,15 @@ public class GUIItems {
 			replacementMap.put("time", df.format(nextRestockDate));
 		}
 
-		String ownerString = Slabbo.localeManager.replaceKey("gui.items.info.owned-by", replacementMap);
-		String sellingString = Slabbo.localeManager.replaceKey("gui.items.info.selling-item", replacementMap);
-		String buyEachString = Slabbo.localeManager.replaceKey("gui.items.info.buy-each", replacementMap);
-		String sellEachString = Slabbo.localeManager.replaceKey("gui.items.info.sell-each", replacementMap);
+		String ownerString = LocaleManager.replaceKey("gui.items.info.owned-by", replacementMap);
+		String sellingString = LocaleManager.replaceKey("gui.items.info.selling-item", replacementMap);
+		String buyEachString = LocaleManager.replaceKey("gui.items.info.buy-each", replacementMap);
+		String sellEachString = LocaleManager.replaceKey("gui.items.info.sell-each", replacementMap);
 
-		String sellStockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.sell-stock", replacementMap);
-		String buyStockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.buy-stock", replacementMap);
-		String restockTimeString = Slabbo.localeManager.replaceKey("gui.items.info.limit.restock-time", replacementMap);
-		String nextRestockString = Slabbo.localeManager.replaceKey("gui.items.info.limit.next-restock", replacementMap);
+		String sellStockString = LocaleManager.replaceKey("gui.items.info.limit.sell-stock", replacementMap);
+		String buyStockString = LocaleManager.replaceKey("gui.items.info.limit.buy-stock", replacementMap);
+		String restockTimeString = LocaleManager.replaceKey("gui.items.info.limit.restock-time", replacementMap);
+		String nextRestockString = LocaleManager.replaceKey("gui.items.info.limit.next-restock", replacementMap);
 
 		List<String> lore = new ArrayList<String>();
 
@@ -295,10 +296,10 @@ public class GUIItems {
 		ItemStack item = itemAPI.getLimeStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("general.general.destroy-shop"));
+		meta.setDisplayName(ChatColor.GREEN+LocaleManager.getString("general.general.destroy-shop"));
 
 		meta.setLore(Arrays.asList(
-				ChatColor.RED+Slabbo.localeManager.getString("general.general.destroy-shop-item-warning")
+				ChatColor.RED+LocaleManager.getString("general.general.destroy-shop-item-warning")
 		));
 
 		item.setItemMeta(meta);
@@ -308,13 +309,13 @@ public class GUIItems {
 
 	public static ItemStack getSellersNoteItem (String sellerNote) {
 		if (sellerNote == null || sellerNote.equalsIgnoreCase("")) {
-			sellerNote = Slabbo.localeManager.getString("general.general.default-shop-note");
+			sellerNote = LocaleManager.getString("general.general.default-shop-note");
 		}
 
 		ItemStack item = new ItemStack(Material.NAME_TAG, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GREEN+Slabbo.localeManager.getString("gui.items.user.sellers-note"));
+		meta.setDisplayName(ChatColor.GREEN+LocaleManager.getString("gui.items.user.sellers-note"));
 
 		meta.setLore(Arrays.asList(
 				sellerNote

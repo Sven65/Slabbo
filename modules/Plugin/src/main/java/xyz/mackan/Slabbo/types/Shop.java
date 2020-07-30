@@ -7,15 +7,43 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @SerializableAs("Shop")
 public class Shop implements Cloneable, ConfigurationSerializable {
+	static class ShopCommandList implements Cloneable, ConfigurationSerializable {
+		private static final long serialVersionUID = 123L;
+
+		public List<String> buyCommands = new ArrayList<String>();
+		public List<String> sellCommands = new ArrayList<String>();
+
+		public ShopCommandList (List<String> buyCommands, List<String> sellCommands) {
+			this.buyCommands = buyCommands;
+			this.sellCommands = sellCommands;
+		}
+
+		@Override
+		public Map<String, Object> serialize () {
+			LinkedHashMap result = new LinkedHashMap();
+
+			result.put("buyCommands", buyCommands);
+			result.put("sellCommands", sellCommands);
+
+			return result;
+		}
+
+		public static ShopCommandList deserialize (Map<String, Object> args) {
+			List<String> buyCommands = (List<String>) args.get("buyCommands");
+			List<String> sellCommands = (List<String>) args.get("sellCommands");
+
+			return new ShopCommandList(buyCommands, sellCommands);
+		}
+	}
+
 	private static final long serialVersionUID = -1358999872552913870L;
 
 	public int buyPrice;
@@ -39,6 +67,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	public String linkedChestLocation;
 
 	public ShopLimit shopLimit = null;
+
+	public ShopCommandList commandList = null;
 
 
 	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
@@ -70,6 +100,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		this.item = item;
 	}
 
+	@Override
 	public Map<String, Object> serialize () {
 		LinkedHashMap result = new LinkedHashMap();
 
@@ -87,6 +118,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 		result.put("note", note);
 
+		result.put("commandList", commandList);
+
 		return result;
 	}
 
@@ -101,23 +134,22 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		ItemStack item = (ItemStack) args.get("item");
 
 		String loadedOwnerId = (String) args.get("ownerId");
+		String linkedChestLocation = (String) args.get("linkedChestLocation");
+		String note = (String) args.getOrDefault("note", "Let's trade!");
 
 		UUID ownerId = UUID.fromString(loadedOwnerId);
 
 		boolean admin = (boolean) args.get("admin");
 
-		String linkedChestLocation = (String) args.get("linkedChestLocation");
-
-		String note = (String) args.getOrDefault("note", "Let's trade!");
-
 		ShopLimit shopLimit = (ShopLimit) args.get("shopLimit");
+		ShopCommandList commandList = (ShopCommandList) args.get("commandList");
 
 
 		Shop newShop = new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);
 
 		newShop.note = note;
-
 		newShop.shopLimit = shopLimit;
+		newShop.commandList = commandList;
 
 		return newShop;
 	}
@@ -150,9 +182,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		return String.format(
 			"§d[%s]§r §7| §d%s: §6%s §7| §d%s: §6%s",
 			getLocationString(),
-			Slabbo.localeManager.getString("general.general.item"),
+			LocaleManager.getString("general.general.item"),
 			api.getItemName(item),
-			Slabbo.localeManager.getString("gui.owner-title"),
+			LocaleManager.getString("gui.owner-title"),
 			Bukkit.getOfflinePlayer(ownerId).getName()
 		);
 	}

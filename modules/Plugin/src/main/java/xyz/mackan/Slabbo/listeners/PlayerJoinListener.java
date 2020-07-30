@@ -7,6 +7,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -35,7 +36,7 @@ public class PlayerJoinListener implements Listener {
 				replacementMap.put("item", NameUtil.getName(shop.item));
 
 
-				player.sendMessage(Slabbo.localeManager.replaceKey("general.general.restock-message", replacementMap));
+				player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
 			}
 		}
 

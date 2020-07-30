@@ -1,4 +1,4 @@
-package xyz.mackan.Slabbo.GUI;
+package xyz.mackan.Slabbo.types;
 
 public enum ChatWaitingType {
 	NONE,

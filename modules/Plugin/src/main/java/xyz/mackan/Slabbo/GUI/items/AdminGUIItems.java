@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.utils.Misc;
 
 import java.util.Arrays;
@@ -30,12 +31,12 @@ public class AdminGUIItems {
 		}
 
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.admin.deposit-item", replacementMap));
+		meta.setDisplayName(ChatColor.GOLD+ LocaleManager.replaceKey("gui.items.admin.deposit-item", replacementMap));
 
-		String shiftForBulk = Slabbo.localeManager.getString("general.general.shift-bulk.deposit");
-		String inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+		String shiftForBulk = LocaleManager.getString("general.general.shift-bulk.deposit");
+		String inStock = LocaleManager.replaceKey("general.general.in-stock", replacementMap);
 
-		String stacks = Slabbo.localeManager.getString("general.general.stacks");
+		String stacks = LocaleManager.getString("general.general.stacks");
 
 		if (isAdmin) {
 			meta.setLore(Arrays.asList("§r"+shiftForBulk, inStock, "(∞ "+stacks+")"));
@@ -63,12 +64,12 @@ public class AdminGUIItems {
 		}
 
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.replaceKey("gui.items.admin.withdraw-item", replacementMap));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.replaceKey("gui.items.admin.withdraw-item", replacementMap));
 
-		String shiftForBulk = Slabbo.localeManager.getString("general.general.shift-bulk.withdraw");
-		String inStock = Slabbo.localeManager.replaceKey("general.general.in-stock", replacementMap);
+		String shiftForBulk = LocaleManager.getString("general.general.shift-bulk.withdraw");
+		String inStock = LocaleManager.replaceKey("general.general.in-stock", replacementMap);
 
-		String stacks = Slabbo.localeManager.getString("general.general.stacks");
+		String stacks = LocaleManager.getString("general.general.stacks");
 
 		if (isAdmin) {
 			meta.setLore(Arrays.asList("§r"+shiftForBulk, inStock, "(∞ "+stacks+")"));
@@ -85,13 +86,13 @@ public class AdminGUIItems {
 		ItemStack item = new ItemStack(Material.MINECART, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD + Slabbo.localeManager.getString("gui.items.admin.changerate-item"));
+		meta.setDisplayName(ChatColor.GOLD + LocaleManager.getString("gui.items.admin.changerate-item"));
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
 		replacementMap.put("count", amount);
 
-		meta.setLore(Arrays.asList("§r"+ Slabbo.localeManager.replaceKey("general.general.amount-per-click", replacementMap)));
+		meta.setLore(Arrays.asList("§r"+ LocaleManager.replaceKey("general.general.amount-per-click", replacementMap)));
 
 		item.setItemMeta(meta);
 
@@ -102,7 +103,7 @@ public class AdminGUIItems {
 		ItemStack item = itemAPI.getComparator();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD + Slabbo.localeManager.getString("gui.items.admin.modify-shop"));
+		meta.setDisplayName(ChatColor.GOLD + LocaleManager.getString("gui.items.admin.modify-shop"));
 
 		item.setItemMeta(meta);
 
@@ -113,7 +114,7 @@ public class AdminGUIItems {
 		ItemStack item = itemAPI.getOakSign();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD + Slabbo.localeManager.getString("gui.items.admin.view-as-customer"));
+		meta.setDisplayName(ChatColor.GOLD + LocaleManager.getString("gui.items.admin.view-as-customer"));
 
 		item.setItemMeta(meta);
 
@@ -124,10 +125,10 @@ public class AdminGUIItems {
 		ItemStack item = new ItemStack(Material.CHEST, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.getString("gui.items.admin.link-chest"));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.getString("gui.items.admin.link-chest"));
 
 		meta.setLore(Arrays.asList(
-				ChatColor.GREEN+Slabbo.localeManager.getString("general.chestlink.link-for-refill")
+				ChatColor.GREEN+LocaleManager.getString("general.chestlink.link-for-refill")
 		));
 
 		item.setItemMeta(meta);
@@ -139,7 +140,7 @@ public class AdminGUIItems {
 		ItemStack item = new ItemStack(Material.ENDER_CHEST, 1);
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+Slabbo.localeManager.getString("general.chestlink.cancel-chest-link"));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.getString("general.chestlink.cancel-chest-link"));
 
 		item.setItemMeta(meta);
 

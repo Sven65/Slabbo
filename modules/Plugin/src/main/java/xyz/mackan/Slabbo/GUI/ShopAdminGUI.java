@@ -18,6 +18,7 @@ import xyz.mackan.Slabbo.GUI.items.AdminGUIItems;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -45,7 +46,7 @@ public class ShopAdminGUI implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+Slabbo.localeManager.getString("gui.owner-title"));
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("gui.owner-title"));
 
 		initializeItems(humanEntity);
 	}
@@ -193,7 +194,7 @@ public class ShopAdminGUI implements Listener {
 		isChangingRate = true;
 		waitingPlayerId = humanEntity.getUniqueId();
 
-		humanEntity.sendMessage(Slabbo.localeManager.getString("general.general.type-new-rate"));
+		humanEntity.sendMessage(LocaleManager.getString("general.general.type-new-rate"));
 		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 
 		humanEntity.closeInventory();
@@ -226,7 +227,7 @@ public class ShopAdminGUI implements Listener {
 		if (hasPendingLink && ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// Current shop's being linked
 			ChestLinkManager.pendingLinks.remove(p.getUniqueId());
-			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.linking-cancelled"));
+			p.sendMessage(ChatColor.RED+LocaleManager.getString("success-message.chestlink.linking-cancelled"));
 			p.playSound(shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 			return;
@@ -244,7 +245,7 @@ public class ShopAdminGUI implements Listener {
 
 			ShopManager.put(shop.getLocationString(), shop);
 
-			p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.chestlink.linking-removed"));
+			p.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.chestlink.linking-removed"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 
 			p.playSound(shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
@@ -255,14 +256,14 @@ public class ShopAdminGUI implements Listener {
 		} else if (hasPendingLink && !ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// A link is in progress, but it's not the current shop
 			ChestLinkManager.pendingLinks.remove(p.getUniqueId());
-			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.previous-linking-cancelled"));
+			p.sendMessage(ChatColor.RED+LocaleManager.getString("success-message.chestlink.previous-linking-cancelled"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 		}
 
 
 		ChestLinkManager.pendingLinks.put(p.getUniqueId(), ShopManager.locationToString(shop.location));
 
-		p.sendMessage(Slabbo.localeManager.getString("general.chestlink.crouch-to-link"));
+		p.sendMessage(LocaleManager.getString("general.chestlink.crouch-to-link"));
 		p.closeInventory();
 
 		p.playSound(shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
@@ -328,7 +329,7 @@ public class ShopAdminGUI implements Listener {
 			try {
 				value = Integer.parseInt(e.getMessage());
 			} catch (NumberFormatException error) {
-				e.getPlayer().sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.modify.not-a-valid-number"));
+				e.getPlayer().sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.modify.not-a-valid-number"));
 			}
 
 			if (value < 0) { value = 0; }

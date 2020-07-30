@@ -78,6 +78,9 @@ general:
     confirm: Confirm
     item: Item
 
+    next-page: Next Page
+    previous-page: Previous Page
+
 
     buy-price: Buy price
     sell-price: Sell price

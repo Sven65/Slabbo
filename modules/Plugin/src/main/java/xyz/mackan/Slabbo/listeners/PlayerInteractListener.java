@@ -16,8 +16,7 @@ import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
-import xyz.mackan.Slabbo.manager.ChestLinkManager;
-import xyz.mackan.Slabbo.manager.ShopManager;
+import xyz.mackan.Slabbo.manager.*;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
@@ -155,7 +154,7 @@ public class PlayerInteractListener implements Listener {
 		boolean isLinked = ChestLinkManager.isChestLinked(clickedBlock);
 
 		if (isLinked) {
-			player.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("error-message.chestlink.already-linked"));
+			player.sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.chestlink.already-linked"));
 			ChestLinkManager.pendingLinks.remove(player.getUniqueId());
 
 			player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
@@ -176,9 +175,9 @@ public class PlayerInteractListener implements Listener {
 
 		replacementMap.put("location", linkingShopLocation);
 
-		player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.chestlink.link-success", replacementMap));
+		player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.chestlink.link-success", replacementMap));
 
-		ChestLinkManager.setChestName(clickedBlock, "Slabbo "+Slabbo.localeManager.replaceKey("general.chestlink.chest-name", replacementMap));
+		ChestLinkManager.setChestName(clickedBlock, "Slabbo "+LocaleManager.replaceKey("general.chestlink.chest-name", replacementMap));
 
 		player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("SUCCESS"), 1, 1);
 
@@ -273,8 +272,6 @@ public class PlayerInteractListener implements Listener {
 
 		ShopAction pAction = getRightClickAction(itemInHand, clickedBlock, player);
 
-		System.out.println("TYPE: "+pAction.type);
-
 		switch (pAction.type) {
 			case CREATION_LIMIT_HIT: {
 				int limit = (Integer) pAction.extra;
@@ -282,7 +279,7 @@ public class PlayerInteractListener implements Listener {
 				HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 				replacementMap.put("limit", limit);
 
-				player.sendMessage(ChatColor.RED + Slabbo.localeManager.replaceKey("error-message.general.limit-hit", replacementMap));
+				player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit", replacementMap));
 
 				player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			}
