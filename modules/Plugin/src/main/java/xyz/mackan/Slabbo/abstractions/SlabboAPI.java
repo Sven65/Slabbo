@@ -146,4 +146,11 @@ public interface SlabboAPI {
 	 * @return
 	 */
 	boolean isUpsideDownStair (Block block);
+
+	/**
+	 * Gets if the interaction was done with the off hand
+	 * @param e
+	 * @return
+	 */
+	boolean isInteractionOffHand(PlayerInteractEvent e);
 }

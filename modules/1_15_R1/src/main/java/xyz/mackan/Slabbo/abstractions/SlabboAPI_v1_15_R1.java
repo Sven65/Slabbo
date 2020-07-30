@@ -13,6 +13,7 @@ import org.bukkit.craftbukkit.v1_15_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -166,5 +167,9 @@ public class SlabboAPI_v1_15_R1 implements SlabboAPI {
 		Stairs stairs = (Stairs) block.getBlockData();
 
 		return stairs.getHalf() == Bisected.Half.TOP;
+	}
+
+	public boolean isInteractionOffHand(PlayerInteractEvent e) {
+		return e.getHand() == EquipmentSlot.OFF_HAND;
 	}
 }

@@ -259,6 +259,8 @@ public class PlayerInteractListener implements Listener {
 
 		Action action = e.getAction();
 
+		if (api.isInteractionOffHand(e)) return;
+
 		Block clickedBlock = e.getClickedBlock();
 
 		if (action != Action.RIGHT_CLICK_BLOCK) {
@@ -272,6 +274,8 @@ public class PlayerInteractListener implements Listener {
 
 		ShopAction pAction = getRightClickAction(itemInHand, clickedBlock, player);
 
+		System.out.println("TYPE: "+pAction.type);
+
 		switch (pAction.type) {
 			case CREATION_LIMIT_HIT: {
 				int limit = (Integer) pAction.extra;
@@ -282,20 +286,20 @@ public class PlayerInteractListener implements Listener {
 				player.sendMessage(ChatColor.RED + Slabbo.localeManager.replaceKey("error-message.general.limit-hit", replacementMap));
 
 				player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-				break;
 			}
+				break;
 			case CREATE: {
 				ShopCreationGUI gui = new ShopCreationGUI(clickedBlock.getLocation());
 				gui.openInventory(e.getPlayer());
-				break;
 			}
+				break;
 			case OPEN_DELETION_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
 				ShopDeletionGUI gui = new ShopDeletionGUI(shop);
 				gui.openInventory(e.getPlayer());
-				break;
 			}
+				break;
 			case OPEN_CLIENT_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
@@ -306,8 +310,8 @@ public class PlayerInteractListener implements Listener {
 
 				ShopUserGUI gui = new ShopUserGUI(shop, player);
 				gui.openInventory(e.getPlayer());
-				break;
 			}
+				break;
 			case OPEN_ADMIN_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
@@ -318,8 +322,8 @@ public class PlayerInteractListener implements Listener {
 
 				ShopAdminGUI gui = new ShopAdminGUI(shop, player);
 				gui.openInventory(e.getPlayer());
-				break;
 			}
+				break;
 		}
 	}
 }

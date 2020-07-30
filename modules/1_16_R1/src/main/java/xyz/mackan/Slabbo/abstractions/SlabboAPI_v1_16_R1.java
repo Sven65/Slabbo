@@ -178,4 +178,8 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 
 		return stairs.getHalf() == Bisected.Half.TOP;
 	}
+
+	public boolean isInteractionOffHand(PlayerInteractEvent e) {
+		return e.getHand() == EquipmentSlot.OFF_HAND;
+	}
 }

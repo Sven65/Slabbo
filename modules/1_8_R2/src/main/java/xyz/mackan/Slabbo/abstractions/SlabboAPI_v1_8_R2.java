@@ -187,4 +187,8 @@ public class SlabboAPI_v1_8_R2 implements SlabboAPI {
 
 		return stairs.isInverted();
 	}
+
+	public boolean isInteractionOffHand(PlayerInteractEvent e) {
+		return false;
+	}
 }

@@ -65,6 +65,10 @@ public class ShopUtil {
 		} else {
 
 			shops.forEach((k, v) -> {
+				if (v.shopLimit != null) {
+					limitedShops.add(v.getLocationString());
+				}
+
 				List<Shop> shopList = shopsByOwnerId.get(v.ownerId);
 
 				if (shopList == null) {
@@ -79,11 +83,14 @@ public class ShopUtil {
 					Slabbo.chestLinkUtil.links.put(v.linkedChestLocation, v);
 				}
 
-				if (v.shopLimit != null) {
-					limitedShops.add(v.getLocationString());
-				}
 			});
 		}
+	}
+
+	public void clearShops () {
+		shops.clear();
+		shopsByOwnerId.clear();
+		limitedShops.clear();
 	}
 
 	public static String locationToString (Location location) {

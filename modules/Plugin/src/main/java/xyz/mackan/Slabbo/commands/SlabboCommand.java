@@ -59,9 +59,9 @@ public class SlabboCommand extends BaseCommand {
 
 		ItemUtil.removeShopItems(player.getWorld());
 
-		Slabbo.chestLinkUtil.links = new HashMap<String, Shop>();
-		Slabbo.shopUtil.shops = new HashMap<String, Shop>();
-		Slabbo.shopUtil.shopsByOwnerId = new HashMap<UUID, List<Shop>>();
+		Slabbo.chestLinkUtil.links.clear();
+
+		Slabbo.shopUtil.clearShops();
 
 		Slabbo.shopUtil.loadShops();
 
@@ -70,8 +70,6 @@ public class SlabboCommand extends BaseCommand {
 			Shop shop = shopEntry.getValue();
 
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
-
-			Slabbo.shopUtil.put(key, shop);
 		}
 
 
