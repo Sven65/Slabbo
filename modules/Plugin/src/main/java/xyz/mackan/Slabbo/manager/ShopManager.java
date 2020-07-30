@@ -39,6 +39,10 @@ public class ShopManager {
 		}
 	}
 
+	public static void updateShop (Shop shop) {
+		put(shop.getLocationString(), shop);
+	}
+
 	public static void removeShop(Shop shop) {
 		String locationString = ShopManager.locationToString(shop.location);
 

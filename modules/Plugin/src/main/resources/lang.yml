@@ -10,6 +10,10 @@ error-message:
     not-shop-owner: That's not your shop.
     no-shops-found: No shops were found!
     not-admin-shop: That's not an admin shop.
+    no-command-entered: Please enter a command!
+    no-buy-commands-in-shop: That shop doesn't have any buy commands.
+    no-sell-commands-in-shop: That shop doesn't have any sell commands.
+    invalid-index: That's not a valid index!
   import:
     file-not-found: That file can't be found
     plugin-not-supported: That plugin can't be imported
@@ -45,6 +49,9 @@ success-message:
       set-time: Restock time has been set to {time} seconds!
       set-sell-stock: Selling stock has been set to {stock}!
       set-buy-stock: Buying stock has been set to {stock}!
+    shop-commands:
+     added-command: The command has been added.
+     removed-command: The command has been removed.
   import:
     importing: Importing shops!
     success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.

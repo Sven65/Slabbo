@@ -1,11 +1,11 @@
 package xyz.mackan.Slabbo.types;
 
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
-import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -15,15 +15,21 @@ import java.util.*;
 
 @SerializableAs("Shop")
 public class Shop implements Cloneable, ConfigurationSerializable {
-	static class ShopCommandList implements Cloneable, ConfigurationSerializable {
+	@SerializableAs("Shop.CommandList")
+	public static class CommandList implements Cloneable, ConfigurationSerializable {
 		private static final long serialVersionUID = 123L;
 
-		public List<String> buyCommands = new ArrayList<String>();
-		public List<String> sellCommands = new ArrayList<String>();
+		public List<String> buyCommands;
+		public List<String> sellCommands;
 
-		public ShopCommandList (List<String> buyCommands, List<String> sellCommands) {
+		public CommandList (List<String> buyCommands, List<String> sellCommands) {
 			this.buyCommands = buyCommands;
 			this.sellCommands = sellCommands;
+		}
+
+		public CommandList () {
+			buyCommands = new ArrayList<String>();
+			sellCommands = new ArrayList<String>();
 		}
 
 		@Override
@@ -36,18 +42,19 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 			return result;
 		}
 
-		public static ShopCommandList deserialize (Map<String, Object> args) {
+		public static CommandList deserialize (Map<String, Object> args) {
 			List<String> buyCommands = (List<String>) args.get("buyCommands");
 			List<String> sellCommands = (List<String>) args.get("sellCommands");
 
-			return new ShopCommandList(buyCommands, sellCommands);
+			return new CommandList(buyCommands, sellCommands);
 		}
 	}
 
-	private static final long serialVersionUID = -1358999872552913870L;
 
+	private static final long serialVersionUID = -1358999872552913870L;
 	public int buyPrice;
 	public int sellPrice;
+
 	public int quantity;
 
 	public Location location;
@@ -68,7 +75,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public ShopLimit shopLimit = null;
 
-	public ShopCommandList commandList = null;
+	public CommandList commandList = null;
 
 
 	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
@@ -142,7 +149,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		boolean admin = (boolean) args.get("admin");
 
 		ShopLimit shopLimit = (ShopLimit) args.get("shopLimit");
-		ShopCommandList commandList = (ShopCommandList) args.get("commandList");
+		CommandList commandList = (CommandList) args.get("commandList");
 
 
 		Shop newShop = new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);

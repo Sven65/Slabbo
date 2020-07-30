@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.utils.Misc;
 import xyz.mackan.Slabbo.manager.ShopManager;
 

@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
@@ -26,13 +27,80 @@ import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.Misc;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @CommandAlias("slabbo")
 @Description("Base command for slabbo")
 public class SlabboCommand extends BaseCommand {
+	public BaseComponent getListComponent (Player player, List<String> rows, int page, String command) {
+		int perPage = 10;
+
+		int pageCount = (int) Math.ceil((double)rows.size() / (double)perPage);
+
+		List<String> subList = Misc.getPage(rows, page, perPage);
+
+		TextComponent component = new TextComponent("");
+
+		for (String row : subList) {
+			component.addExtra("\n"+row);
+		}
+
+		TextComponent previousPage = new TextComponent("<<<");
+		TextComponent nextPage = new TextComponent(">>>");
+
+		String previousPageCommand = String.format("%s %s", command, page - 1);
+		String nextPageCommand = String.format("%s %s", command, page + 1);
+
+		if (page + 1 <= pageCount) {
+			nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextPageCommand));
+
+			BaseComponent[] hoverEventComponents = new BaseComponent[] {
+					new TextComponent(LocaleManager.getString("general.general.next-page"))
+			};
+
+			nextPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents));
+		} else {
+			nextPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+		}
+
+		if (page > Math.max(pageCount - 1, 1)) {
+			previousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, previousPageCommand));
+
+			BaseComponent[] hoverEventComponents = new BaseComponent[] {
+					new TextComponent(LocaleManager.getString("general.general.previous-page"))
+			};
+
+			previousPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents));
+		} else {
+			previousPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
+		}
+
+		TextComponent pager = new TextComponent("\n");
+
+		pager.addExtra(previousPage);
+
+		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		replacementMap.put("page", page);
+		replacementMap.put("pageCount", pageCount);
+
+		String pagerString = LocaleManager.replaceKey("general.general.pager", replacementMap);
+
+		pager.addExtra(" "+pagerString+" ");
+
+		pager.addExtra(nextPage);
+
+		component.addExtra(pager);
+
+		return component;
+
+		//player.spigot().sendMessage(component);
+	}
+
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
 
 	public Shop getLookingAtShop (Player player) {
@@ -69,7 +137,6 @@ public class SlabboCommand extends BaseCommand {
 		ShopManager.loadShops();
 
 		for (Map.Entry<String, Shop> shopEntry : ShopManager.shops.entrySet()) {
-			String key = shopEntry.getKey();
 			Shop shop = shopEntry.getValue();
 
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
@@ -91,19 +158,11 @@ public class SlabboCommand extends BaseCommand {
 
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 	}
-
 	@Subcommand("admin")
 	@Description("Admin shop commands")
-	@CommandPermission("slabbo.admin" +
-			"|slabbo.admin.toggle" +
-			"|slabbo.admin.limit" +
-			"|slabbo.admin.limit.toggle" +
-			"|slabbo.admin.limit.time" +
-			"|slabbo.admin.limit.stock" +
-			"|slabbo.admin.limit.stock.sell" +
-			"|slabbo.admin.limit.stock.buy"
-	)
+	@CommandPermission("slabbo.admin.help")
 	public class SlabboAdminCommand extends BaseCommand {
+
 		@Subcommand("toggle")
 		@Description("Toggles the shop as being an admin shop")
 		@CommandPermission("slabbo.admin.toggle")
@@ -129,11 +188,11 @@ public class SlabboCommand extends BaseCommand {
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
-
 		@Subcommand("limit")
 		@Description("Commands for setting the shop to have a limited stock")
 		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle|slabbo.admin.limit.time|slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
 		public class SlabboAdminLimitCommand extends BaseCommand {
+
 			@Subcommand("toggle")
 			@Description("Toggles the admin shop as having limited stock")
 			@CommandPermission("slabbo.admin.limit.toggle")
@@ -174,11 +233,11 @@ public class SlabboCommand extends BaseCommand {
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
-
 			@Subcommand("stock")
 			@Description("Commands for setting the limited stocks")
 			@CommandPermission("slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
 			public class SlabboAdminLimitStockCommand extends BaseCommand {
+
 				@Subcommand("buy")
 				@Description("Sets the limited buy stock the shop has")
 				@CommandPermission("slabbo.admin.limit.stock.buy")
@@ -216,7 +275,6 @@ public class SlabboCommand extends BaseCommand {
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
-
 				@Subcommand("sell")
 				@Description("Sets the limited sell stock the shop has")
 				@CommandPermission("slabbo.admin.limit.stock.sell")
@@ -254,8 +312,8 @@ public class SlabboCommand extends BaseCommand {
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
-			}
 
+			}
 			@Subcommand("time")
 			@Description("Sets the time before the shop restocks, in seconds")
 			@CommandPermission("slabbo.admin.limit.time")
@@ -292,6 +350,7 @@ public class SlabboCommand extends BaseCommand {
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
 		}
+
 	}
 
 	@Subcommand("destroy")
@@ -375,20 +434,11 @@ public class SlabboCommand extends BaseCommand {
 
 		player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shops-saved"));
 	}
-
 	@Subcommand("modify")
 	@Description("Modifies the shop")
-	@CommandPermission("slabbo.modify.self.buyprice" +
-			"|slabbo.modify.self.sellprice" +
-			"|slabbo.modify.self.quantity" +
-			"|slabbo.modify.self.note" +
-			"|slabbo.modify.others.buyprice" +
-			"|slabbo.modify.others.sellprice" +
-			"|slabbo.modify.others.quantity" +
-			"|slabbo.modify.others.note" +
-			"|slabbo.modify.admin.owner" +
-			"|slabbo.modify.admin.stock")
+	@CommandPermission("slabbo.modify.help")
 	public class SlabboModifyCommand extends BaseCommand {
+
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
 			help.showHelp();
@@ -637,78 +687,10 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 	}
-
 	@Subcommand("list")
 	@Description("Commands for listing Slabbo shops")
 	@CommandPermission("slabbo.list.all|slabbo.list.self")
 	public class SlabboListCommand extends BaseCommand {
-		public void sendShopList (Player player, List<Shop> shops, int page, String command) {
-			if (shops.size() <= 0) {
-				player.sendMessage(net.md_5.bungee.api.ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
-				return;
-			}
-
-			int perPage = 10;
-
-			int pageCount = (int) Math.ceil((double)shops.size() / (double)perPage);
-
-			List<Shop> subList = Misc.getPage(shops, page, perPage);
-
-			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
-
-			for (Shop shop : subList) {
-				component.addExtra("\n"+shop.getInfoString());
-			}
-
-			TextComponent previousPage = new TextComponent("<<<");
-			TextComponent nextPage = new TextComponent(">>>");
-
-			String previousPageCommand = String.format("%s %s", command, page - 1);
-			String nextPageCommand = String.format("%s %s", command, page + 1);
-
-			if (page + 1 <= pageCount) {
-				nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, nextPageCommand));
-
-				BaseComponent[] hoverEventComponents = new BaseComponent[] {
-					new TextComponent(LocaleManager.getString("general.general.next-page"))
-				};
-
-				nextPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents));
-			} else {
-				nextPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
-			}
-
-			if (page > pageCount - 1) {
-				previousPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, previousPageCommand));
-
-				BaseComponent[] hoverEventComponents = new BaseComponent[] {
-					new TextComponent(LocaleManager.getString("general.general.previous-page"))
-				};
-
-				previousPage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverEventComponents));
-			} else {
-				previousPage.setColor(net.md_5.bungee.api.ChatColor.GRAY);
-			}
-
-			TextComponent pager = new TextComponent("\n");
-
-			pager.addExtra(previousPage);
-
-			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
-
-			replacementMap.put("page", page);
-			replacementMap.put("pageCount", pageCount);
-
-			String pagerString = LocaleManager.replaceKey("general.general.pager", replacementMap);
-
-			pager.addExtra(" "+pagerString+" ");
-
-			pager.addExtra(nextPage);
-
-			component.addExtra(pager);
-
-			player.spigot().sendMessage(component);
-		}
 
 		@HelpCommand
 		public void onCommand(CommandSender sender, CommandHelp help) {
@@ -727,21 +709,22 @@ public class SlabboCommand extends BaseCommand {
 
 			Location playerLocation = player.getLocation();
 
-			ArrayList<Shop> shopsInRadius = new ArrayList<Shop>();
+			List<String> rows = ShopManager.shops.values()
+					.stream()
+					.filter(shop -> playerLocation.distance(shop.location) <= radius)
+					.map(shop -> shop.getInfoString())
+					.collect(Collectors.toList());
 
-			if (radius <= -1) {
-				shopsInRadius = new ArrayList<Shop>(ShopManager.shops.values());
+			if (rows.size() <= 0) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+				return;
 			}
 
-			for (Shop shop : ShopManager.shops.values()) {
-				double distance = playerLocation.distance(shop.location);
+			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
 
-				if (distance <= radius) {
-					shopsInRadius.add(shop);
-				}
-			}
+			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list all radius "+radius));
 
-			sendShopList(player, shopsInRadius, listPage, "/slabbo list all radius "+radius);
+			player.spigot().sendMessage(component);
 		}
 
 		@Subcommand("all")
@@ -754,9 +737,21 @@ public class SlabboCommand extends BaseCommand {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
-			List<Shop> shops = new ArrayList<Shop>(ShopManager.shops.values());
+			List<String> rows = ShopManager.shops.values()
+					.stream()
+					.map(shop -> shop.getInfoString())
+					.collect(Collectors.toList());
 
-			sendShopList(player, shops, listPage, "/slabbo list all");
+			if (rows.size() <= 0) {
+				player.sendMessage(net.md_5.bungee.api.ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+				return;
+			}
+
+			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
+
+			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list all"));
+
+			player.spigot().sendMessage(component);
 		}
 
 		@Subcommand("mine radius")
@@ -771,21 +766,22 @@ public class SlabboCommand extends BaseCommand {
 
 			Location playerLocation = player.getLocation();
 
-			ArrayList<Shop> shopsInRadius = new ArrayList<Shop>();
+			List<String> rows = ShopManager.shops.values()
+					.stream()
+					.filter(shop -> playerLocation.distance(shop.location) <= radius && shop.ownerId.equals(player.getUniqueId()))
+					.map(shop -> shop.getInfoString())
+					.collect(Collectors.toList());
 
-			if (radius <= -1) {
-				shopsInRadius = new ArrayList<Shop>(ShopManager.shops.values());
+			if (rows.size() <= 0) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+				return;
 			}
 
-			for (Shop shop : ShopManager.shops.values()) {
-				double distance = playerLocation.distance(shop.location);
+			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
 
-				if (distance <= radius && shop.ownerId.equals(player.getUniqueId())) {
-					shopsInRadius.add(shop);
-				}
-			}
+			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list all mine radius "+radius));
 
-			sendShopList(player, shopsInRadius, listPage, "/slabbo list mine radius "+radius);
+			player.spigot().sendMessage(component);
 		}
 
 		@Subcommand("mine")
@@ -794,19 +790,343 @@ public class SlabboCommand extends BaseCommand {
 		public void onListMine (Player player, @Optional String page) {
 			int listPage = 1;
 
-			if (page == null || page.equals("")) {
+			if (page != null && !page.equals("")) {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
-			List<Shop> shops = new ArrayList<Shop>(ShopManager.shops.values());
+			List<String> rows = ShopManager.shops.values()
+					.stream()
+					.filter(shop -> shop.ownerId.equals(player.getUniqueId()))
+					.map(shop -> shop.getInfoString())
+					.collect(Collectors.toList());
 
-			List<Shop> myShops = shops.stream().filter(shop -> shop.ownerId.equals(player.getUniqueId())).collect(Collectors.toList());
+			if (rows.size() <= 0) {
+				player.sendMessage(net.md_5.bungee.api.ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+				return;
+			}
 
-			sendShopList(player, myShops, listPage, "/slabbo list mine");
+			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
+
+			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list mine"));
+
+			player.spigot().sendMessage(component);
 		}
 	}
 
-	@Subcommand("commands")
+	@Subcommand("shopcommands")
 	@Description("For adding commands to Slabbo shops")
+	@CommandPermission("slabbo.shopcommands")
+	public class SlabboShopCommandsCommand extends BaseCommand {
+		@Subcommand("add")
+		@Description("Adds commands to the shop")
+//		@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.self.buyslabbo.shopcommands.edit.others.buy")
+		public class SlabboShopCommandsAddCommand extends BaseCommand {
+			@Subcommand("buy")
+			@Description("Adds a command to the shop which gets ran on buying")
+			@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.others.buy")
+			public void onAddBuyCommand(Player player, String command) {
+				if (command == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-command-entered"));
+				}
+
+				Shop lookingAtShop = getLookingAtShop(player);
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+
+				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+
+				boolean canModifyOthers = player.hasPermission("slabbo.shopcommands.edit.others.buy");
+
+				if (!isShopOwner) {
+					if (!canModifyOthers) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
+						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+						return;
+					}
+				}
+
+				if (lookingAtShop.commandList == null) {
+					lookingAtShop.commandList = new Shop.CommandList();
+				}
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.added-command"));
+
+				lookingAtShop.commandList.buyCommands.add(command);
+
+				ShopManager.updateShop(lookingAtShop);
+
+				DataUtil.saveShops();
+			}
+
+			@Subcommand("sell")
+			@Description("Adds a command to the shop which gets ran on selling")
+			@CommandPermission("slabbo.shopcommands.edit.self.sell|slabbo.shopcommands.edit.others.sell")
+			public void onAddSellCommand(Player player, String command) {
+				if (command == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-command-entered"));
+				}
+
+				Shop lookingAtShop = getLookingAtShop(player);
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+
+				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+
+				boolean canModifyOthers = player.hasPermission("slabbo.shopcommands.edit.others.sell");
+
+				if (!isShopOwner) {
+					if (!canModifyOthers) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
+						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+						return;
+					}
+				}
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.added-command"));
+
+				lookingAtShop.commandList.sellCommands.add(command);
+
+				ShopManager.updateShop(lookingAtShop);
+
+				DataUtil.saveShops();
+			}
+		}
+
+		@Subcommand("remove")
+		@Description("Removes commands from the shop")
+//		@CommandPermission("slabbo.commands.edit")
+		public class SlabboShopCommandsRemoveCommand extends BaseCommand {
+			@Subcommand("buy")
+			@Description("Removes a command from the shop which got ran on buying")
+			@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.others.buy")
+			public void onRemoveBuyCommand(Player player, int index) {
+				int newIndex = index - 1;
+
+				if (newIndex < 0) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.invalid-index"));
+					return;
+				}
+
+				Shop lookingAtShop = getLookingAtShop(player);
+
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+
+				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+
+				boolean canEditOthers = player.hasPermission("slabbo.shopcommands.edit.others.buy");
+
+				if (!isShopOwner) {
+					if (!canEditOthers) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
+						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+						return;
+					}
+				}
+
+				if (lookingAtShop.commandList == null || lookingAtShop.commandList.buyCommands.size() <= 0) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-buy-commands-in-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				if (lookingAtShop.commandList.buyCommands.size() < newIndex) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.invalid-index"));
+					return;
+				}
+
+				lookingAtShop.commandList.buyCommands.remove(newIndex);
+
+				ShopManager.updateShop(lookingAtShop);
+				DataUtil.saveShops();
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.removed-command"));
+			}
+
+			@Subcommand("sell")
+			@Description("Removes a command from the shop which got ran on selling")
+			@CommandPermission("slabbo.shopcommands.edit.self.sell|slabbo.shopcommands.edit.others.sell")
+			public void onRemoveSellCommand(Player player, int index) {
+				int newIndex = index - 1;
+
+				if (newIndex < 0) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.invalid-index"));
+					return;
+				}
+
+				Shop lookingAtShop = getLookingAtShop(player);
+
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+
+				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+
+				boolean canEditOthers = player.hasPermission("slabbo.shopcommands.edit.others.sell");
+
+				if (!isShopOwner) {
+					if (!canEditOthers) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
+						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+						return;
+					}
+				}
+
+				if (lookingAtShop.commandList == null || lookingAtShop.commandList.sellCommands.size() <= 0) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-sell-commands-in-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				if (lookingAtShop.commandList.sellCommands.size() < newIndex) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.invalid-index"));
+					return;
+				}
+
+				lookingAtShop.commandList.sellCommands.remove(newIndex);
+
+				ShopManager.updateShop(lookingAtShop);
+				DataUtil.saveShops();
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.removed-command"));
+			}
+		}
+
+		@Subcommand("list")
+		@Description("Lists the commands the shop has")
+//		@CommandPermission("slabbo.commands.list")
+		public class SlabboShopCommandsListCommand extends BaseCommand {
+			@Subcommand("buy")
+			@Description("Lists the commands that gets ran when someone buys from the shop")
+			@CommandPermission("slabbo.shopcommands.list.self.buy|slabbo.shopcommands.list.others.buy")
+			public void onListBuyCommands (Player player, @Optional String page) {
+				Shop lookingAtShop = getLookingAtShop(player);
+
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+
+				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+
+				boolean canListOthers = player.hasPermission("slabbo.shopcommands.list.others.buy");
+
+				if (!isShopOwner) {
+					if (!canListOthers) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
+						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+						return;
+					}
+				}
+
+				if (lookingAtShop.commandList == null || lookingAtShop.commandList.buyCommands.size() <= 0) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-buy-commands-in-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				int listPage = 1;
+
+				if (page != null && !page.equals("")) {
+					try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+				}
+
+				AtomicInteger i = new AtomicInteger();
+				List<String> rows = lookingAtShop.commandList.buyCommands
+						.stream()
+						.map(command -> {
+							i.getAndIncrement();
+							return String.format("§8- §7[%s] §b%s", i.toString(), command);
+						})
+						.collect(Collectors.toList());
+
+				if (rows.size() <= 0) {
+					player.sendMessage(net.md_5.bungee.api.ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+					return;
+				}
+
+				TextComponent component = new TextComponent("=== [Slabbo Shop Commands] === ");
+
+				component.addExtra(getListComponent(player, rows, listPage, "/slabbo shopcommands list buy"));
+
+				player.spigot().sendMessage(component);
+			}
+
+			@Subcommand("sell")
+			@Description("Lists the commands that gets ran when someone sells to the shop")
+			@CommandPermission("slabbo.shopcommands.list.self.sell|slabbo.shopcommands.list.others.sell")
+			public void onListSellCommands (Player player, @Optional String page) {
+				Shop lookingAtShop = getLookingAtShop(player);
+
+				if (lookingAtShop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+
+					return;
+				}
+
+				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
+
+				boolean canListOthers = player.hasPermission("slabbo.shopcommands.list.others.sell");
+
+				if (!isShopOwner) {
+					if (!canListOthers) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
+						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+						return;
+					}
+				}
+
+				if (lookingAtShop.commandList == null || lookingAtShop.commandList.sellCommands.size() <= 0) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-buy-commands-in-shop"));
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					return;
+				}
+
+				int listPage = 1;
+
+				if (page != null && !page.equals("")) {
+					try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+				}
+
+				AtomicInteger i = new AtomicInteger();
+				List<String> rows = lookingAtShop.commandList.sellCommands
+						.stream()
+						.map(command -> {
+							i.getAndIncrement();
+							return String.format("§8- §7[%s] §b%s", i.toString(), command);
+						})
+						.collect(Collectors.toList());
+
+				if (rows.size() <= 0) {
+					player.sendMessage(net.md_5.bungee.api.ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+					return;
+				}
+
+				TextComponent component = new TextComponent("=== [Slabbo Shop Commands] === ");
+
+				component.addExtra(getListComponent(player, rows, listPage, "/slabbo shopcommands list sell"));
+
+				player.spigot().sendMessage(component);
+			}
+		}
+	}
 
 }
