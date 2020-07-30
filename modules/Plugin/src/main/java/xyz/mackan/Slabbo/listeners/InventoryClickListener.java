@@ -2,28 +2,18 @@ package xyz.mackan.Slabbo.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.ChestLinkUtil;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.Misc;
-import xyz.mackan.Slabbo.utils.ShopUtil;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class InventoryClickListener implements Listener {
 	private boolean isWaitingForSave = false;
@@ -48,7 +38,7 @@ public class InventoryClickListener implements Listener {
 
 		Block chestBlock = inventoryLocation.getBlock();
 
-		if (!Slabbo.chestLinkUtil.isChestLinked(chestBlock)) return;
+		if (!ChestLinkManager.isChestLinked(chestBlock)) return;
 
 		boolean isTopInventory = false;
 		ItemStack item = null;
@@ -70,7 +60,7 @@ public class InventoryClickListener implements Listener {
 
 		if (!isTopInventory) return;
 
-		Shop shop = Slabbo.chestLinkUtil.getShopByChestLocation(chestBlock.getLocation());
+		Shop shop = ChestLinkManager.getShopByChestLocation(chestBlock.getLocation());
 
 		ItemStack clonedItem = item.clone();
 		ItemStack clonedShopItem = shop.item.clone();
@@ -85,7 +75,7 @@ public class InventoryClickListener implements Listener {
 
 		shop.stock += item.getAmount();
 
-		Slabbo.shopUtil.put(shop.getLocationString(), shop);
+		ShopManager.put(shop.getLocationString(), shop);
 
 		e.setCurrentItem(null);
 
@@ -119,7 +109,7 @@ public class InventoryClickListener implements Listener {
 
 		Block chestBlock = invLocation.getBlock();
 
-		if (!Slabbo.chestLinkUtil.isChestLinked(chestBlock)) return;
+		if (!ChestLinkManager.isChestLinked(chestBlock)) return;
 
 		DragType type = e.getType();
 

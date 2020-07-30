@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.NameUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,9 +21,9 @@ public class PlayerJoinListener implements Listener {
 		Player player = e.getPlayer();
 		UUID userId = player.getUniqueId();
 
-		if(!Slabbo.shopUtil.shopsByOwnerId.containsKey(userId)) return;
+		if(!ShopManager.shopsByOwnerId.containsKey(userId)) return;
 
-		List<Shop> shops = Slabbo.shopUtil.shopsByOwnerId.get(userId);
+		List<Shop> shops = ShopManager.shopsByOwnerId.get(userId);
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
@@ -31,7 +31,7 @@ public class PlayerJoinListener implements Listener {
 			if (shop.admin) continue;
 
 			if (shop.stock == 0) {
-				replacementMap.put("location", ShopUtil.locationToString(shop.location));
+				replacementMap.put("location", ShopManager.locationToString(shop.location));
 				replacementMap.put("item", NameUtil.getName(shop.item));
 
 

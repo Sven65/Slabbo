@@ -14,8 +14,7 @@ import org.bukkit.persistence.PersistentDataType;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
-import xyz.mackan.Slabbo.types.AttributeKey;
-import xyz.mackan.Slabbo.types.MetaKey;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.SlabType;
 
 import java.util.*;
@@ -79,7 +78,7 @@ public class ItemUtil {
 			clonedItem.setAmount(64);
 		}
 
-		meta.setDisplayName("Slabbo Item "+ShopUtil.locationToString(location));
+		meta.setDisplayName("Slabbo Item "+ ShopManager.locationToString(location));
 
 		clonedItem.setItemMeta(meta);
 
@@ -117,7 +116,7 @@ public class ItemUtil {
 	public static List<Item> findShopItems (Location location) {
 		Collection<Entity> nearbyEntites = api.getNearbyEntities(location, 0.5, 2, 0.5);
 
-		String locationString = ShopUtil.locationToString(location);
+		String locationString = ShopManager.locationToString(location);
 
 		List<Item> shopItems = new ArrayList<Item>();
 

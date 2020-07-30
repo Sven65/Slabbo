@@ -5,14 +5,10 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.mackan.Slabbo.Slabbo;
-import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
-import xyz.mackan.Slabbo.utils.DataUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -145,7 +141,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	public String getLocationString () {
-		return ShopUtil.locationToString(this.location);
+		return ShopManager.locationToString(this.location);
 	}
 
 	public String getInfoString () {

@@ -10,8 +10,9 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.utils.Misc;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -24,9 +25,9 @@ public class BlockEventListeners implements Listener {
 
 		if (!Misc.isValidShopBlock(lookingAt)) return false;
 
-		String locationString = ShopUtil.locationToString(lookingAt.getLocation());
+		String locationString = ShopManager.locationToString(lookingAt.getLocation());
 
-		if (Slabbo.shopUtil.shops.containsKey(locationString)) return true;
+		if (ShopManager.shops.containsKey(locationString)) return true;
 
 		return false;
 	}
@@ -34,7 +35,7 @@ public class BlockEventListeners implements Listener {
 	public boolean isLookingAtLinkedChest (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-		if (!Slabbo.chestLinkUtil.isChestLinked(lookingAt)) return false;
+		if (!ChestLinkManager.isChestLinked(lookingAt)) return false;
 
 		return true;
 	}
@@ -68,16 +69,16 @@ public class BlockEventListeners implements Listener {
 		while (it.hasNext()) {
 			Block block = it.next();
 
-			String locationString = ShopUtil.locationToString(block.getLocation());
+			String locationString = ShopManager.locationToString(block.getLocation());
 
-			if (!Slabbo.shopUtil.shops.containsKey(locationString)) {
+			if (!ShopManager.shops.containsKey(locationString)) {
 				continue;
 			} else {
 				it.remove();
 			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
-				if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
+				if (!ChestLinkManager.isChestLinked(block)) continue;
 			}
 
 			it.remove();
@@ -87,16 +88,16 @@ public class BlockEventListeners implements Listener {
 	@EventHandler
 	public void onPistonExtend (BlockPistonExtendEvent event) {
 		for (Block block : event.getBlocks()){
-			String locationString = ShopUtil.locationToString(block.getLocation());
+			String locationString = ShopManager.locationToString(block.getLocation());
 
-			if (!Slabbo.shopUtil.shops.containsKey(locationString)) {
+			if (!ShopManager.shops.containsKey(locationString)) {
 				continue;
 			} else {
 				event.setCancelled(true);
 			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
-				if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
+				if (!ChestLinkManager.isChestLinked(block)) continue;
 			}
 
 			event.setCancelled(true);
@@ -106,16 +107,16 @@ public class BlockEventListeners implements Listener {
 	@EventHandler
 	public void onPistonRetract (BlockPistonRetractEvent event) {
 		for (Block block : event.getBlocks()){
-			String locationString = ShopUtil.locationToString(block.getLocation());
+			String locationString = ShopManager.locationToString(block.getLocation());
 
-			if (!Slabbo.shopUtil.shops.containsKey(locationString)) {
+			if (!ShopManager.shops.containsKey(locationString)) {
 				continue;
 			} else {
 				event.setCancelled(true);
 			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
-				if (!Slabbo.chestLinkUtil.isChestLinked(block)) continue;
+				if (!ChestLinkManager.isChestLinked(block)) continue;
 			}
 
 			event.setCancelled(true);

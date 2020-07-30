@@ -8,14 +8,14 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import scala.Int;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.importers.ImportResult;
 import xyz.mackan.Slabbo.importers.UShopImporter;
@@ -24,7 +24,7 @@ import xyz.mackan.Slabbo.types.ShopLimit;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.Misc;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.io.File;
 import java.util.*;
@@ -38,10 +38,10 @@ public class SlabboCommand extends BaseCommand {
 	public Shop getLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-		String locationString = ShopUtil.locationToString(lookingAt.getLocation());
+		String locationString = ShopManager.locationToString(lookingAt.getLocation());
 
-		if (Slabbo.shopUtil.shops.containsKey(locationString)) {
-			return Slabbo.shopUtil.shops.get(locationString);
+		if (ShopManager.shops.containsKey(locationString)) {
+			return ShopManager.shops.get(locationString);
 		}
 
 		return null;
@@ -62,13 +62,13 @@ public class SlabboCommand extends BaseCommand {
 
 		ItemUtil.removeShopItems(player.getWorld());
 
-		Slabbo.chestLinkUtil.links.clear();
+		ChestLinkManager.links.clear();
 
-		Slabbo.shopUtil.clearShops();
+		ShopManager.clearShops();
 
-		Slabbo.shopUtil.loadShops();
+		ShopManager.loadShops();
 
-		for (Map.Entry<String, Shop> shopEntry : Slabbo.shopUtil.shops.entrySet()) {
+		for (Map.Entry<String, Shop> shopEntry : ShopManager.shops.entrySet()) {
 			String key = shopEntry.getKey();
 			Shop shop = shopEntry.getValue();
 
@@ -86,7 +86,7 @@ public class SlabboCommand extends BaseCommand {
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 
 		sender.sendMessage("Version: "+ Slabbo.getInstance().getDescription().getVersion());
-		sender.sendMessage("Total Shops: "+Slabbo.shopUtil.shops.size());
+		sender.sendMessage("Total Shops: "+ShopManager.shops.size());
 		sender.sendMessage("Economy Provider: "+Slabbo.getEconomy().getName());
 
 		sender.sendMessage("=====[ Slabbo Info ]=====");
@@ -123,7 +123,7 @@ public class SlabboCommand extends BaseCommand {
 				player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.admin-destroy"));
 			}
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -168,7 +168,7 @@ public class SlabboCommand extends BaseCommand {
 					player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.general.limited-stock.destroy"));
 				}
 
-				Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 				DataUtil.saveShops();
 
@@ -210,7 +210,7 @@ public class SlabboCommand extends BaseCommand {
 
 					player.sendMessage(ChatColor.GREEN + Slabbo.localeManager.replaceSingleKey("success-message.general.limited-stock.set-buy-stock", "stock", stock));
 
-					Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+					ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 					DataUtil.saveShops();
 
@@ -248,7 +248,7 @@ public class SlabboCommand extends BaseCommand {
 
 					player.sendMessage(ChatColor.GREEN + Slabbo.localeManager.replaceSingleKey("success-message.general.limited-stock.set-sell-stock", "stock", stock));
 
-					Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+					ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 					DataUtil.saveShops();
 
@@ -285,7 +285,7 @@ public class SlabboCommand extends BaseCommand {
 
 				player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceSingleKey("success-message.general.limited-stock.set-time", "time", time));
 
-				Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 				DataUtil.saveShops();
 
@@ -354,7 +354,7 @@ public class SlabboCommand extends BaseCommand {
 		for (Shop shop : result.shops) {
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
 
-			Slabbo.shopUtil.put(shop.getLocationString(), shop);
+			ShopManager.put(shop.getLocationString(), shop);
 		}
 
 		DataUtil.saveShops();
@@ -433,7 +433,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.buyprice-set", replacementMap));
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -480,7 +480,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.sellprice-set", replacementMap));
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -527,7 +527,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.quantity-set", replacementMap));
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -553,7 +553,7 @@ public class SlabboCommand extends BaseCommand {
 
 			lookingAtShop.ownerId = newOwnerID;
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -579,7 +579,7 @@ public class SlabboCommand extends BaseCommand {
 
 			lookingAtShop.stock = newStock;
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -629,7 +629,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+Slabbo.localeManager.replaceKey("success-message.modify.note-set", replacementMap));
 
-			Slabbo.shopUtil.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
 
 			DataUtil.saveShops();
 
@@ -730,10 +730,10 @@ public class SlabboCommand extends BaseCommand {
 			ArrayList<Shop> shopsInRadius = new ArrayList<Shop>();
 
 			if (radius <= -1) {
-				shopsInRadius = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+				shopsInRadius = new ArrayList<Shop>(ShopManager.shops.values());
 			}
 
-			for (Shop shop : Slabbo.shopUtil.shops.values()) {
+			for (Shop shop : ShopManager.shops.values()) {
 				double distance = playerLocation.distance(shop.location);
 
 				if (distance <= radius) {
@@ -754,7 +754,7 @@ public class SlabboCommand extends BaseCommand {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
-			List<Shop> shops = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+			List<Shop> shops = new ArrayList<Shop>(ShopManager.shops.values());
 
 			sendShopList(player, shops, listPage, "/slabbo list all");
 		}
@@ -774,10 +774,10 @@ public class SlabboCommand extends BaseCommand {
 			ArrayList<Shop> shopsInRadius = new ArrayList<Shop>();
 
 			if (radius <= -1) {
-				shopsInRadius = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+				shopsInRadius = new ArrayList<Shop>(ShopManager.shops.values());
 			}
 
-			for (Shop shop : Slabbo.shopUtil.shops.values()) {
+			for (Shop shop : ShopManager.shops.values()) {
 				double distance = playerLocation.distance(shop.location);
 
 				if (distance <= radius && shop.ownerId.equals(player.getUniqueId())) {
@@ -798,7 +798,7 @@ public class SlabboCommand extends BaseCommand {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
-			List<Shop> shops = new ArrayList<Shop>(Slabbo.shopUtil.shops.values());
+			List<Shop> shops = new ArrayList<Shop>(ShopManager.shops.values());
 
 			List<Shop> myShops = shops.stream().filter(shop -> shop.ownerId.equals(player.getUniqueId())).collect(Collectors.toList());
 

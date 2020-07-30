@@ -3,7 +3,6 @@ package xyz.mackan.Slabbo;
 
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -17,14 +16,13 @@ import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
-import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
-import xyz.mackan.Slabbo.utils.ChestLinkUtil;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.utils.DataUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.utils.locale.LocaleManager;
 
@@ -48,8 +46,8 @@ public class Slabbo extends JavaPlugin {
 
 	private static Slabbo instance;
 
-	public static ShopUtil shopUtil = new ShopUtil();
-	public static ChestLinkUtil chestLinkUtil = new ChestLinkUtil();
+//	public static ShopManager shopManager = new ShopManager();
+//	public static ChestLinkManager chestLinkManager = new ChestLinkManager();
 
 	public static LocaleManager localeManager;
 
@@ -99,7 +97,9 @@ public class Slabbo extends JavaPlugin {
 
 		getLogger().info("Slabbo enabled.");
 
-		shopUtil.loadShops();
+//		shopManager.loadShops();
+
+		ShopManager.loadShops();
 
 		isEnabled = true;
 	}

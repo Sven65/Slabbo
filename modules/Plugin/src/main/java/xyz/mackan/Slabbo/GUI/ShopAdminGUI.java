@@ -19,10 +19,10 @@ import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.ChestLinkUtil;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -71,16 +71,16 @@ public class ShopAdminGUI implements Listener {
 			if (!humanEntity.hasPermission("slabbo.link")) return;
 		}
 
-		boolean hasPendingLink = Slabbo.chestLinkUtil.hasPendingLink(humanEntity);
+		boolean hasPendingLink = ChestLinkManager.hasPendingLink(humanEntity);
 		boolean hasExistingLink = shop.linkedChestLocation != null;
 
-		if (hasPendingLink && Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+		if (hasPendingLink && ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// Current shop's being linked
 			inv.setItem(5, AdminGUIItems.getUnlinkChestItem());
 		} else if (!hasPendingLink && hasExistingLink) {
 			// Current shop isn't being linked, but it has one
 			inv.setItem(5, AdminGUIItems.getUnlinkChestItem());
-		} else if (hasPendingLink && !Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+		} else if (hasPendingLink && !ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// A link is in progress, but it's not the current shop
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 		} else if (!hasPendingLink && !hasExistingLink) {
@@ -220,29 +220,29 @@ public class ShopAdminGUI implements Listener {
 		if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enforcepermission") && !humanEntity.hasPermission("slabbo.link")) return;
 		Player p = (Player)humanEntity;
 
-		boolean hasPendingLink = Slabbo.chestLinkUtil.hasPendingLink(p);
+		boolean hasPendingLink = ChestLinkManager.hasPendingLink(p);
 		boolean hasExistingLink = shop.linkedChestLocation != null;
 
-		if (hasPendingLink && Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+		if (hasPendingLink && ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// Current shop's being linked
-			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+			ChestLinkManager.pendingLinks.remove(p.getUniqueId());
 			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.linking-cancelled"));
 			p.playSound(shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 			return;
 		} else if (!hasPendingLink && hasExistingLink) {
 			// Current shop isn't being linked, but it has one
-			Slabbo.chestLinkUtil.links.remove(shop.linkedChestLocation);
+			ChestLinkManager.links.remove(shop.linkedChestLocation);
 
-			Location blockLocation = ShopUtil.fromString(shop.linkedChestLocation);
+			Location blockLocation = ShopManager.fromString(shop.linkedChestLocation);
 
 			Block chestBlock = blockLocation.getBlock();
 
-			ChestLinkUtil.setChestName(chestBlock, null);
+			ChestLinkManager.setChestName(chestBlock, null);
 
 			shop.linkedChestLocation = null;
 
-			Slabbo.shopUtil.put(shop.getLocationString(), shop);
+			ShopManager.put(shop.getLocationString(), shop);
 
 			p.sendMessage(ChatColor.GREEN+Slabbo.localeManager.getString("success-message.chestlink.linking-removed"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
@@ -252,15 +252,15 @@ public class ShopAdminGUI implements Listener {
 			DataUtil.saveShops();
 
 			return;
-		} else if (hasPendingLink && !Slabbo.chestLinkUtil.pendingLinks.containsValue(shop.getLocationString())) {
+		} else if (hasPendingLink && !ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// A link is in progress, but it's not the current shop
-			Slabbo.chestLinkUtil.pendingLinks.remove(p.getUniqueId());
+			ChestLinkManager.pendingLinks.remove(p.getUniqueId());
 			p.sendMessage(ChatColor.RED+Slabbo.localeManager.getString("success-message.chestlink.previous-linking-cancelled"));
 			inv.setItem(5, AdminGUIItems.getLinkChestItem());
 		}
 
 
-		Slabbo.chestLinkUtil.pendingLinks.put(p.getUniqueId(), ShopUtil.locationToString(shop.location));
+		ChestLinkManager.pendingLinks.put(p.getUniqueId(), ShopManager.locationToString(shop.location));
 
 		p.sendMessage(Slabbo.localeManager.getString("general.chestlink.crouch-to-link"));
 		p.closeInventory();

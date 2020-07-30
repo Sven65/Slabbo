@@ -9,10 +9,11 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.Misc;
-import xyz.mackan.Slabbo.utils.ShopUtil;
 
 
 public class InventoryMoveListener implements Listener {
@@ -37,9 +38,9 @@ public class InventoryMoveListener implements Listener {
 
 		Block destinationBlock = destinationLocation.getBlock();
 
-		if (!Slabbo.chestLinkUtil.isChestLinked(destinationBlock)) return;
+		if (!ChestLinkManager.isChestLinked(destinationBlock)) return;
 
-		Shop shop = Slabbo.chestLinkUtil.getShopByChestLocation(destinationBlock.getLocation());
+		Shop shop = ChestLinkManager.getShopByChestLocation(destinationBlock.getLocation());
 
 		ItemStack itemClone = item.clone();
 		ItemStack shopItemClone = shop.item.clone();
@@ -54,7 +55,7 @@ public class InventoryMoveListener implements Listener {
 
 		shop.stock += item.getAmount();
 
-		Slabbo.shopUtil.put(shop.getLocationString(), shop);
+		ShopManager.put(shop.getLocationString(), shop);
 
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Slabbo.getInstance(), new Runnable() {
 			@Override

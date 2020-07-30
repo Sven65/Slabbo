@@ -20,7 +20,7 @@ import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -121,7 +121,7 @@ public class ShopCreationGUI implements Listener {
 		inv.setItem(4, GUIItems.getSellPriceItem(sellPrice));
 		inv.setItem(5, GUIItems.getAmountItem(quantity));
 
-		inv.setItem(7, GUIItems.getConfirmItem(ShopUtil.locationToString(slabLocation)));
+		inv.setItem(7, GUIItems.getConfirmItem(ShopManager.locationToString(slabLocation)));
 		inv.setItem(8, GUIItems.getCancelItem());
 	}
 
@@ -134,7 +134,7 @@ public class ShopCreationGUI implements Listener {
 
 		meta.setDisplayName(ChatColor.RED+Slabbo.localeManager.getString("gui.items.new-shop.click-item-below"));
 
-		meta.setLore(Arrays.asList(Slabbo.localeManager.getString("general.general.new-shop"), ShopUtil.locationToString(slabLocation)));
+		meta.setLore(Arrays.asList(Slabbo.localeManager.getString("general.general.new-shop"), ShopManager.locationToString(slabLocation)));
 
 		item.setItemMeta(meta);
 
@@ -209,7 +209,7 @@ public class ShopCreationGUI implements Listener {
 					shop.note = sellersNote;
 
 
-					Slabbo.shopUtil.put(ShopUtil.locationToString(slabLocation), shop);
+					ShopManager.put(ShopManager.locationToString(slabLocation), shop);
 
 					DataUtil.saveShops();
 

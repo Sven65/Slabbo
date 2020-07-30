@@ -1,29 +1,27 @@
-package xyz.mackan.Slabbo.utils;
+package xyz.mackan.Slabbo.manager;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
+import xyz.mackan.Slabbo.utils.DataUtil;
 
-import java.time.Instant;
 import java.util.*;
 
-public class ShopUtil {
-	public HashMap<String, Shop> shops = new HashMap<String, Shop>();
-	public HashMap<UUID, List<Shop>> shopsByOwnerId = new HashMap<UUID, List<Shop>>();
+public class ShopManager {
+	public static HashMap<String, Shop> shops = new HashMap<String, Shop>();
+	public static HashMap<UUID, List<Shop>> shopsByOwnerId = new HashMap<UUID, List<Shop>>();
 
-	public List<String> limitedShops = new ArrayList<String>();
+	public static List<String> limitedShops = new ArrayList<String>();
 
-	public ShopUtil () { }
-
-	public int getOwnerCount (UUID ownerId) {
+	public static int getOwnerCount (UUID ownerId) {
 		if (!shopsByOwnerId.containsKey(ownerId)) return 0;
 
 		return shopsByOwnerId.get(ownerId).size();
 	}
 
-	public void put (String key, Shop value) {
+	public static void put (String key, Shop value) {
 		shops.put(key, value);
 
 		List<Shop> shopList = shopsByOwnerId.get(value.ownerId);
@@ -41,8 +39,8 @@ public class ShopUtil {
 		}
 	}
 
-	public void removeShop(Shop shop) {
-		String locationString = ShopUtil.locationToString(shop.location);
+	public static void removeShop(Shop shop) {
+		String locationString = ShopManager.locationToString(shop.location);
 
 		shops.remove(locationString);
 
@@ -57,7 +55,7 @@ public class ShopUtil {
 		limitedShops.remove(locationString);
 	}
 
-	public void loadShops () {
+	public static void loadShops () {
 		shops = DataUtil.loadShops();
 
 		if (shops == null) {
@@ -80,14 +78,14 @@ public class ShopUtil {
 				shopsByOwnerId.put(v.ownerId, shopList);
 
 				if (v.linkedChestLocation != null) {
-					Slabbo.chestLinkUtil.links.put(v.linkedChestLocation, v);
+					ChestLinkManager.links.put(v.linkedChestLocation, v);
 				}
 
 			});
 		}
 	}
 
-	public void clearShops () {
+	public static void clearShops () {
 		shops.clear();
 		shopsByOwnerId.clear();
 		limitedShops.clear();

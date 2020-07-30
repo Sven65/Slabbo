@@ -8,7 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class UShopImporter {
 		}
 
 		for (String key : uShopConfig.getKeys(false)) {
-			if (Slabbo.shopUtil.shops.containsKey(key)) {
+			if (ShopManager.shops.containsKey(key)) {
 				skippedShops.add(key);
 				continue;
 			}
@@ -60,7 +60,7 @@ public class UShopImporter {
 				stock = 0;
 			}
 
-			Location shopLocation = ShopUtil.fromString(key);
+			Location shopLocation = ShopManager.fromString(key);
 
 			Shop shop = new Shop(buyPrice, sellPrice, quantity, shopLocation, itemStack, stock, shopOwnerUUID, isAdmin, null);
 

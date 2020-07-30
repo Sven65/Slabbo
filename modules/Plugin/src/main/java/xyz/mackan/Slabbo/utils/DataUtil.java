@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class DataUtil {
 
 		FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
-		configFile.createSection("shops", Slabbo.shopUtil.shops);
+		configFile.createSection("shops", ShopManager.shops);
 
 		try {
 			configFile.save(dataFile);
@@ -55,7 +56,7 @@ public class DataUtil {
 
 				FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
-				configFile.createSection("shops", Slabbo.shopUtil.shops);
+				configFile.createSection("shops", ShopManager.shops);
 
 				try {
 					configFile.save(dataFile);

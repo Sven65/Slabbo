@@ -14,21 +14,15 @@ import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
 import org.bukkit.material.WoodenStep;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.util.Vector;
-import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.MetaKey;
 import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ItemUtil;
-import xyz.mackan.Slabbo.utils.ShopUtil;
+import xyz.mackan.Slabbo.manager.ShopManager;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -174,7 +168,7 @@ public class SlabboAPI_v1_9_R1 implements SlabboAPI {
 	public void setShopLocation (Item item, Location location) {
 		ItemStack itemStack = item.getItemStack();
 
-		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.SHOP_LOCATION.getKey(), ShopUtil.locationToString(location)));
+		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.SHOP_LOCATION.getKey(), ShopManager.locationToString(location)));
 	}
 
 	public boolean isSlabboItem (Item item) {

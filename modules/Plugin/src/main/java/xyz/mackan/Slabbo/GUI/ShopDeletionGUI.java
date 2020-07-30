@@ -12,6 +12,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -41,7 +43,7 @@ public class ShopDeletionGUI  implements Listener {
 
 		ItemUtil.removeShopItemsAtLocation(shop.location);
 
-		Slabbo.shopUtil.removeShop(shop);
+		ShopManager.removeShop(shop);
 
 		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
 
