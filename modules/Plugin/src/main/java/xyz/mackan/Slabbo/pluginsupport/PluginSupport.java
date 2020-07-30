@@ -5,18 +5,24 @@ import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.Slabbo;
 
 public class PluginSupport {
+
+	public static class EnabledPlugins {
+		public static boolean worldguard = false;
+		public static boolean griefprevention = false;
+	}
+
 	public static boolean canCreateShop (Location location, Player player) {
 		boolean canCreateShop = true;
 
-		if (Slabbo.enabledPlugins.worldguard) {
+		if (EnabledPlugins.worldguard) {
 			canCreateShop = WorldguardSupport.canCreateShop(location, player);
 		}
 
-		if (Slabbo.enabledPlugins.griefprevention) {
+		if (EnabledPlugins.griefprevention) {
 			canCreateShop = GriefPreventionSupport.canCreateShop(location, player);
 		}
 
-		if (Slabbo.enabledPlugins.worldguard && Slabbo.enabledPlugins.griefprevention) {
+		if (EnabledPlugins.worldguard && EnabledPlugins.griefprevention) {
 			canCreateShop = WorldguardSupport.canCreateShop(location, player) && GriefPreventionSupport.canCreateShop(location, player);
 		}
 
@@ -26,15 +32,15 @@ public class PluginSupport {
 	public static boolean canUseShop (Location location, Player player) {
 		boolean canUseShop = true;
 
-		if (Slabbo.enabledPlugins.worldguard) {
+		if (EnabledPlugins.worldguard) {
 			canUseShop = WorldguardSupport.canUseShop(location, player);
 		}
 
-		if (Slabbo.enabledPlugins.griefprevention) {
+		if (EnabledPlugins.griefprevention) {
 			canUseShop = GriefPreventionSupport.canUseShop(location, player);
 		}
 
-		if (Slabbo.enabledPlugins.worldguard && Slabbo.enabledPlugins.griefprevention) {
+		if (EnabledPlugins.worldguard && EnabledPlugins.griefprevention) {
 			canUseShop = WorldguardSupport.canUseShop(location, player) || GriefPreventionSupport.canUseShop(location, player);
 		}
 

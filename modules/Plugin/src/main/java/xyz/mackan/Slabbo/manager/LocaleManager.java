@@ -1,8 +1,9 @@
-package xyz.mackan.Slabbo.utils.locale;
+package xyz.mackan.Slabbo.manager;
 
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.yaml.snakeyaml.Yaml;
 import xyz.mackan.Slabbo.Slabbo;
 
@@ -16,11 +17,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LocaleManager {
-	public HashMap<String, String> translationMap = new HashMap<String, String>();
+	private static HashMap<String, String> translationMap = new HashMap<String, String>();
 
-	public LocaleManager () {
-		File languageFile = new File(Slabbo.getDataPath(), "lang.yml");
-		InputStream defaultFile = Slabbo.getInstance().getResource("lang.yml");
+
+	/**
+	 * Loads a language file into the translation map
+	 * @param plugin JavaPlugin to load from
+	 * @param fileName The filename to load
+	 */
+	public static void loadFile (JavaPlugin plugin, String fileName) {
+		File languageFile = new File(plugin.getDataFolder().getPath(), fileName);
+		InputStream defaultFile = plugin.getResource(fileName);
 		InputStreamReader reader = new InputStreamReader(defaultFile);
 
 		YamlConfiguration defaultConf = YamlConfiguration.loadConfiguration(reader);
@@ -49,7 +56,7 @@ public class LocaleManager {
 	 * @param key The key to get
 	 * @return String
 	 */
-	public String getString (String key) {
+	public static String getString (String key) {
 		String value = translationMap.get(key);
 
 		if (value == null || value.equals("")) return "Translation key "+key+" not found!";
@@ -63,7 +70,7 @@ public class LocaleManager {
 	 * @param replacementMap The map to use for replacements
 	 * @return String
 	 */
-	public String replaceKey (String tlKey, HashMap<String, Object> replacementMap) {
+	public static String replaceKey (String tlKey, HashMap<String, Object> replacementMap) {
 		String replaceString = getString(tlKey);
 
 		for (Map.Entry<String, Object> replacement : replacementMap.entrySet()) {
@@ -100,7 +107,7 @@ public class LocaleManager {
 	 * @param replaceValue The value to replace with
 	 * @return String
 	 */
-	public String replaceSingleKey (String tlKey, String replaceKey, Object replaceValue) {
+	public static String replaceSingleKey (String tlKey, String replaceKey, Object replaceValue) {
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
 		replacementMap.put(replaceKey, replaceValue);
@@ -113,7 +120,7 @@ public class LocaleManager {
 	 * @param amount The amount of currency
 	 * @return String
 	 */
-	public String getCurrencyString (Object amount) {
+	public static String getCurrencyString (Object amount) {
 		return replaceSingleKey("general.currency-format", "amount", amount);
 	}
 }

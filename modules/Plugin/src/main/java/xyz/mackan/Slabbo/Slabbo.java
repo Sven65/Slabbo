@@ -15,16 +15,15 @@ import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
 import xyz.mackan.Slabbo.listeners.*;
-import xyz.mackan.Slabbo.pluginsupport.EnabledPlugins;
+import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
-import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.utils.UpdateChecker;
-import xyz.mackan.Slabbo.utils.locale.LocaleManager;
+import xyz.mackan.Slabbo.manager.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,16 +45,8 @@ public class Slabbo extends JavaPlugin {
 
 	private static Slabbo instance;
 
-//	public static ShopManager shopManager = new ShopManager();
-//	public static ChestLinkManager chestLinkManager = new ChestLinkManager();
-
-	public static LocaleManager localeManager;
-
 	public static boolean hasUpdate = false;
 	private static boolean isEnabled = false;
-
-
-	public static EnabledPlugins enabledPlugins = new EnabledPlugins();
 
 
 	@Override
@@ -87,7 +78,7 @@ public class Slabbo extends JavaPlugin {
 
 		instance = this;
 
-		localeManager = new LocaleManager();
+		LocaleManager.loadFile(this, "lang.yml");
 
 		setupCommands();
 		setupListeners();
@@ -96,8 +87,6 @@ public class Slabbo extends JavaPlugin {
 		checkUpdates();
 
 		getLogger().info("Slabbo enabled.");
-
-//		shopManager.loadShops();
 
 		ShopManager.loadShops();
 
@@ -140,11 +129,11 @@ public class Slabbo extends JavaPlugin {
 
 	private void setupPluginSupport () {
 		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-			enabledPlugins.worldguard = true;
+			PluginSupport.EnabledPlugins.worldguard = true;
 		}
 
 		if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
-			enabledPlugins.griefprevention = true;
+			PluginSupport.EnabledPlugins.griefprevention = true;
 		}
 	}
 
