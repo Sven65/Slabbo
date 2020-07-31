@@ -158,6 +158,7 @@ public class SlabboCommand extends BaseCommand {
 
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 	}
+
 	@Subcommand("admin")
 	@Description("Admin shop commands")
 	@CommandPermission("slabbo.admin.help")
@@ -233,6 +234,7 @@ public class SlabboCommand extends BaseCommand {
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
+
 			@Subcommand("stock")
 			@Description("Commands for setting the limited stocks")
 			@CommandPermission("slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
@@ -275,6 +277,7 @@ public class SlabboCommand extends BaseCommand {
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
+
 				@Subcommand("sell")
 				@Description("Sets the limited sell stock the shop has")
 				@CommandPermission("slabbo.admin.limit.stock.sell")
@@ -314,6 +317,7 @@ public class SlabboCommand extends BaseCommand {
 				}
 
 			}
+
 			@Subcommand("time")
 			@Description("Sets the time before the shop restocks, in seconds")
 			@CommandPermission("slabbo.admin.limit.time")
@@ -434,6 +438,7 @@ public class SlabboCommand extends BaseCommand {
 
 		player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shops-saved"));
 	}
+
 	@Subcommand("modify")
 	@Description("Modifies the shop")
 	@CommandPermission("slabbo.modify.help")
@@ -815,7 +820,7 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("shopcommands")
 	@Description("For adding commands to Slabbo shops")
-	@CommandPermission("slabbo.shopcommands")
+//	@CommandPermission("slabbo.shopcommands")
 	public class SlabboShopCommandsCommand extends BaseCommand {
 		@Subcommand("add")
 		@Description("Adds commands to the shop")
