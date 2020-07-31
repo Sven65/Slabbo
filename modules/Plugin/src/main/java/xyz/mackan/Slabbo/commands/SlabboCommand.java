@@ -3,6 +3,7 @@ package xyz.mackan.Slabbo.commands;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Optional;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -103,6 +104,10 @@ public class SlabboCommand extends BaseCommand {
 
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
 
+	boolean shouldReturn () {
+		return true;
+	}
+
 	public Shop getLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
@@ -116,6 +121,7 @@ public class SlabboCommand extends BaseCommand {
 	}
 
 	@HelpCommand
+	@CatchUnknown
 	public static void onCommand(CommandSender sender, CommandHelp help) {
 		help.showHelp();
 	}
@@ -197,7 +203,15 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("toggle")
 			@Description("Toggles the admin shop as having limited stock")
 			@CommandPermission("slabbo.admin.limit.toggle")
-			public void onToggleLimit (Player player) {
+			public void onToggleLimit (
+					Player player,
+					@Flags("admin")
+						SlabboContextResolver slabboContext
+			) {
+				if (slabboContext == null) {
+					return;
+				}
+
 				Shop lookingAtShop = getLookingAtShop(player);
 				if (lookingAtShop == null) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
@@ -692,6 +706,7 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 	}
+
 	@Subcommand("list")
 	@Description("Commands for listing Slabbo shops")
 	@CommandPermission("slabbo.list.all|slabbo.list.self")
@@ -1018,7 +1033,9 @@ public class SlabboCommand extends BaseCommand {
 		public class SlabboShopCommandsListCommand extends BaseCommand {
 			@Subcommand("buy")
 			@Description("Lists the commands that gets ran when someone buys from the shop")
-			@CommandPermission("slabbo.shopcommands.list.self.buy|slabbo.shopcommands.list.others.buy")
+			//@Conditions("hasEitherPermission:permissions=slabbo.shopcommands.list.self.buy|slabbo.shopcommands.list.others.buy")
+			@CommandPermission("slabbo.shopcommands.list.self.buy,slabbo.shopcommands.list.others.buy")
+			//@Conditions("lookingAtShop")
 			public void onListBuyCommands (Player player, @Optional String page) {
 				Shop lookingAtShop = getLookingAtShop(player);
 

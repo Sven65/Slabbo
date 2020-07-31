@@ -1,9 +1,12 @@
 // TODO: Docs
 package xyz.mackan.Slabbo;
 
+import co.aikar.commands.BukkitCommandIssuer;
+import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -12,8 +15,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
+import xyz.mackan.Slabbo.commands.Conditions;
 import xyz.mackan.Slabbo.commands.SlabboCommand;
 import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
+import xyz.mackan.Slabbo.commands.SlabboContextResolver;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
@@ -27,6 +32,7 @@ import xyz.mackan.Slabbo.manager.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -191,6 +197,28 @@ public class Slabbo extends JavaPlugin {
 		manager.getCommandCompletions().registerCompletion("importFiles", c -> {
 			return SlabboCommandCompletions.getImportFiles();
 		});
+
+		//manager.getCommandConditions().addCondition(Conditions.class, "lookingAtShop", Conditions.isLookingAtShop());
+
+		//manager.getCommandConditions().addCondition("lookingAtShop", Conditions.isLookingAtShop());
+
+		manager.getCommandConditions().addCondition("hasEitherPermission", c -> {
+			BukkitCommandIssuer issuer = c.getIssuer();
+
+			if(!issuer.isPlayer()) {
+				throw new ConditionFailedException("Only players can execute this.");
+			}
+
+			String[] nodes = c.getConfigValue("permissions", "").split("\\|");
+
+			boolean hasPermission = Arrays.stream(nodes).anyMatch(node -> issuer.hasPermission(node));
+
+			if (!hasPermission) {
+				throw new ConditionFailedException("You don't have permission to execute this command.");
+			}
+		});
+
+		manager.getCommandContexts().registerIssuerOnlyContext(SlabboContextResolver.class, SlabboContextResolver.getContextResolver());
 
 		manager.registerCommand(new SlabboCommand());
 	}
