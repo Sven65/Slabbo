@@ -174,10 +174,11 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-
 		DataUtil.saveShops();
 
-
+		if (shop.commandList != null) {
+			shop.commandList.executeBuyCommands();
+		}
 
 		if (isLimitedShop) {
 			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop));
@@ -253,6 +254,10 @@ public class ShopUserGUI implements Listener {
 		}
 
 		DataUtil.saveShops();
+
+		if (shop.commandList != null) {
+			shop.commandList.executeSellCommands();
+		}
 
 		shopItemClone.setAmount(itemCount);
 

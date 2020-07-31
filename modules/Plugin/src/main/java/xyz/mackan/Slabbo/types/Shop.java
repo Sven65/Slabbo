@@ -48,6 +48,22 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 			return new CommandList(buyCommands, sellCommands);
 		}
+
+		public void executeBuyCommands () {
+			if (buyCommands == null) return;
+
+			buyCommands.forEach(command -> {
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+			});
+		}
+
+		public void executeSellCommands () {
+			if (sellCommands == null) return;
+
+			sellCommands.forEach(command -> {
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+			});
+		}
 	}
 
 
