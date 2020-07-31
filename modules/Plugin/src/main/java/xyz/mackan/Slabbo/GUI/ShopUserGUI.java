@@ -177,7 +177,8 @@ public class ShopUserGUI implements Listener {
 		DataUtil.saveShops();
 
 		if (shop.commandList != null) {
-			shop.commandList.executeBuyCommands();
+			replacementMap.put("newStock", shop.stock);
+			shop.commandList.executeBuyCommands(replacementMap);
 		}
 
 		if (isLimitedShop) {
@@ -255,9 +256,6 @@ public class ShopUserGUI implements Listener {
 
 		DataUtil.saveShops();
 
-		if (shop.commandList != null) {
-			shop.commandList.executeSellCommands();
-		}
 
 		shopItemClone.setAmount(itemCount);
 
@@ -278,6 +276,11 @@ public class ShopUserGUI implements Listener {
 		humanEntity.sendMessage(ChatColor.GREEN+userMessage);
 
 		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
+
+		if (shop.commandList != null) {
+			replacementMap.put("newStock", shop.stock);
+			shop.commandList.executeSellCommands(replacementMap);
+		}
 
 		if (!shop.admin) {
 			Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);

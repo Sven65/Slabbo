@@ -49,19 +49,19 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 			return new CommandList(buyCommands, sellCommands);
 		}
 
-		public void executeBuyCommands () {
+		public void executeBuyCommands (HashMap<String, Object> replacementMap) {
 			if (buyCommands == null) return;
 
 			buyCommands.forEach(command -> {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), LocaleManager.replaceString(command, replacementMap));
 			});
 		}
 
-		public void executeSellCommands () {
+		public void executeSellCommands (HashMap<String, Object> replacementMap) {
 			if (sellCommands == null) return;
 
 			sellCommands.forEach(command -> {
-				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), LocaleManager.replaceString(command, replacementMap));
 			});
 		}
 	}
