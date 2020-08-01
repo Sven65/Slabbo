@@ -25,26 +25,64 @@ public class Conditions {
 			return ShopManager.shops.get(locationString);
 		}
 
-		return null;
+		player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+		throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-a-shop"));
 	}
 
-	public static CommandConditions.Condition<BukkitCommandIssuer> isLookingAtShop () {
-		return (context) -> {
+	public static boolean isPlayer (CommandIssuer issuer) {
+		if(!issuer.isPlayer()) {
+			throw new ConditionFailedException("Only players can execute this.");
+		}
+
+		return true;
+	}
+
+	public static boolean isShopOwner (Shop shop, Player player) {
+		return shop.ownerId.equals(player.getUniqueId());
+	}
+
+	public static void registerConditions (PaperCommandManager manager) {
+		manager.getCommandConditions().addCondition("lookingAtShop", context -> {
 			BukkitCommandIssuer issuer = context.getIssuer();
 
-			if(!issuer.isPlayer()) {
-				throw new ConditionFailedException("Only players can execute this.");
+			isPlayer(issuer);
+
+			Player player = issuer.getPlayer();
+
+			getLookingAtShop(player);
+		});
+
+		manager.getCommandConditions().addCondition("canExecuteOnShop", context -> {
+			BukkitCommandIssuer issuer = context.getIssuer();
+
+			isPlayer(issuer);
+
+			Player player = issuer.getPlayer();
+
+			String permissionNode = context.getConfigValue("othersPerm", "");
+
+			Shop shop = getLookingAtShop(player);
+
+			if (!isShopOwner(shop, player)) {
+				if (!player.hasPermission(permissionNode)) {
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+					throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-shop-owner"));
+				}
 			}
+		});
+
+		manager.getCommandConditions().addCondition("isAdminShop", context -> {
+			BukkitCommandIssuer issuer = context.getIssuer();
+
+			isPlayer(issuer);
 
 			Player player = issuer.getPlayer();
 
 			Shop shop = getLookingAtShop(player);
 
-			if (shop == null) {
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-				throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-a-shop"));
-//				player.sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.general.not-a-shop"));
+			if (!shop.admin) {
+				throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-admin-shop"));
 			}
-		};
+		});
 	}
 }

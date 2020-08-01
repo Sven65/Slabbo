@@ -19,7 +19,7 @@ import java.util.Set;
 public class SlabboContextResolver {
 	static ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
 
-	private Shop shop;
+	public Shop shop;
 
 	SlabboContextResolver (Shop shop) {
 		this.shop = shop;
@@ -44,10 +44,10 @@ public class SlabboContextResolver {
 			Shop shop = getLookingAtShop(player);
 
 			if (shop == null) {
-				player.sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.general.not-a-shop"));
+				//player.sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.general.not-a-shop"));
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 
-				return null;
+				throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-a-shop"));
 			}
 
 			return new SlabboContextResolver(getLookingAtShop(player));

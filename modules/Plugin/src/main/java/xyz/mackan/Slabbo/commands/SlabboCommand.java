@@ -167,19 +167,15 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("admin")
 	@Description("Admin shop commands")
-	@CommandPermission("slabbo.admin.help")
+//	@CommandPermission("slabbo.admin.help")
 	public class SlabboAdminCommand extends BaseCommand {
 
 		@Subcommand("toggle")
 		@Description("Toggles the shop as being an admin shop")
 		@CommandPermission("slabbo.admin.toggle")
-		public void onToggleAdmin (Player player) {
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-				return;
-			}
+		@Conditions("lookingAtShop")
+		public void onToggleAdmin (Player player, SlabboContextResolver slabboContextResolver) {
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.admin = !lookingAtShop.admin;
 
@@ -195,6 +191,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
+
 		@Subcommand("limit")
 		@Description("Commands for setting the shop to have a limited stock")
 		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle|slabbo.admin.limit.time|slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
@@ -203,27 +200,9 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("toggle")
 			@Description("Toggles the admin shop as having limited stock")
 			@CommandPermission("slabbo.admin.limit.toggle")
-			public void onToggleLimit (
-					Player player,
-					@Flags("admin")
-						SlabboContextResolver slabboContext
-			) {
-				if (slabboContext == null) {
-					return;
-				}
-
-				Shop lookingAtShop = getLookingAtShop(player);
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-					return;
-				}
-
-				if (!lookingAtShop.admin) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-					return;
-				}
+			@Conditions("lookingAtShop|isAdminShop")
+			public void onToggleLimit (Player player, SlabboContextResolver slabboContext) {
+				Shop lookingAtShop = slabboContext.shop;
 
 				ShopLimit limit = lookingAtShop.shopLimit;
 
@@ -257,19 +236,9 @@ public class SlabboCommand extends BaseCommand {
 				@Subcommand("buy")
 				@Description("Sets the limited buy stock the shop has")
 				@CommandPermission("slabbo.admin.limit.stock.buy")
-				public void onSetBuyStock (Player player, int stock) {
-					Shop lookingAtShop = getLookingAtShop(player);
-					if (lookingAtShop == null) {
-						player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-a-shop"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-
-					if (!lookingAtShop.admin) {
-						player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-admin-shop"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
+				@Conditions("lookingAtShop|isAdminShop")
+				public void onSetBuyStock (Player player, SlabboContextResolver slabboContextResolver, int stock) {
+					Shop lookingAtShop = slabboContextResolver.shop;
 
 					ShopLimit limit = lookingAtShop.shopLimit;
 
@@ -295,19 +264,9 @@ public class SlabboCommand extends BaseCommand {
 				@Subcommand("sell")
 				@Description("Sets the limited sell stock the shop has")
 				@CommandPermission("slabbo.admin.limit.stock.sell")
-				public void onSetSellStock (Player player, int stock) {
-					Shop lookingAtShop = getLookingAtShop(player);
-					if (lookingAtShop == null) {
-						player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-a-shop"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-
-					if (!lookingAtShop.admin) {
-						player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-admin-shop"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
+				@Conditions("lookingAtShop|isAdminShop")
+				public void onSetSellStock (Player player, SlabboContextResolver slabboContextResolver, int stock) {
+					Shop lookingAtShop = slabboContextResolver.shop;
 
 					ShopLimit limit = lookingAtShop.shopLimit;
 
@@ -335,19 +294,9 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("time")
 			@Description("Sets the time before the shop restocks, in seconds")
 			@CommandPermission("slabbo.admin.limit.time")
-			public void onSetTime (Player player, int time) {
-				Shop lookingAtShop = getLookingAtShop(player);
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-					return;
-				}
-
-				if (!lookingAtShop.admin) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-					return;
-				}
+			@Conditions("lookingAtShop|isAdminShop")
+			public void onSetTime (Player player, SlabboContextResolver slabboContextResolver, int time) {
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				ShopLimit limit = lookingAtShop.shopLimit;
 
@@ -373,27 +322,10 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("destroy")
 	@Description("Destroys a shop")
-	@CommandPermission("slabbo.destroy")
-	public void onDestroyShop(Player player) {
-		Shop lookingAtShop = getLookingAtShop(player);
-		if (lookingAtShop == null) {
-			player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-			player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-			return;
-		}
-
-		boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-		boolean canDestroyOthers = player.hasPermission("slabbo.destroy.others");
-
-		if (!isShopOwner) {
-			if (!canDestroyOthers) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
-		}
+	@CommandPermission("slabbo.destroy.self")
+	@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.destroy.others")
+	public void onDestroyShop(Player player, SlabboContextResolver slabboContextResolver) {
+		Shop lookingAtShop = slabboContextResolver.shop;
 
 		ShopDeletionGUI deletionGUI = new ShopDeletionGUI(lookingAtShop);
 		deletionGUI.openInventory(player);
@@ -466,7 +398,8 @@ public class SlabboCommand extends BaseCommand {
 		@Subcommand("buyprice")
 		@Description("Sets the buying price for the shop")
 		@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.others.buyprice")
-		public void onModifyBuyPrice(Player player, int newBuyingPrice) {
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.buyprice")
+		public void onModifyBuyPrice(Player player, SlabboContextResolver slabboContextResolver, int newBuyingPrice) {
 			if (newBuyingPrice < -1) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.modify.invalid-buy-price"));
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
@@ -474,25 +407,7 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
-
-			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.buyprice");
-
-			if (!isShopOwner) {
-				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-			}
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.buyPrice = newBuyingPrice;
 
@@ -513,7 +428,8 @@ public class SlabboCommand extends BaseCommand {
 		@Subcommand("sellprice")
 		@Description("Sets the selling price for the shop")
 		@CommandPermission("slabbo.modify.self.sellprice|slabbo.modify.others.sellprice")
-		public void onModifySellPrice(Player player, int newSellingPrice) {
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.sellprice")
+		public void onModifySellPrice(Player player, SlabboContextResolver slabboContextResolver, int newSellingPrice) {
 			if (newSellingPrice < -1) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.modify.invalid-sell-price"));
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
@@ -521,25 +437,7 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
-
-			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.sellprice");
-
-			if (!isShopOwner) {
-				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-			}
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.sellPrice = newSellingPrice;
 
@@ -560,7 +458,8 @@ public class SlabboCommand extends BaseCommand {
 		@Subcommand("quantity")
 		@Description("Sets the quantity for the shop")
 		@CommandPermission("slabbo.modify.self.quantity|slabbo.modify.others.quantity")
-		public void onModifyQuantity(Player player, int newQuantity) {
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.quantity")
+		public void onModifyQuantity(Player player, SlabboContextResolver slabboContextResolver, int newQuantity) {
 			if (newQuantity < 0) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.modify.invalid-quantity"));
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
@@ -568,25 +467,7 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
-
-			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.quantity");
-
-			if (!isShopOwner) {
-				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-			}
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.quantity = newQuantity;
 
@@ -607,18 +488,12 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Sets the owner for the shop")
 		@CommandPermission("slabbo.modify.admin.owner")
 		@CommandCompletion("@players")
-		public void onChangeOwner (Player player, OfflinePlayer newOwner) {
+		@Conditions("lookingAtShop")
+		public void onChangeOwner (Player player, SlabboContextResolver slabboContextResolver, OfflinePlayer newOwner) {
 
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			UUID newOwnerID = newOwner.getUniqueId();
-
 
 			lookingAtShop.ownerId = newOwnerID;
 
@@ -636,15 +511,10 @@ public class SlabboCommand extends BaseCommand {
 		@Subcommand("stock")
 		@Description("Sets the stock for the shop")
 		@CommandPermission("slabbo.modify.admin.stock")
-		public void onSetStock (Player player, int newStock) {
+		@Conditions("lookingAtShop")
+		public void onSetStock (Player player, SlabboContextResolver slabboContextResolver, int newStock) {
 
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.stock = newStock;
 
@@ -662,7 +532,8 @@ public class SlabboCommand extends BaseCommand {
 		@Subcommand("stock")
 		@Description("Sets the sellers note for the shop")
 		@CommandPermission("slabbo.modify.self.note|slabbo.modify.others.note")
-		public void onSetNote (Player player, String note) {
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.note")
+		public void onSetNote (Player player, SlabboContextResolver slabboContextResolver, String note) {
 			if (note.equals("")) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.modify.invalid-note"));
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
@@ -670,25 +541,7 @@ public class SlabboCommand extends BaseCommand {
 				return;
 			}
 
-			Shop lookingAtShop = getLookingAtShop(player);
-			if (lookingAtShop == null) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-				return;
-			}
-
-			boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-			boolean canModifyOthers = player.hasPermission("slabbo.modify.others.note");
-
-			if (!isShopOwner) {
-				if (!canModifyOthers) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-			}
+			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.note = note;
 
@@ -844,30 +697,13 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("buy")
 			@Description("Adds a command to the shop which gets ran on buying")
 			@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.others.buy")
-			public void onAddBuyCommand(Player player, String command) {
+			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.edit.others.buy")
+			public void onAddBuyCommand(Player player, SlabboContextResolver slabboContextResolver, String command) {
 				if (command == null) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-command-entered"));
 				}
 
-				Shop lookingAtShop = getLookingAtShop(player);
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-
-				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-
-				boolean canModifyOthers = player.hasPermission("slabbo.shopcommands.edit.others.buy");
-
-				if (!isShopOwner) {
-					if (!canModifyOthers) {
-						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-				}
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				if (lookingAtShop.commandList == null) {
 					lookingAtShop.commandList = new Shop.CommandList();
@@ -885,30 +721,13 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("sell")
 			@Description("Adds a command to the shop which gets ran on selling")
 			@CommandPermission("slabbo.shopcommands.edit.self.sell|slabbo.shopcommands.edit.others.sell")
-			public void onAddSellCommand(Player player, String command) {
+			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.edit.others.sell")
+			public void onAddSellCommand(Player player, SlabboContextResolver slabboContextResolver, String command) {
 				if (command == null) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-command-entered"));
 				}
 
-				Shop lookingAtShop = getLookingAtShop(player);
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-
-				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-
-				boolean canModifyOthers = player.hasPermission("slabbo.shopcommands.edit.others.sell");
-
-				if (!isShopOwner) {
-					if (!canModifyOthers) {
-						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-				}
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.added-command"));
 
@@ -927,7 +746,8 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("buy")
 			@Description("Removes a command from the shop which got ran on buying")
 			@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.others.buy")
-			public void onRemoveBuyCommand(Player player, int index) {
+			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.edit.others.buy")
+			public void onRemoveBuyCommand(Player player, SlabboContextResolver slabboContextResolver, int index) {
 				int newIndex = index - 1;
 
 				if (newIndex < 0) {
@@ -935,26 +755,7 @@ public class SlabboCommand extends BaseCommand {
 					return;
 				}
 
-				Shop lookingAtShop = getLookingAtShop(player);
-
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-
-				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-
-				boolean canEditOthers = player.hasPermission("slabbo.shopcommands.edit.others.buy");
-
-				if (!isShopOwner) {
-					if (!canEditOthers) {
-						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-				}
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				if (lookingAtShop.commandList == null || lookingAtShop.commandList.buyCommands.size() <= 0) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-buy-commands-in-shop"));
@@ -978,7 +779,8 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("sell")
 			@Description("Removes a command from the shop which got ran on selling")
 			@CommandPermission("slabbo.shopcommands.edit.self.sell|slabbo.shopcommands.edit.others.sell")
-			public void onRemoveSellCommand(Player player, int index) {
+			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.edit.others.sell")
+			public void onRemoveSellCommand(Player player, SlabboContextResolver slabboContextResolver, int index) {
 				int newIndex = index - 1;
 
 				if (newIndex < 0) {
@@ -986,26 +788,7 @@ public class SlabboCommand extends BaseCommand {
 					return;
 				}
 
-				Shop lookingAtShop = getLookingAtShop(player);
-
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-
-				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-
-				boolean canEditOthers = player.hasPermission("slabbo.shopcommands.edit.others.sell");
-
-				if (!isShopOwner) {
-					if (!canEditOthers) {
-						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-				}
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				if (lookingAtShop.commandList == null || lookingAtShop.commandList.sellCommands.size() <= 0) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-sell-commands-in-shop"));
@@ -1034,29 +817,10 @@ public class SlabboCommand extends BaseCommand {
 			@Subcommand("buy")
 			@Description("Lists the commands that gets ran when someone buys from the shop")
 			//@Conditions("hasEitherPermission:permissions=slabbo.shopcommands.list.self.buy|slabbo.shopcommands.list.others.buy")
-			@CommandPermission("slabbo.shopcommands.list.self.buy,slabbo.shopcommands.list.others.buy")
-			//@Conditions("lookingAtShop")
-			public void onListBuyCommands (Player player, @Optional String page) {
-				Shop lookingAtShop = getLookingAtShop(player);
-
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-
-				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-
-				boolean canListOthers = player.hasPermission("slabbo.shopcommands.list.others.buy");
-
-				if (!isShopOwner) {
-					if (!canListOthers) {
-						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-				}
+			@CommandPermission("slabbo.shopcommands.list.self.buy")
+			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.list.others.buy")
+			public void onListBuyCommands (Player player, SlabboContextResolver slabboContextResolver, @Optional String page) {
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				if (lookingAtShop.commandList == null || lookingAtShop.commandList.buyCommands.size() <= 0) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-buy-commands-in-shop"));
@@ -1093,28 +857,10 @@ public class SlabboCommand extends BaseCommand {
 
 			@Subcommand("sell")
 			@Description("Lists the commands that gets ran when someone sells to the shop")
-			@CommandPermission("slabbo.shopcommands.list.self.sell|slabbo.shopcommands.list.others.sell")
-			public void onListSellCommands (Player player, @Optional String page) {
-				Shop lookingAtShop = getLookingAtShop(player);
-
-				if (lookingAtShop == null) {
-					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-a-shop"));
-					player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
-					return;
-				}
-
-				boolean isShopOwner = lookingAtShop.ownerId.equals(player.getUniqueId());
-
-				boolean canListOthers = player.hasPermission("slabbo.shopcommands.list.others.sell");
-
-				if (!isShopOwner) {
-					if (!canListOthers) {
-						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-shop-owner"));
-						player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-						return;
-					}
-				}
+			@CommandPermission("slabbo.shopcommands.list.self.sell,slabbo.shopcommands.list.others.sell")
+			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.list.others.sell")
+			public void onListSellCommands (Player player, SlabboContextResolver slabboContextResolver, @Optional String page) {
+				Shop lookingAtShop = slabboContextResolver.shop;
 
 				if (lookingAtShop.commandList == null || lookingAtShop.commandList.sellCommands.size() <= 0) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-buy-commands-in-shop"));

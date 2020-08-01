@@ -42,3 +42,4 @@ acf-core:
   help_detailed_command_format: "<c1>{command}</c1> <c2>{parameters}</c2> <c3>{separator} {description}</c3>"
   help_detailed_parameter_format: "<c2>{syntaxorname}</c2>: <c3>{description}</c3>"
   help_search_header: "<c3>=== </c3><c1>Search results for </c1><c2>{commandprefix}{command} {search}</c2><c3> ===</c3>"
+  error_prefix: "{message}"

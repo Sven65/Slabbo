@@ -198,9 +198,7 @@ public class Slabbo extends JavaPlugin {
 			return SlabboCommandCompletions.getImportFiles();
 		});
 
-		//manager.getCommandConditions().addCondition(Conditions.class, "lookingAtShop", Conditions.isLookingAtShop());
-
-		//manager.getCommandConditions().addCondition("lookingAtShop", Conditions.isLookingAtShop());
+		Conditions.registerConditions(manager);
 
 		manager.getCommandConditions().addCondition("hasEitherPermission", c -> {
 			BukkitCommandIssuer issuer = c.getIssuer();
