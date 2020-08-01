@@ -9,9 +9,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
@@ -28,7 +26,6 @@ import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.Misc;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -104,22 +101,6 @@ public class SlabboCommand extends BaseCommand {
 
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
 
-	boolean shouldReturn () {
-		return true;
-	}
-
-	public Shop getLookingAtShop (Player player) {
-		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
-
-		String locationString = ShopManager.locationToString(lookingAt.getLocation());
-
-		if (ShopManager.shops.containsKey(locationString)) {
-			return ShopManager.shops.get(locationString);
-		}
-
-		return null;
-	}
-
 	@HelpCommand
 	@CatchUnknown
 	public static void onCommand(CommandSender sender, CommandHelp help) {
@@ -167,8 +148,13 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("admin")
 	@Description("Admin shop commands")
-//	@CommandPermission("slabbo.admin.help")
 	public class SlabboAdminCommand extends BaseCommand {
+
+		@HelpCommand
+		@CatchUnknown
+		public void onCommand(CommandSender sender, CommandHelp help) {
+			help.showHelp();
+		}
 
 		@Subcommand("toggle")
 		@Description("Toggles the shop as being an admin shop")
@@ -194,8 +180,14 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("limit")
 		@Description("Commands for setting the shop to have a limited stock")
-		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle|slabbo.admin.limit.time|slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
+//		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle|slabbo.admin.limit.time|slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
 		public class SlabboAdminLimitCommand extends BaseCommand {
+
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
 
 			@Subcommand("toggle")
 			@Description("Toggles the admin shop as having limited stock")
@@ -230,8 +222,14 @@ public class SlabboCommand extends BaseCommand {
 
 			@Subcommand("stock")
 			@Description("Commands for setting the limited stocks")
-			@CommandPermission("slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
+//			@CommandPermission("slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
 			public class SlabboAdminLimitStockCommand extends BaseCommand {
+
+				@HelpCommand
+				@CatchUnknown
+				public void onCommand(CommandSender sender, CommandHelp help) {
+					help.showHelp();
+				}
 
 				@Subcommand("buy")
 				@Description("Sets the limited buy stock the shop has")
@@ -387,17 +385,17 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("modify")
 	@Description("Modifies the shop")
-	@CommandPermission("slabbo.modify.help")
 	public class SlabboModifyCommand extends BaseCommand {
 
 		@HelpCommand
+		@CatchUnknown
 		public void onCommand(CommandSender sender, CommandHelp help) {
 			help.showHelp();
 		}
 
 		@Subcommand("buyprice")
 		@Description("Sets the buying price for the shop")
-		@CommandPermission("slabbo.modify.self.buyprice|slabbo.modify.others.buyprice")
+		@CommandPermission("slabbo.modify.self.buyprice")
 		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.buyprice")
 		public void onModifyBuyPrice(Player player, SlabboContextResolver slabboContextResolver, int newBuyingPrice) {
 			if (newBuyingPrice < -1) {
@@ -427,7 +425,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("sellprice")
 		@Description("Sets the selling price for the shop")
-		@CommandPermission("slabbo.modify.self.sellprice|slabbo.modify.others.sellprice")
+		@CommandPermission("slabbo.modify.self.sellprice")
 		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.sellprice")
 		public void onModifySellPrice(Player player, SlabboContextResolver slabboContextResolver, int newSellingPrice) {
 			if (newSellingPrice < -1) {
@@ -457,7 +455,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("quantity")
 		@Description("Sets the quantity for the shop")
-		@CommandPermission("slabbo.modify.self.quantity|slabbo.modify.others.quantity")
+		@CommandPermission("slabbo.modify.self.quantity")
 		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.quantity")
 		public void onModifyQuantity(Player player, SlabboContextResolver slabboContextResolver, int newQuantity) {
 			if (newQuantity < 0) {
@@ -531,7 +529,7 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("stock")
 		@Description("Sets the sellers note for the shop")
-		@CommandPermission("slabbo.modify.self.note|slabbo.modify.others.note")
+		@CommandPermission("slabbo.modify.self.note")
 		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.note")
 		public void onSetNote (Player player, SlabboContextResolver slabboContextResolver, String note) {
 			if (note.equals("")) {
@@ -562,10 +560,10 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("list")
 	@Description("Commands for listing Slabbo shops")
-	@CommandPermission("slabbo.list.all|slabbo.list.self")
 	public class SlabboListCommand extends BaseCommand {
 
 		@HelpCommand
+		@CatchUnknown
 		public void onCommand(CommandSender sender, CommandHelp help) {
 			help.showHelp();
 		}
@@ -688,15 +686,27 @@ public class SlabboCommand extends BaseCommand {
 
 	@Subcommand("shopcommands")
 	@Description("For adding commands to Slabbo shops")
-//	@CommandPermission("slabbo.shopcommands")
 	public class SlabboShopCommandsCommand extends BaseCommand {
+
+		@HelpCommand
+		@CatchUnknown
+		public void onCommand(CommandSender sender, CommandHelp help) {
+			help.showHelp();
+		}
+
 		@Subcommand("add")
 		@Description("Adds commands to the shop")
-//		@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.self.buyslabbo.shopcommands.edit.others.buy")
 		public class SlabboShopCommandsAddCommand extends BaseCommand {
+
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
+
 			@Subcommand("buy")
 			@Description("Adds a command to the shop which gets ran on buying")
-			@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.others.buy")
+			@CommandPermission("slabbo.shopcommands.edit.self.buy")
 			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.edit.others.buy")
 			public void onAddBuyCommand(Player player, SlabboContextResolver slabboContextResolver, String command) {
 				if (command == null) {
@@ -720,7 +730,7 @@ public class SlabboCommand extends BaseCommand {
 
 			@Subcommand("sell")
 			@Description("Adds a command to the shop which gets ran on selling")
-			@CommandPermission("slabbo.shopcommands.edit.self.sell|slabbo.shopcommands.edit.others.sell")
+			@CommandPermission("slabbo.shopcommands.edit.self.sell")
 			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.edit.others.sell")
 			public void onAddSellCommand(Player player, SlabboContextResolver slabboContextResolver, String command) {
 				if (command == null) {
@@ -741,8 +751,14 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("remove")
 		@Description("Removes commands from the shop")
-//		@CommandPermission("slabbo.commands.edit")
 		public class SlabboShopCommandsRemoveCommand extends BaseCommand {
+
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
+
 			@Subcommand("buy")
 			@Description("Removes a command from the shop which got ran on buying")
 			@CommandPermission("slabbo.shopcommands.edit.self.buy|slabbo.shopcommands.edit.others.buy")
@@ -812,11 +828,16 @@ public class SlabboCommand extends BaseCommand {
 
 		@Subcommand("list")
 		@Description("Lists the commands the shop has")
-//		@CommandPermission("slabbo.commands.list")
 		public class SlabboShopCommandsListCommand extends BaseCommand {
+
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
+
 			@Subcommand("buy")
 			@Description("Lists the commands that gets ran when someone buys from the shop")
-			//@Conditions("hasEitherPermission:permissions=slabbo.shopcommands.list.self.buy|slabbo.shopcommands.list.others.buy")
 			@CommandPermission("slabbo.shopcommands.list.self.buy")
 			@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.shopcommands.list.others.buy")
 			public void onListBuyCommands (Player player, SlabboContextResolver slabboContextResolver, @Optional String page) {

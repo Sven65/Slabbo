@@ -19,8 +19,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class BlockEventListeners implements Listener {
-	SlabboAPI api = (SlabboAPI) Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
-
 	public boolean isLookingAtShop (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 

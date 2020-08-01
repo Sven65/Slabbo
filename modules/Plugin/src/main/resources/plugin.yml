@@ -7,22 +7,42 @@ api-version: 1.13
 depend: [Vault]
 softdepend: [ClearLag, WorldGuard, GriefPrevention]
 permissions:
+  # General permissions
   slabbo.use:
     default: op
     description: Lets you use slab shops
+
   slabbo.create:
     default: op
     description: Lets you create slab shops
+
   slabbo.limit.*:
     default: op
     description: Gives you unlimited shops
-  slabbo.destroy:
+
+  slabbo.destroy.self:
     default: op
     description: Lets you destroy your shops
+
   slabbo.destroy.others:
     default: op
     description: Lets you destroy other peoples shops
+    children:
+      slabbo.destroy.self: true
 
+  slabbo.link:
+    default: op
+    description: Lets you link a shop to a chest
+
+  slabbo.notifyupdate:
+    default: op
+    description: Shows you the update notification when you join
+
+  # Commands
+
+  ## Modification
+
+  ### Self
   slabbo.modify.self.buyprice:
     default: op
     description: Lets you modify the buy price of shops with a command
@@ -45,18 +65,30 @@ permissions:
       slabbo.modify.self.quantity: true
       slabbo.modify.self.note: true
 
+  # ============================================================================== #
+
+  ### Others
+
   slabbo.modify.others.buyprice:
     default: op
     description: Lets you modify the buy price of other peoples shops
+    children:
+      slabbo.modify.self.buyprice: true
+
   slabbo.modify.others.sellprice:
     default: op
     description: Lets you modify the sell price of other peoples shops
+    slabbo.modify.self.sellprice: true
+
   slabbo.modify.others.quantity:
     default: op
     description: Lets you modify the quantity of other peoples shops.
+    slabbo.modify.self.quantity: true
+
   slabbo.modify.others.note:
     default: op
     description: Lets you modify the sellers note of other peoples shops
+    slabbo.modify.self.note: true
 
   slabbo.modify.others.*:
     default: op
@@ -66,6 +98,10 @@ permissions:
       slabbo.modify.others.sellprice: true
       slabbo.modify.others.quantity: true
       slabbo.modify.others.note: true
+
+  # ============================================================================== #
+
+  ### Admin
 
   slabbo.modify.admin.owner:
     default: op
@@ -82,9 +118,17 @@ permissions:
       slabbo.modify.admin.owner: true
       slabbo.modify.admin.stock: true
 
+  # ============================================================================== #
+
+  ## Admin shops
+
   slabbo.admin.toggle:
     default: op
     description: Lets you toggle shops as being admin shops
+
+  # ============================================================================== #
+
+  ### Limits
 
   slabbo.admin.limit.toggle:
     default: op
@@ -125,14 +169,62 @@ permissions:
       slabbo.admin.toggle: true
       slabbo.admin.limit.*: true
 
+  # ============================================================================== #
 
-  slabbo.link:
-    default: op
-    description: Lets you link a shop to a chest
+  ## ShopCommands
 
-  slabbo.notifyupdate:
+  ### Self
+
+  slabbo.shopcommands.edit.self.buy:
     default: op
-    description: Shows you the update notification when you join
+    description: Lets you edit the buy commands of your own shops
+
+
+  slabbo.shopcommands.edit.self.sell:
+    default: op
+    description: Lets you edit the sell commands of your own shops
+
+
+  slabbo.shopcommands.list.self.buy:
+    default: op
+    description: Lets you list the buy commands of your own shops
+
+
+  slabbo.shopcommands.list.self.sell:
+    default: op
+    description: Lets you list the buy commands of your own shops
+
+  ### Others
+
+  slabbo.shopcommands.edit.others.buy:
+    default: op
+    description: Lets you edit the buy commands of other peoples shops
+    children:
+      slabbo.shopcommands.edit.self.buy: true
+
+  slabbo.shopcommands.edit.others.sell:
+    default: op
+    description: Lets you list the buy commands of other peoples shops
+    children:
+      slabbo.shopcommands.edit.self.sell: true
+
+  slabbo.shopcommands.list.others.buy:
+    default: op
+    description: Lets you list the buy commands of other peoples shops
+    children:
+      slabbo.shopcommands.list.self.buy: true
+
+  slabbo.shopcommands.list.others.sell:
+    default: op
+    description: Lets you list the buy commands of other peoples shops
+    children:
+      slabbo.shopcommands.list.self.sell: true
+
+
+
+  # ============================================================================== #
+
+  ## Misc commands
 
   slabbo.save:
     default: op
