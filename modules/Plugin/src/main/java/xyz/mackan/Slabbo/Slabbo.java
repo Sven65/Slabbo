@@ -200,22 +200,6 @@ public class Slabbo extends JavaPlugin {
 
 		Conditions.registerConditions(manager);
 
-		manager.getCommandConditions().addCondition("hasEitherPermission", c -> {
-			BukkitCommandIssuer issuer = c.getIssuer();
-
-			if(!issuer.isPlayer()) {
-				throw new ConditionFailedException("Only players can execute this.");
-			}
-
-			String[] nodes = c.getConfigValue("permissions", "").split("\\|");
-
-			boolean hasPermission = Arrays.stream(nodes).anyMatch(node -> issuer.hasPermission(node));
-
-			if (!hasPermission) {
-				throw new ConditionFailedException("You don't have permission to execute this command.");
-			}
-		});
-
 		manager.getCommandContexts().registerIssuerOnlyContext(SlabboContextResolver.class, SlabboContextResolver.getContextResolver());
 
 		manager.registerCommand(new SlabboCommand());
