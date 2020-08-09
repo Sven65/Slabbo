@@ -262,7 +262,7 @@ public class ShopCreationGUI implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChat (final AsyncPlayerChatEvent e) {
 		if (!e.getPlayer().getUniqueId().equals(waitingPlayerId)) return;
 
