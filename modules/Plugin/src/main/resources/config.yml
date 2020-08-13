@@ -5,7 +5,10 @@
 ########################
 
 # How the hovering items should be displayed
-# Quantity (The amount the shop sells) / Full (A full stack (64 items))
+# Accepts the following values:
+# - Quantity (The amount the shop sells)
+# - Full (A full stack (64 items))
+# - Single (A single item)
 itemdisplay: quantity
 
 # If Slabbo should check for updates

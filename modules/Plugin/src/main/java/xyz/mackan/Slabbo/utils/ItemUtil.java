@@ -74,6 +74,8 @@ public class ItemUtil {
 			if (quantity > 64) quantity = 64;
 
 			clonedItem.setAmount(quantity);
+		} else if (displayType.equalsIgnoreCase("single")) {
+			clonedItem.setAmount(1);
 		} else {
 			clonedItem.setAmount(64);
 		}
