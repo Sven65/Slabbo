@@ -153,4 +153,11 @@ public interface SlabboAPI {
 	 * @return
 	 */
 	boolean isInteractionOffHand(PlayerInteractEvent e);
+
+	/**
+	 * Gets if the block is a barrier block
+	 * @param block
+	 * @return
+	 */
+	boolean isBarrier (Block block);
 }

@@ -1,9 +1,6 @@
 package xyz.mackan.Slabbo.utils;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -30,9 +27,12 @@ public class ItemUtil {
 		if (block == null) return 0;
 
 		boolean stairsEnabled = Slabbo.getInstance().getConfig().getBoolean("stairs", true);
-		boolean isUpsideDownStair = api.isUpsideDownStair(block);
+		boolean barriersEnabled = Slabbo.getInstance().getConfig().getBoolean("barriershops", true);
 
-		if (stairsEnabled && isUpsideDownStair) {
+		boolean isUpsideDownStair = api.isUpsideDownStair(block);
+		boolean isBarrier = block.getType() == Material.BARRIER;
+
+		if ((stairsEnabled && isUpsideDownStair) || (barriersEnabled && isBarrier)) {
 			return 1.0;
 		}
 
@@ -76,6 +76,8 @@ public class ItemUtil {
 			clonedItem.setAmount(quantity);
 		} else if (displayType.equalsIgnoreCase("single")) {
 			clonedItem.setAmount(1);
+		} else if (displayType.equalsIgnoreCase("none")) {
+			return;
 		} else {
 			clonedItem.setAmount(64);
 		}

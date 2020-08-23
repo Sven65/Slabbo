@@ -154,7 +154,7 @@ public class PlayerInteractListener implements Listener {
 		boolean isLinked = ChestLinkManager.isChestLinked(clickedBlock);
 
 		if (isLinked) {
-			player.sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.chestlink.already-linked"));
+			player.sendMessage(ChatColor.DARK_RED + LocaleManager.getString("error-message.chestlink.already-linked"));
 			ChestLinkManager.pendingLinks.remove(player.getUniqueId());
 
 			player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);

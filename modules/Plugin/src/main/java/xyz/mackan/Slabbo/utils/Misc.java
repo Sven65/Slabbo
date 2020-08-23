@@ -2,6 +2,7 @@ package xyz.mackan.Slabbo.utils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.Inventory;
@@ -44,9 +45,14 @@ public class Misc {
 		boolean isSlab = api.isSlab(block);
 
 		boolean stairsEnabled = Slabbo.getInstance().getConfig().getBoolean("stairs", true);
+
+		boolean barriersEnabled = Slabbo.getInstance().getConfig().getBoolean("barriershops", true);
+
 		boolean isUpsideDownStair = api.isUpsideDownStair(block);
 
-		boolean validBlock = isSlab || (stairsEnabled && isUpsideDownStair);
+		boolean isBarrier = block.getType() == Material.BARRIER;
+
+		boolean validBlock = isSlab || (stairsEnabled && isUpsideDownStair) || (barriersEnabled && isBarrier);
 
 		return validBlock;
 	}

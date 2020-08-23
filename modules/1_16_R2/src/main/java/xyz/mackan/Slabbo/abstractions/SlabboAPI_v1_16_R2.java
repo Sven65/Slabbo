@@ -2,6 +2,7 @@ package xyz.mackan.Slabbo.abstractions;
 
 import net.minecraft.server.v1_16_R2.LocaleLanguage;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.data.Bisected;
@@ -171,5 +172,9 @@ public class SlabboAPI_v1_16_R2 implements SlabboAPI {
 
 	public boolean isInteractionOffHand(PlayerInteractEvent e) {
 		return e.getHand() == EquipmentSlot.OFF_HAND;
+	}
+
+	public boolean isBarrier (Block block) {
+		return block.getType() == Material.BARRIER;
 	}
 }

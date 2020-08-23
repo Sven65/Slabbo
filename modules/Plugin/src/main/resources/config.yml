@@ -9,6 +9,7 @@
 # - Quantity (The amount the shop sells)
 # - Full (A full stack (64 items))
 # - Single (A single item)
+# - None (No item display)
 itemdisplay: quantity
 
 # If Slabbo should check for updates
@@ -16,6 +17,9 @@ checkupdates: true
 
 # If users should be able to use upside down stairs as shops
 stairs: true
+
+# If barrier blocks can be used as shops
+barriershops: true
 
 punchRestock:
   # If a user can punch a shop with the item to restock it
