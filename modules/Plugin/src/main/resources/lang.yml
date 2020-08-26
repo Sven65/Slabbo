@@ -88,6 +88,8 @@ general:
     next-page: Next Page
     previous-page: Previous Page
 
+    unknown-user: Unknown User
+
 
     buy-price: Buy price
     sell-price: Sell price

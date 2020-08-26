@@ -230,7 +230,9 @@ public class GUIItems {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		replacementMap.put("owner", owner.getName());
+		String ownerName = Misc.getValueOrDefault(owner.getName(), LocaleManager.getString("general.general.unknown-user"));
+
+		replacementMap.put("owner", ownerName);
 		replacementMap.put("item", shop.item.getType());
 		replacementMap.put("quantity", shop.quantity);
 		replacementMap.put("buyPrice", shop.buyPrice);

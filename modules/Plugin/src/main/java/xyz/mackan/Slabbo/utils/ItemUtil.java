@@ -69,6 +69,10 @@ public class ItemUtil {
 
 		String displayType = Slabbo.getInstance().getConfig().getString("itemdisplay", "quantity");
 
+		if (clonedItem.getType() == Material.AIR) {
+			return;
+		}
+
 		if (displayType.equalsIgnoreCase("quantity")) {
 			if (quantity < 1) quantity = 1;
 			if (quantity > 64) quantity = 64;
@@ -82,9 +86,11 @@ public class ItemUtil {
 			clonedItem.setAmount(64);
 		}
 
-		meta.setDisplayName("Slabbo Item "+ ShopManager.locationToString(location));
+		if (clonedItem.hasItemMeta() && meta != null) {
+			meta.setDisplayName("Slabbo Item " + ShopManager.locationToString(location));
 
-		clonedItem.setItemMeta(meta);
+			clonedItem.setItemMeta(meta);
+		}
 
 		Item itemEnt = location.getWorld().dropItem(dropLocation, clonedItem);
 
