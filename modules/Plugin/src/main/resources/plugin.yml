@@ -192,7 +192,7 @@ permissions:
 
   slabbo.shopcommands.list.self.sell:
     default: op
-    description: Lets you list the buy commands of your own shops
+    description: Lets you list the sell commands of your own shops
 
   ### Others
 
@@ -204,7 +204,7 @@ permissions:
 
   slabbo.shopcommands.edit.others.sell:
     default: op
-    description: Lets you list the buy commands of other peoples shops
+    description: Lets you edit the sell commands of other peoples shops
     children:
       slabbo.shopcommands.edit.self.sell: true
 
@@ -216,7 +216,7 @@ permissions:
 
   slabbo.shopcommands.list.others.sell:
     default: op
-    description: Lets you list the buy commands of other peoples shops
+    description: Lets you list the sell commands of other peoples shops
     children:
       slabbo.shopcommands.list.self.sell: true
 
