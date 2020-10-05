@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.*;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -101,6 +102,9 @@ public class ShopAdminGUI implements Listener {
 
 		PlayerInventory pInv = player.getInventory();
 
+		//off hand go brrrrr
+		ItemStack oInv = player.getInventory().getItemInOffHand();
+
 		int itemCount = 0;
 
 		ItemStack[] itemStacks = pInv.getContents();
@@ -133,6 +137,13 @@ public class ShopAdminGUI implements Listener {
 		shopItemClone.setAmount(tempTransferRate);
 
 		pInv.removeItem(shopItemClone);
+		//account for off hand if it is shop item
+		if (!(oInv == null || oInv.getType() == Material.AIR)){
+			if (oInv == shop.item){
+				oInv.setAmount(0);
+			}
+		}
+
 
 		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
