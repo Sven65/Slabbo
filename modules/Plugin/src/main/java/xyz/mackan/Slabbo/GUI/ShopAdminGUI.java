@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.GUI;
 
 import org.bukkit.*;
+
 import org.bukkit.block.Block;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -19,6 +20,7 @@ import xyz.mackan.Slabbo.GUI.items.AdminGUIItems;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
@@ -31,6 +33,8 @@ import java.util.UUID;
 
 public class ShopAdminGUI implements Listener {
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+	private static SlabboAPI slabboAPI = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
+
 
 
 	private Shop shop;
@@ -101,7 +105,20 @@ public class ShopAdminGUI implements Listener {
 
 		PlayerInventory pInv = player.getInventory();
 
+		//off hand go brrrrr
+		ItemStack offhandItem = slabboAPI.getItemInOffHand(pInv);
+
 		int itemCount = 0;
+		int offhandCount = 0;
+
+		if (offhandItem != null && offhandItem.getType() != Material.AIR) {
+			ItemStack clonedOffhand = offhandItem.clone();
+			clonedOffhand.setAmount(1);
+
+			if (clonedOffhand.equals(shop.item)) {
+				offhandCount = offhandItem.getAmount();
+			}
+		}
 
 		ItemStack[] itemStacks = pInv.getContents();
 
@@ -113,6 +130,8 @@ public class ShopAdminGUI implements Listener {
 				itemCount += inventoryItem.getAmount();
 			}
 		}
+
+		itemCount -= offhandCount;
 
 		int tempTransferRate = Math.min(itemCount, transferRate);
 
