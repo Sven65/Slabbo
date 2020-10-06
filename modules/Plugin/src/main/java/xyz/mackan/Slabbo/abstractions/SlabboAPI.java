@@ -6,6 +6,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import xyz.mackan.Slabbo.types.SlabType;
 
 import java.util.Collection;
@@ -24,6 +25,13 @@ public interface SlabboAPI {
 	 * @return The ItemStack the user's holding
 	 */
 	ItemStack getInteractionItemInHand (PlayerInteractEvent e);
+
+	/**
+	 * Gets the item in the players offhand
+	 * @param inv
+	 * @return The ItemStack the user's holding in their offhand
+	 */
+	ItemStack getItemInOffHand (PlayerInventory inv);
 
 	/**
 	 * Gets if the block is a slab

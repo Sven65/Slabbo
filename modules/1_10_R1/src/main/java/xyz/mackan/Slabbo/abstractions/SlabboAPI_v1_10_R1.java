@@ -39,6 +39,8 @@ public class SlabboAPI_v1_10_R1 implements SlabboAPI {
 		return e.getItem();
 	}
 
+	public ItemStack getItemInOffHand (org.bukkit.inventory.PlayerInventory inv) { return inv.getItemInOffHand(); }
+
 	public boolean isSlab (Block block) {
 		List<Material> slabMaterials = Arrays.asList(
 				Material.STEP,
@@ -189,4 +191,9 @@ public class SlabboAPI_v1_10_R1 implements SlabboAPI {
 	public boolean isInteractionOffHand(PlayerInteractEvent e) {
 		return e.getHand() == EquipmentSlot.OFF_HAND;
 	}
+
+	public boolean isBarrier (Block block) {
+		return block.getType() == Material.BARRIER;
+	}
+
 }

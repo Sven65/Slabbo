@@ -40,6 +40,9 @@ public class SlabboAPI_v1_16_R2 implements SlabboAPI {
 		return e.getItem();
 	}
 
+	public ItemStack getItemInOffHand (org.bukkit.inventory.PlayerInventory inv) { return inv.getItemInOffHand(); }
+
+
 	@Override
 	public boolean isSlab (Block block) {
 		BlockData blockData = block.getBlockData();

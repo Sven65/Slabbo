@@ -1,6 +1,9 @@
 package xyz.mackan.Slabbo.abstractions;
 
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.TileEntity;
+import net.minecraft.server.v1_8_R1.TileEntityChest;
+import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
@@ -39,6 +43,8 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 	public ItemStack getInteractionItemInHand (PlayerInteractEvent e) {
 		return e.getItem();
 	}
+
+	public ItemStack getItemInOffHand (org.bukkit.inventory.PlayerInventory inv) { return null; }
 
 	public boolean isSlab (Block block) {
 		List<Material> slabMaterials = Arrays.asList(
@@ -191,5 +197,9 @@ public class SlabboAPI_v1_8_R1 implements SlabboAPI {
 
 	public boolean isInteractionOffHand(PlayerInteractEvent e) {
 		return false;
+	}
+
+	public boolean isBarrier (Block block) {
+		return block.getType() == Material.BARRIER;
 	}
 }
