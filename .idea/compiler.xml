@@ -7,7 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Slabbo-1_12_R1" />
-        <module name="Slabbo-1_13_R1" />
+        <module name="Slabbo-1_16_R2" />
         <module name="Slabbo-1_11_R1" />
         <module name="Slabbo-1_9_R2" />
         <module name="Slabbo-1_9_R1" />
@@ -17,9 +17,10 @@
         <module name="Slabbo-1_8_R2" />
         <module name="Slabbo-1_8_R1" />
         <module name="Slabbo-1_15_R1" />
+        <module name="Slabbo-1_16_R3" />
         <module name="Slabbo-1_14_R1" />
-        <module name="Slabbo-1_16_R2" />
         <module name="Slabbo-1_13_R2" />
+        <module name="Slabbo-1_13_R1" />
         <module name="Slabbo-plugin" />
       </profile>
       <profile name="Annotation profile for Slabbo" enabled="true">
@@ -40,6 +41,7 @@
       <module name="Slabbo-1_15_R1" target="8" />
       <module name="Slabbo-1_16_R1" target="8" />
       <module name="Slabbo-1_16_R2" target="8" />
+      <module name="Slabbo-1_16_R3" target="8" />
       <module name="Slabbo-1_8_R1" target="8" />
       <module name="Slabbo-1_8_R2" target="8" />
       <module name="Slabbo-1_8_R3" target="8" />
