@@ -94,9 +94,7 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 		chest.update();
 	}
 
-	public boolean getNoPickup (Item item) {
-		ItemStack itemStack = item.getItemStack();
-
+	public boolean getNoPickup (ItemStack itemStack) {
 		int noPickup = ItemUtil.getContainerIntValue(itemStack, AttributeKey.NO_PICKUP.getKey());
 
 		if (noPickup <= -1) {
@@ -108,12 +106,22 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 		return noPickup == 1;
 	}
 
-	public boolean getNoDespawn (Item item) {
+	public boolean getNoPickup (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
+		return getNoPickup(itemStack);
+	}
+
+	public boolean getNoDespawn (ItemStack itemStack) {
 		int noDespawn = ItemUtil.getContainerIntValue(itemStack, AttributeKey.NO_DESPAWN.getKey());
 
 		return noDespawn == 1;
+	}
+
+	public boolean getNoDespawn (Item item) {
+		ItemStack itemStack = item.getItemStack();
+
+		return getNoDespawn(itemStack);
 	}
 
 	public boolean getNoMerge (Item item) {
@@ -154,6 +162,8 @@ public class SlabboAPI_v1_16_R1 implements SlabboAPI {
 
 		item.setItemStack(ItemUtil.setContainerStringValue(itemStack, AttributeKey.SHOP_LOCATION.getKey(), ShopManager.locationToString(location)));
 	}
+
+	public boolean isSlabboItem (ItemStack itemStack) { return getNoPickup(itemStack) && getNoDespawn(itemStack); }
 
 	public boolean isSlabboItem (Item item) {
 		return getNoPickup(item) && getNoDespawn(item);

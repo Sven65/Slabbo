@@ -79,6 +79,13 @@ public interface SlabboAPI {
 	void setChestName (Block chestBlock, String name);
 
 	/**
+	 * Checks if the ItemStack has tags for Slabbo
+	 * @param itemStack
+	 * @return If the itemstack is a slabbo item
+	 */
+	boolean isSlabboItem (ItemStack itemStack);
+
+	/**
 	 * Checks if the Item entity has tags for Slabbo
 	 * @param item
 	 * @return If the entity is a slabbo item
@@ -86,11 +93,25 @@ public interface SlabboAPI {
 	boolean isSlabboItem (Item item);
 
 	/**
+	 * Gets if the item stack has the Slabbo tag to prevent it from being picked up
+	 * @param item
+	 * @return
+	 */
+	boolean getNoPickup (ItemStack item);
+
+	/**
 	 * Gets if the item has the Slabbo tag to prevent it from being picked up
 	 * @param item
 	 * @return
 	 */
 	boolean getNoPickup (Item item);
+
+	/**
+	 * Gets if the item stack has the Slabbo tag to prevent it from being despawned
+	 * @param item
+	 * @return
+	 */
+	boolean getNoDespawn (ItemStack item);
 
 	/**
 	 * Gets if the item has the Slabbo tag to prevent it from being despawned

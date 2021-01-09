@@ -116,16 +116,24 @@ public class SlabboAPI_v1_8_R3 implements SlabboAPI {
 		chest.update();
 	}
 
+	public boolean getNoPickup (ItemStack itemStack) {
+		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_PICKUP.getKey()).equals("1");
+	}
+
 	public boolean getNoPickup (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_PICKUP.getKey()).equals("1");
+		return getNoPickup(itemStack);
+	}
+
+	public boolean getNoDespawn (ItemStack itemStack) {
+		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_DESPAWN.getKey()).equals("1");
 	}
 
 	public boolean getNoDespawn (Item item) {
 		ItemStack itemStack = item.getItemStack();
 
-		return ItemUtil.getLoreValue(itemStack, MetaKey.NO_DESPAWN.getKey()).equals("1");
+		return getNoDespawn(itemStack);
 	}
 
 	public boolean getNoMerge (Item item) {
@@ -168,6 +176,8 @@ public class SlabboAPI_v1_8_R3 implements SlabboAPI {
 
 		item.setItemStack(ItemUtil.setLoreValue(itemStack, MetaKey.SHOP_LOCATION.getKey(), ShopManager.locationToString(location)));
 	}
+
+	public boolean isSlabboItem (ItemStack itemStack) { return getNoPickup(itemStack) && getNoDespawn(itemStack); }
 
 	public boolean isSlabboItem (Item item) {
 		return getNoPickup(item) && getNoDespawn(item);
