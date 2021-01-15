@@ -142,6 +142,10 @@ public class Slabbo extends JavaPlugin {
 		if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
 			PluginSupport.EnabledPlugins.griefprevention = true;
 		}
+
+		if (getServer().getPluginManager().getPlugin("HoloDropsX") != null) {
+			PluginSupport.EnabledPlugins.holoDropsX = true;
+		}
 	}
 
 	private void checkUpdates () {

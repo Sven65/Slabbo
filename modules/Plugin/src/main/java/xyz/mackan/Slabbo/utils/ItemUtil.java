@@ -12,6 +12,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.manager.ShopManager;
+import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.types.SlabType;
 
 import java.util.*;
@@ -88,6 +89,14 @@ public class ItemUtil {
 
 		if (clonedItem.hasItemMeta() && meta != null) {
 			meta.setDisplayName("Slabbo Item " + ShopManager.locationToString(location));
+
+			if (PluginSupport.EnabledPlugins.holoDropsX) {
+				ArrayList<String> lore = new ArrayList<String>();
+
+				lore.add("Display Item");
+
+				meta.setLore(Arrays.asList("Display Item"));
+			}
 
 			clonedItem.setItemMeta(meta);
 		}
