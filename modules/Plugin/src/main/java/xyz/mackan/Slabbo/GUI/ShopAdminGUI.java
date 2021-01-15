@@ -24,6 +24,7 @@ import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
+import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -57,19 +58,27 @@ public class ShopAdminGUI implements Listener {
 	}
 
 	public void initializeItems (Player humanEntity) {
+		boolean disableShops = Slabbo.getInstance().getConfig().getBoolean("disableShops", false);
+
 		ItemStack shopItem = shop.item.clone();
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
-		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
-		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
-		inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
+
+
+		if (!disableShops) {
+			inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
+			inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
+			inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
+
+			inv.setItem(6, GUIItems.getUserInfoItem(shop));
+			inv.setItem(7, AdminGUIItems.getModifyItem());
+			inv.setItem(8, AdminGUIItems.getViewAsCustomerItem());
+		}
 
 		inv.setItem(4, shopItem);
 
-		inv.setItem(6, GUIItems.getUserInfoItem(shop));
-		inv.setItem(7, AdminGUIItems.getModifyItem());
-		inv.setItem(8, AdminGUIItems.getViewAsCustomerItem());
+		if (disableShops) return;
 
 		if (!Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) return;
 
@@ -293,6 +302,9 @@ public class ShopAdminGUI implements Listener {
 	public void onInventoryClick (final InventoryClickEvent e) {
 		if (!e.getInventory().equals(inv)) return;
 		e.setCancelled(true);
+
+		if (Slabbo.getInstance().getConfig().getBoolean("disableShops", false)) return;
+
 
 		ItemStack clickedItem = e.getCurrentItem();
 

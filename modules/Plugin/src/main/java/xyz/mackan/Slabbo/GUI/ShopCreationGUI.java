@@ -113,15 +113,20 @@ public class ShopCreationGUI implements Listener {
 	}
 
 	public void initializeStage2 () {
+		boolean disableShops = Slabbo.getInstance().getConfig().getBoolean("disableShops", false);
+
 		clearShopInv();
 
+
 		inv.setItem(0, shopItem);
-		inv.setItem(1, GUIItems.getSellersNoteItem(sellersNote));
 
+		if (!disableShops) {
+			inv.setItem(1, GUIItems.getSellersNoteItem(sellersNote));
 
-		inv.setItem(3, GUIItems.getBuyPriceItem(buyPrice));
-		inv.setItem(4, GUIItems.getSellPriceItem(sellPrice));
-		inv.setItem(5, GUIItems.getAmountItem(quantity));
+			inv.setItem(3, GUIItems.getBuyPriceItem(buyPrice));
+			inv.setItem(4, GUIItems.getSellPriceItem(sellPrice));
+			inv.setItem(5, GUIItems.getAmountItem(quantity));
+		}
 
 		inv.setItem(7, GUIItems.getConfirmItem(ShopManager.locationToString(slabLocation)));
 		inv.setItem(8, GUIItems.getCancelItem());

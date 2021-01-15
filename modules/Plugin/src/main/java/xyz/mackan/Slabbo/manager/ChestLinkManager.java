@@ -89,6 +89,10 @@ public class ChestLinkManager {
 	}
 
 	public static void removeShopLink (Shop shop) {
+		if (shop.linkedChestLocation.isEmpty()) return;
+
+		if (!links.containsKey(shop.linkedChestLocation)) return;
+
 		links.remove(shop.linkedChestLocation);
 
 		Location blockLocation = ShopManager.fromString(shop.linkedChestLocation);

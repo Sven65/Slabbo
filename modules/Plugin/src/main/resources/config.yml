@@ -29,6 +29,9 @@ punchRestock:
   # all matching items in their inventory
   bulk: true
 
+# If the shop functionality should be disabled
+disableShops: false
+
 ########################
 #     Chest links      #
 ########################

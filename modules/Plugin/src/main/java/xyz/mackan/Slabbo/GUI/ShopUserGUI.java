@@ -40,6 +40,7 @@ public class ShopUserGUI implements Listener {
 	public void initializeItems (Player player) {
 		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
 
+
 		ItemStack shopItem = shop.item.clone();
 
 		shopItem.setAmount(Math.max(shop.quantity, 1));
@@ -62,6 +63,7 @@ public class ShopUserGUI implements Listener {
 
 		inv.setItem(4, shopItem);
 
+		if (Slabbo.getInstance().getConfig().getBoolean("disableShops", false)) return;
 
 		inv.setItem(6, GUIItems.getSellersNoteItem(shop.note));
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance(player)));

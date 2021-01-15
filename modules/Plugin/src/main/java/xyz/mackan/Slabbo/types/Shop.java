@@ -87,7 +87,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	//public UUID droppedItemId;
 
-	public String linkedChestLocation;
+	public String linkedChestLocation = "";
 
 	public ShopLimit shopLimit = null;
 
