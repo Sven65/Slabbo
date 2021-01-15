@@ -56,6 +56,8 @@ public class ShopManager {
 			shopsByOwnerId.put(shop.ownerId, shopList);
 		}
 
+		ChestLinkManager.removeShopLink(shop);
+
 		limitedShops.remove(locationString);
 	}
 

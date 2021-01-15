@@ -87,4 +87,14 @@ public class ChestLinkManager {
 
 		return ShopManager.shops.get(cachedShop.getLocationString());
 	}
+
+	public static void removeShopLink (Shop shop) {
+		links.remove(shop.linkedChestLocation);
+
+		Location blockLocation = ShopManager.fromString(shop.linkedChestLocation);
+
+		Block chestBlock = blockLocation.getBlock();
+
+		setChestName(chestBlock, null);
+	}
 }
