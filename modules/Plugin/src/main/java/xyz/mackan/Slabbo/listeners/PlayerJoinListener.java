@@ -24,19 +24,21 @@ public class PlayerJoinListener implements Listener {
 
 		if(!ShopManager.shopsByOwnerId.containsKey(userId)) return;
 
-		List<Shop> shops = ShopManager.shopsByOwnerId.get(userId);
+		if (!Slabbo.getInstance().getConfig().getBoolean("disableShops", false)) {
+			List<Shop> shops = ShopManager.shopsByOwnerId.get(userId);
 
-		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		for (Shop shop : shops) {
-			if (shop.admin) continue;
+			for (Shop shop : shops) {
+				if (shop.admin) continue;
 
-			if (shop.stock == 0) {
-				replacementMap.put("location", ShopManager.locationToString(shop.location));
-				replacementMap.put("item", NameUtil.getName(shop.item));
+				if (shop.stock == 0) {
+					replacementMap.put("location", ShopManager.locationToString(shop.location));
+					replacementMap.put("item", NameUtil.getName(shop.item));
 
 
-				player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
+					player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
+				}
 			}
 		}
 
