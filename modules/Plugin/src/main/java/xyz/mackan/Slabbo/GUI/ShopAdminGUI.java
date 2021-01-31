@@ -117,8 +117,13 @@ public class ShopAdminGUI implements Listener {
 		//off hand go brrrrr
 		ItemStack offhandItem = slabboAPI.getItemInOffHand(pInv);
 
+		// Armor slots too!
+		ItemStack[] armorItems = pInv.getArmorContents();
+
 		int itemCount = 0;
 		int offhandCount = 0;
+
+		int armorCount = 0;
 
 		if (offhandItem != null && offhandItem.getType() != Material.AIR) {
 			ItemStack clonedOffhand = offhandItem.clone();
@@ -126,6 +131,17 @@ public class ShopAdminGUI implements Listener {
 
 			if (clonedOffhand.equals(shop.item)) {
 				offhandCount = offhandItem.getAmount();
+			}
+		}
+
+		if (armorItems.length > 0) {
+			for (ItemStack armorItem : armorItems) {
+				if (armorItem == null || armorItem.getType() == Material.AIR) continue;
+				ItemStack clonedItem = armorItem.clone();
+				clonedItem.setAmount(1);
+				if (clonedItem.equals(shop.item)) {
+					armorCount += armorItem.getAmount();
+				}
 			}
 		}
 
@@ -141,6 +157,7 @@ public class ShopAdminGUI implements Listener {
 		}
 
 		itemCount -= offhandCount;
+		itemCount -= armorCount;
 
 		int tempTransferRate = Math.min(itemCount, transferRate);
 
