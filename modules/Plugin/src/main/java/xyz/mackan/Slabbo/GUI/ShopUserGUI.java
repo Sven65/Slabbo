@@ -128,27 +128,29 @@ public class ShopUserGUI implements Listener {
 		} else {
 			int maxStackSize = slabboAPI.getMaxStack(shopItemClone);
 
-			int totalItems = itemCount;
+			int stacks = (int)Math.floor(itemCount / maxStackSize);
+			int lastStack = itemCount % maxStackSize;
 
-			int totalStacks = (totalItems / maxStackSize + (totalItems % maxStackSize));
+			//int totalStacks = (totalItems / maxStackSize + (totalItems % maxStackSize));
 
 
-			for (int i = 0;i<totalStacks;i++) {
+			for (int i = 0;i<stacks;i++) {
 				int size = maxStackSize;
-
-				if (totalItems < maxStackSize) {
-					size = totalItems;
-				}
 
 				ItemStack clonedStack = shop.item.clone();
 				clonedStack.setAmount(size);
 				stacksToAdd.add(clonedStack);
+			}
 
-				totalItems -= maxStackSize;
+			if (lastStack > 0) {
+				ItemStack clonedStack = shop.item.clone();
+				clonedStack.setAmount(lastStack);
+				stacksToAdd.add(clonedStack);
 			}
 		}
 
-		HashMap<Integer, ItemStack> leftovers = pInv.addItem((ItemStack[]) stacksToAdd.toArray());
+		ItemStack[] stackArray = stacksToAdd.toArray(new ItemStack[stacksToAdd.size()]);
+		HashMap<Integer, ItemStack> leftovers = pInv.addItem(stackArray);
 
 		// TODO: Make this do a dry run to see if the player can acutally get all the items
 		int leftoverCount = leftovers
