@@ -13,16 +13,19 @@ import org.bukkit.inventory.PlayerInventory;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ShopUserGUI implements Listener {
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
-
+	SlabboAPI slabboAPI = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
 	private Shop shop;
 	private Inventory inv;
@@ -111,13 +114,41 @@ public class ShopUserGUI implements Listener {
 			return;
 		}
 
+		boolean sellOversized = Slabbo.getInstance().getConfig().getBoolean("sellOversized", false);
+
 		PlayerInventory pInv = humanEntity.getInventory();
+
+		List<ItemStack> stacksToAdd = new ArrayList<ItemStack>();
 
 		ItemStack shopItemClone = shop.item.clone();
 
-		shopItemClone.setAmount(itemCount);
+		if (sellOversized) {
+			shopItemClone.setAmount(itemCount);
+			stacksToAdd.add(shopItemClone);
+		} else {
+			int maxStackSize = slabboAPI.getMaxStack(shopItemClone);
 
-		HashMap<Integer, ItemStack> leftovers = pInv.addItem(shopItemClone);
+			int totalItems = itemCount;
+
+			int totalStacks = (totalItems / maxStackSize + (totalItems % maxStackSize));
+
+
+			for (int i = 0;i<totalStacks;i++) {
+				int size = maxStackSize;
+
+				if (totalItems < maxStackSize) {
+					size = totalItems;
+				}
+
+				ItemStack clonedStack = shop.item.clone();
+				clonedStack.setAmount(size);
+				stacksToAdd.add(clonedStack);
+
+				totalItems -= maxStackSize;
+			}
+		}
+
+		HashMap<Integer, ItemStack> leftovers = pInv.addItem((ItemStack[]) stacksToAdd.toArray());
 
 		// TODO: Make this do a dry run to see if the player can acutally get all the items
 		int leftoverCount = leftovers

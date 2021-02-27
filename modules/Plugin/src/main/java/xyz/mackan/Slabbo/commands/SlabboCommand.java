@@ -12,8 +12,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -100,6 +102,7 @@ public class SlabboCommand extends BaseCommand {
 	}
 
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+	SlabboAPI slabboAPI = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
 	@HelpCommand
 	@CatchUnknown
@@ -131,6 +134,18 @@ public class SlabboCommand extends BaseCommand {
 
 
 		player.sendMessage("Slabbo "+LocaleManager.getString("general.general.reloaded")+"!");
+	}
+
+	@Subcommand("debug")
+	@Description("Debugs slabbo")
+	@CommandPermission("slabbo.info")
+	public void onDebug (Player player) {
+		ItemStack item = player.getInventory().getItemInMainHand();
+
+		String itemName = slabboAPI.getItemName(item);
+		int maxSize = slabboAPI.getMaxStack(item);
+
+		player.sendMessage(String.format("Max stack size of item %s is %d items.", itemName, maxSize));
 	}
 
 	@Subcommand("info")

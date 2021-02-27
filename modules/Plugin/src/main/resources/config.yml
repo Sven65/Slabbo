@@ -21,6 +21,11 @@ stairs: true
 # If barrier blocks can be used as shops
 barriershops: true
 
+# If shops can add in oversized stacks
+# I.e, a regular stack of pickaxes can only have one item,
+# an oversized stack can have 64 items.
+sellOversized: false
+
 punchRestock:
   # If a user can punch a shop with the item to restock it
   single: true

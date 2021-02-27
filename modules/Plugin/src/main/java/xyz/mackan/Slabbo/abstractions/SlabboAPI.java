@@ -20,6 +20,13 @@ public interface SlabboAPI {
 	String getItemName (ItemStack itemStack);
 
 	/**
+	 * Gets the maximum stack size for an item
+	 * @param itemStack
+	 * @return The max stack size for the item
+	 */
+	int getMaxStack (ItemStack itemStack);
+
+	/**
 	 * Gets the item a user is holding in their main hand when interacting
 	 * @param e
 	 * @return The ItemStack the user's holding

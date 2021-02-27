@@ -2,6 +2,7 @@ package xyz.mackan.Slabbo.abstractions;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 public class SlabboItemAPI_v1_8_R1 implements SlabboItemAPI {

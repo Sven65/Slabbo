@@ -33,6 +33,12 @@ public class SlabboAPI_v1_14_R1 implements SlabboAPI {
 		return LocaleLanguage.a().a(nmsStack.getItem().getName());
 	}
 
+	public int getMaxStack (ItemStack itemStack) {
+		net.minecraft.server.v1_14_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
+
+		return nmsStack.getMaxStackSize();
+	}
+
 	public ItemStack getInteractionItemInHand (PlayerInteractEvent e) {
 		return e.getItem();
 	}

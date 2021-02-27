@@ -32,6 +32,12 @@ public class SlabboAPI_v1_16_R3 implements SlabboAPI {
 		return LocaleLanguage.a().a(nmsStack.getItem().getName());
 	}
 
+	public int getMaxStack (ItemStack itemStack) {
+		net.minecraft.server.v1_16_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
+
+		return nmsStack.getMaxStackSize();
+	}
+
 	public ItemStack getInteractionItemInHand (PlayerInteractEvent e) {
 		EquipmentSlot hand = e.getHand();
 

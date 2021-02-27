@@ -35,6 +35,12 @@ public class SlabboAPI_v1_10_R1 implements SlabboAPI {
 		return nmsStack.getName();
 	}
 
+	public int getMaxStack (ItemStack itemStack) {
+		net.minecraft.server.v1_10_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(itemStack);
+
+		return nmsStack.getMaxStackSize();
+	}
+
 	public ItemStack getInteractionItemInHand (PlayerInteractEvent e) {
 		return e.getItem();
 	}
