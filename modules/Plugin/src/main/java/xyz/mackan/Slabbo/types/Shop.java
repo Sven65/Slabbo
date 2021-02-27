@@ -68,6 +68,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 
 	private static final long serialVersionUID = -1358999872552913870L;
+
 	public int buyPrice;
 	public int sellPrice;
 

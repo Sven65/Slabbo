@@ -102,7 +102,6 @@ public class SlabboCommand extends BaseCommand {
 	}
 
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
-	SlabboAPI slabboAPI = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
 	@HelpCommand
 	@CatchUnknown
@@ -134,18 +133,6 @@ public class SlabboCommand extends BaseCommand {
 
 
 		player.sendMessage("Slabbo "+LocaleManager.getString("general.general.reloaded")+"!");
-	}
-
-	@Subcommand("debug")
-	@Description("Debugs slabbo")
-	@CommandPermission("slabbo.info")
-	public void onDebug (Player player) {
-		ItemStack item = player.getInventory().getItemInMainHand();
-
-		String itemName = slabboAPI.getItemName(item);
-		int maxSize = slabboAPI.getMaxStack(item);
-
-		player.sendMessage(String.format("Max stack size of item %s is %d items.", itemName, maxSize));
 	}
 
 	@Subcommand("info")

@@ -32,6 +32,7 @@ error-message:
     not-enough-inventory-space: You don't have enough inventory space!
     buy-limit-reached: The shops buy limit has been reached!
     sell-limit-reached: The shops sell limit has been reached!
+    not-enough-stock: The shop doesn't have enough stock left!
 
 success-message:
   chestlink:

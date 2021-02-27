@@ -82,8 +82,15 @@ public class ShopUserGUI implements Listener {
 
 		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
 
+
 		if (shop.stock <= 0 && !shop.admin) {
 			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.out-of-stock"));
+			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+			return;
+		}
+
+		if (shop.stock < shop.quantity) {
+			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.not-enough-stock"));
 			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
