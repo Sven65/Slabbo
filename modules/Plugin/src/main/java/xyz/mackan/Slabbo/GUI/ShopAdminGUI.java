@@ -87,7 +87,7 @@ public class ShopAdminGUI implements Listener {
 		}
 
 		boolean hasPendingLink = ChestLinkManager.hasPendingLink(humanEntity);
-		boolean hasExistingLink = shop.linkedChestLocation != null;
+		boolean hasExistingLink = (shop.linkedChestLocation != null && !shop.linkedChestLocation.isEmpty());
 
 		if (hasPendingLink && ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// Current shop's being linked
@@ -268,7 +268,7 @@ public class ShopAdminGUI implements Listener {
 		Player p = (Player)humanEntity;
 
 		boolean hasPendingLink = ChestLinkManager.hasPendingLink(p);
-		boolean hasExistingLink = shop.linkedChestLocation != null;
+		boolean hasExistingLink = shop.linkedChestLocation != null && !shop.linkedChestLocation.isEmpty();
 
 		if (hasPendingLink && ChestLinkManager.pendingLinks.containsValue(shop.getLocationString())) {
 			// Current shop's being linked
