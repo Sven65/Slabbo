@@ -12,7 +12,7 @@
     <parent>
         <artifactId>Slabbo-parent</artifactId>
         <groupId>xyz.mackan</groupId>
-        <version>1.0.22</version>
+        <version>1.0.23</version>
         <relativePath>../../</relativePath>
     </parent>
 

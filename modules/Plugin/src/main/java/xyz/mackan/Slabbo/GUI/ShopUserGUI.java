@@ -89,7 +89,7 @@ public class ShopUserGUI implements Listener {
 			return;
 		}
 
-		if (shop.stock < shop.quantity) {
+		if (shop.stock < shop.quantity && !shop.admin) {
 			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.not-enough-stock"));
 			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
