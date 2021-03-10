@@ -61,7 +61,7 @@ public class PlayerInteractListener implements Listener {
 			return new ShopAction(ShopAction.ShopActionType.CREATE);
 		}
 
-		if (holdingStick && shopExists && (canUseShop || canCreateShop)) {
+		if (holdingStick && shopExists && canUseShop) {
 			if (isShopOwner) {
 				return new ShopAction(ShopAction.ShopActionType.OPEN_DELETION_GUI, shop);
 			} else {
@@ -69,7 +69,7 @@ public class PlayerInteractListener implements Listener {
 			}
 		}
 
-		if (!holdingStick && shopExists && (canUseShop || canCreateShop)) {
+		if (!holdingStick && shopExists && canUseShop) {
 			if (isShopOwner) {
 				return new ShopAction(ShopAction.ShopActionType.OPEN_ADMIN_GUI, shop);
 			} else {

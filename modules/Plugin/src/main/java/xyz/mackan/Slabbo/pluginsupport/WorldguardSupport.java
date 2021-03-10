@@ -6,21 +6,16 @@ import com.sk89q.worldguard.LocalPlayer;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.Flags;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
-import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import xyz.mackan.Slabbo.Slabbo;
 
-import java.util.LinkedList;
 import java.util.Set;
 
 public class WorldguardSupport {
@@ -67,19 +62,19 @@ public class WorldguardSupport {
 
 		Set<ProtectedRegion> regions = getRegions(location);
 
-		boolean isOwner = true;
+		boolean isOwner = false;
 		boolean canOthersCreate = true;
 
 		for (ProtectedRegion region : regions) {
-			if (!region.isOwner(localPlayer)) {
-				isOwner = false;
+			if (region.isOwner(localPlayer)) {
+				isOwner = true;
 			}
 
-			Object createShopsValue = region.getFlag(CREATE_SHOPS);
+			String createShopsValue = region.getFlag(CREATE_SHOPS).toString();
 
 			if (createShopsValue == null) continue;
 
-			if (createShopsValue.equals("DENY")) {
+			if (createShopsValue.equalsIgnoreCase("DENY")) {
 				canOthersCreate = false;
 			}
 		}
@@ -93,19 +88,19 @@ public class WorldguardSupport {
 
 		Set<ProtectedRegion> regions = getRegions(location);
 
-		boolean isOwner = true;
+		boolean isOwner = false;
 		boolean canOthersUse = true;
 
 		for (ProtectedRegion region : regions) {
-			if (!region.isOwner(localPlayer)) {
-				isOwner = false;
+			if (region.isOwner(localPlayer)) {
+				isOwner = true;
 			}
 
-			Object useShopsValue = region.getFlag(USE_SHOPS);
+			String useShopsValue = region.getFlag(USE_SHOPS).toString();
 
 			if (useShopsValue == null) continue;
 
-			if (useShopsValue.equals("DENY")) {
+			if (useShopsValue.equalsIgnoreCase("DENY")) {
 				canOthersUse = false;
 			}
 		}
