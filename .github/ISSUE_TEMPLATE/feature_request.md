@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for Slabbo
-labels: Feature Request
+labels: "Feature Request"
 ---
 
 **Is your feature request related to a problem? Please describe.**
