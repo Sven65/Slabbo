@@ -1,10 +1,12 @@
 # Slabbo
 
+
 Slab shops for Spigot
 
 Creating: Right click slab with stick
 
 Destroying: Right click existing shop with stick
+
 
 ## Permissions
 
@@ -89,3 +91,7 @@ Destroying: Right click existing shop with stick
 - `/slabbo shopcommands remove sell`
 - `/slabbo shopcommands list buy`
 - `/slabbo shopcommands list sell`
+
+## Legal
+
+Slabbo is licensed under the EUPL-1.2-or-later.
