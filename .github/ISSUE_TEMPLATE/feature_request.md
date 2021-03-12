@@ -4,8 +4,9 @@ about: Suggest an idea for Slabbo
 labels: "Feature Request"
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Please describe your feature request**
+<!-- Is your feature request related to a problem? Please describe. -->
+A clear and concise description of the feature request. Ex. I want to be able to [...]
 
 **Describe the solution you'd like**
 A clear and concise description of what you want to happen.
