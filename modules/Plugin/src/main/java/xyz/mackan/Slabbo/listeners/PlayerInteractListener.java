@@ -32,9 +32,10 @@ public class PlayerInteractListener implements Listener {
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
 	SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
+	Material creationItem = Material.getMaterial(Slabbo.getInstance().getConfig().getString("shopCreationItem", "STICK"));
 
 	public ShopAction getRightClickAction (ItemStack itemInHand, Block clickedBlock, Player player) {
-		boolean holdingStick = itemInHand != null && itemInHand.getType() == Material.STICK;
+		boolean holdingCreationItem = itemInHand != null && itemInHand.getType() == creationItem;
 
 		String clickedLocation = ShopManager.locationToString(clickedBlock.getLocation());
 
@@ -50,7 +51,7 @@ public class PlayerInteractListener implements Listener {
 			isShopOwner = shop.ownerId.equals(player.getUniqueId());
 		}
 
-		if (holdingStick && !shopExists && canCreateShop) {
+		if (holdingCreationItem && !shopExists && canCreateShop) {
 			int maxShops = PermissionUtil.getLimit(player);
 			int userShops = ShopManager.getOwnerCount(player.getUniqueId());
 
@@ -61,7 +62,7 @@ public class PlayerInteractListener implements Listener {
 			return new ShopAction(ShopAction.ShopActionType.CREATE);
 		}
 
-		if (holdingStick && shopExists && canUseShop) {
+		if (holdingCreationItem && shopExists && canUseShop) {
 			if (isShopOwner) {
 				return new ShopAction(ShopAction.ShopActionType.OPEN_DELETION_GUI, shop);
 			} else {
@@ -69,7 +70,7 @@ public class PlayerInteractListener implements Listener {
 			}
 		}
 
-		if (!holdingStick && shopExists && canUseShop) {
+		if (!holdingCreationItem && shopExists && canUseShop) {
 			if (isShopOwner) {
 				return new ShopAction(ShopAction.ShopActionType.OPEN_ADMIN_GUI, shop);
 			} else {
