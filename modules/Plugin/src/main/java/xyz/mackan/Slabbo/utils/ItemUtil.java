@@ -109,6 +109,10 @@ public class ItemUtil {
 
 		itemEnt.setVelocity(itemEnt.getVelocity().zero());
 
+		if (PluginSupport.EnabledPlugins.magic) {
+			itemEnt.setPickupDelay(Integer.MAX_VALUE);
+		}
+
 		itemEnt.teleport(dropLocation);
 	}
 

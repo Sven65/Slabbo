@@ -10,6 +10,7 @@ public class PluginSupport {
 		public static boolean worldguard = false;
 		public static boolean griefprevention = false;
 		public static boolean holoDropsX = false;
+		public static boolean magic = false;
 	}
 
 	public static boolean canCreateShop (Location location, Player player) {
