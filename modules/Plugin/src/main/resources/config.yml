@@ -26,6 +26,10 @@ barriershops: true
 # an oversized stack can have 64 items.
 sellOversized: false
 
+# The maximum amount of items a shop can keep in stock.
+# Set to -1 for unlimited
+maxStockSize: -1
+
 punchRestock:
   # If a user can punch a shop with the item to restock it
   single: true

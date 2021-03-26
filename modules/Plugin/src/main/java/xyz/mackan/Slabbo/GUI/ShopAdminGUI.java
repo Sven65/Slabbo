@@ -156,6 +156,10 @@ public class ShopAdminGUI implements Listener {
 			}
 		}
 
+		int maxShopStock = Slabbo.getInstance().getConfig().getInt("maxStockSize", -1);
+
+		if (maxShopStock <= -1) maxShopStock = Integer.MAX_VALUE;
+
 		itemCount -= offhandCount;
 		itemCount -= armorCount;
 
@@ -163,11 +167,20 @@ public class ShopAdminGUI implements Listener {
 
 		if (isBulk) {
 			tempTransferRate = itemCount;
+
+			if (shop.stock + tempTransferRate > maxShopStock) {
+				tempTransferRate = maxShopStock - shop.stock;
+			}
 		}
 
 		ItemStack shopItemClone = shop.item.clone();
 
 		if (!shop.admin) {
+			if (shop.stock + tempTransferRate > maxShopStock || shop.stock >= maxShopStock) {
+				player.playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
+				player.sendMessage(ChatColor.RED+LocaleManager.replaceSingleKey("error-message.shop-errors.stock-limit-reached", "limit", maxShopStock));
+				return;
+			}
 			shop.stock += tempTransferRate;
 		}
 

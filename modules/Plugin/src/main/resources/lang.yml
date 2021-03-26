@@ -33,6 +33,7 @@ error-message:
     buy-limit-reached: The shops buy limit has been reached!
     sell-limit-reached: The shops sell limit has been reached!
     not-enough-stock: The shop doesn't have enough stock left!
+    stock-limit-reached: The shop can't have more than {limit} items in stock!
 
 success-message:
   chestlink:
