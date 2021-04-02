@@ -165,6 +165,7 @@ public class ShopCreationGUI implements Listener {
 
 		int slot = e.getRawSlot();
 
+
 		if (getIsStage2()) {
 			if (slot <= 8) {
 				// User's clicked shop GUI
@@ -206,6 +207,7 @@ public class ShopCreationGUI implements Listener {
 					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 7) {
 					// Confirm
+
 					Shop shop = new Shop(buyPrice, sellPrice, quantity, slabLocation, shopItem);
 
 					shop.ownerId = e.getWhoClicked().getUniqueId();
@@ -251,6 +253,23 @@ public class ShopCreationGUI implements Listener {
 		p.playSound(this.slabLocation, slabboSound.getSoundByKey("NAVIGATION"), 1, 1);
 
 		//p.playSound(this.slabLocation, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
+
+		String shopLocation = ShopManager.locationToString(this.slabLocation);
+
+		boolean shopExists = ShopManager.shops.containsKey(shopLocation);
+		Shop shop = ShopManager.shops.get(shopLocation);
+
+
+		if (shopExists && shop.stock > 0) {
+			// Not allowed to change the item
+
+			p.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.change-item-disallowed"));
+
+
+			p.playSound(this.slabLocation, slabboSound.getSoundByKey("CANCEL"), 1, 1);
+
+			return;
+		}
 
 		shopItem = clickedItem.clone();
 

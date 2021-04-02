@@ -34,6 +34,7 @@ error-message:
     sell-limit-reached: The shops sell limit has been reached!
     not-enough-stock: The shop doesn't have enough stock left!
     stock-limit-reached: The shop can't have more than {limit} items in stock!
+    change-item-disallowed: Please empty the shop before changing the item!
 
 success-message:
   chestlink:
