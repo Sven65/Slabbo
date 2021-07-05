@@ -12,13 +12,13 @@
     <parent>
         <artifactId>Slabbo-parent</artifactId>
         <groupId>xyz.mackan</groupId>
-        <version>1.0.26</version>
+        <version>1.0.27</version>
         <relativePath>../../</relativePath>
     </parent>
 
     <groupId>xyz.mackan</groupId>
     <artifactId>Slabbo-plugin</artifactId>
-    <version>${project.parent.version}</version>
+    <version>1.0.27</version>
     <packaging>jar</packaging>
 
     <description>Slab shops for spigot</description>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.17-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -87,7 +87,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.17-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
