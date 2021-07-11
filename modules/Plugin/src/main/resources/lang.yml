@@ -53,8 +53,8 @@ success-message:
       set-sell-stock: Selling stock has been set to {stock}!
       set-buy-stock: Buying stock has been set to {stock}!
     shop-commands:
-     added-command: The command has been added.
-     removed-command: The command has been removed.
+     added-command: The command {command} has been added.
+     removed-command: The command {command} has been removed.
   import:
     importing: Importing shops!
     success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.

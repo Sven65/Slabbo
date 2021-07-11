@@ -721,7 +721,7 @@ public class SlabboCommand extends BaseCommand {
 					lookingAtShop.commandList = new Shop.CommandList();
 				}
 
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.added-command"));
+				player.sendMessage(ChatColor.GREEN+LocaleManager.replaceSingleKey("success-message.general.shop-commands.added-command", "command", command));
 
 				lookingAtShop.commandList.buyCommands.add(command);
 
@@ -741,7 +741,7 @@ public class SlabboCommand extends BaseCommand {
 
 				Shop lookingAtShop = slabboContextResolver.shop;
 
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.added-command"));
+				player.sendMessage(ChatColor.GREEN+LocaleManager.replaceSingleKey("success-message.general.shop-commands.removed-command", "command", command));
 
 				lookingAtShop.commandList.sellCommands.add(command);
 
@@ -781,7 +781,7 @@ public class SlabboCommand extends BaseCommand {
 					return;
 				}
 
-				if (lookingAtShop.commandList.buyCommands.size() < newIndex) {
+				if (lookingAtShop.commandList.buyCommands.size() <= newIndex) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.invalid-index"));
 					return;
 				}
@@ -814,7 +814,7 @@ public class SlabboCommand extends BaseCommand {
 					return;
 				}
 
-				if (lookingAtShop.commandList.sellCommands.size() < newIndex) {
+				if (lookingAtShop.commandList.sellCommands.size() <= newIndex) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.invalid-index"));
 					return;
 				}
