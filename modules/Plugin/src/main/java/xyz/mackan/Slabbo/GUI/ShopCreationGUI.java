@@ -43,6 +43,8 @@ public class ShopCreationGUI implements Listener {
 	private int quantity = 0;
 	private int stock = 0;
 
+	public String linkedChestLocation = "";
+
 	private String sellersNote;
 
 	private boolean isModifying = false;
@@ -61,6 +63,8 @@ public class ShopCreationGUI implements Listener {
 		buyPrice = shop.buyPrice;
 		sellPrice = shop.sellPrice;
 		quantity = shop.quantity;
+
+		linkedChestLocation = shop.linkedChestLocation;
 
 		stock = shop.stock;
 
@@ -92,6 +96,7 @@ public class ShopCreationGUI implements Listener {
 		stock = 0;
 
 		sellersNote = "";
+		linkedChestLocation = "";
 	}
 
 	public boolean getIsStage2 () {
@@ -216,6 +221,7 @@ public class ShopCreationGUI implements Listener {
 					shop.stock = stock;
 
 					shop.note = sellersNote;
+					shop.linkedChestLocation = linkedChestLocation;
 
 
 					ShopManager.put(ShopManager.locationToString(slabLocation), shop);
