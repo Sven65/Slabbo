@@ -223,12 +223,20 @@ public class ShopUserGUI implements Listener {
 			shop.commandList.executeBuyCommands(replacementMap);
 		}
 
-		if (isLimitedShop) {
-			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop));
-			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.shopLimit.sellStockLeft, shop.admin, isLimitedShop));
-		} else {
-			inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin, isLimitedShop));
-			inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin, isLimitedShop));
+		if (shop.buyPrice > -1 && shop.quantity > 0) {
+			if (isLimitedShop) {
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop));
+			} else {
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin, isLimitedShop));
+			}
+		}
+
+		if (shop.sellPrice > -1 && shop.quantity > 0) {
+			if (isLimitedShop) {
+				inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.shopLimit.sellStockLeft, shop.admin, isLimitedShop));
+			} else {
+				inv.setItem(1, GUIItems.getUserSellItem(NameUtil.getName(shop.item), shop.quantity, shop.sellPrice, shop.stock, shop.admin, isLimitedShop));
+			}
 		}
 
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
