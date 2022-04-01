@@ -95,3 +95,16 @@ Destroying: Right click existing shop with stick
 ## Legal
 
 Slabbo is licensed under the EUPL-1.2-or-later.
+
+## Developing
+
+In order to develop Slabbo, you first need to setup the development environment.
+
+1. Download [BuildTools](https://www.spigotmc.org/wiki/buildtools/#what-is-it)
+2. Build a jar for your NMS revision
+[[1.8+](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-legacy/)]
+[[1.10 to 1.15](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-10-1-15/)]
+[[1.16+](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/)]
+2.1 Be sure to compile craftbukkit using the `--compile craftbukkit` option
+3. Install the compiled JAR files to your local maven using `mvn install:install-file -Dfile="spigot-version.jar" -DgroupId=org.spigotmc -DartifactId=spigot -Dversion=version-R0.1-SNAPSHOT -Dpackaging=jar`
+
