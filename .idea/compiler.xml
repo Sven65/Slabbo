@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Slabbo-1_17_R1" />
+        <module name="Slabbo-1_18_R2" />
         <module name="Slabbo-1_16_R3" />
         <module name="Slabbo-1_15_R1" />
         <module name="Slabbo-1_14_R1" />
@@ -46,6 +47,7 @@
       <module name="Slabbo-1_16_R3" target="8" />
       <module name="Slabbo-1_17_R1" target="14" />
       <module name="Slabbo-1_18_R1" target="14" />
+      <module name="Slabbo-1_18_R2" target="14" />
       <module name="Slabbo-1_8_R1" target="8" />
       <module name="Slabbo-1_8_R2" target="8" />
       <module name="Slabbo-1_8_R3" target="8" />
