@@ -22,7 +22,7 @@ acf-core:
   error_generic_logged: "An error occurred. This problem has been logged. Sorry for the inconvenience."
   unknown_command: "Unknown Command, please type <c2>/help</c2>"
   invalid_syntax:Usage: "<c2>{command}</c2> <c3>{syntax}</c3>"
-  error_prefix:Error: "{message}"
+  error_prefix: "Error: {message}"
   error_performing_command: "I'm sorry, but there was an error performing this command."
   info_message: "{message}"
   please_specify_one_of:Error: "Please specify one of (<c2>{valid}</c2>)."

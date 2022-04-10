@@ -10,6 +10,7 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -920,4 +921,22 @@ public class SlabboCommand extends BaseCommand {
 		}
 	}
 
+	@Subcommand("unlink")
+	@Description("Unlinks the chest you're looking at.")
+	@CommandPermission("slabbo.unlink.self")
+	@Conditions("lookingAtLinkedChest|canExecuteOnLinkedChest:othersPerm=slabbo.unlink.others")
+	public void SlabboUnlinkCommand (Player player, LCContextResolver lcCtx) {
+		Block lookingAtBlock = lcCtx.lookingAtBlock;
+
+		Shop shop = ChestLinkManager.getShopByChestLocation(lookingAtBlock.getLocation());
+
+		ChestLinkManager.removeShopLink(shop);
+		shop.linkedChestLocation = null;
+
+		ShopManager.put(shop.getLocationString(), shop);
+
+		DataUtil.saveShops();
+
+		player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.chestlink.linking-removed"));
+	}
 }
