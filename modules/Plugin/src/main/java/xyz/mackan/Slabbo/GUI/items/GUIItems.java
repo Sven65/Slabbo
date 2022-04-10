@@ -33,9 +33,7 @@ public class GUIItems {
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		String explainer = LocaleManager.getString("general.general.not-for-sale-explain");
 
-		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
-
-		String currencyString = allowCents ? LocaleManager.getCurrencyString(buyPrice) : LocaleManager.getCurrencyString((int) buyPrice);
+		String currencyString = LocaleManager.getCurrencyString(buyPrice);
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
@@ -54,8 +52,7 @@ public class GUIItems {
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		String explainer = LocaleManager.getString("general.general.not-buying-explain");
 
-		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
-		String currencyString = allowCents ? LocaleManager.getCurrencyString(sellPrice) : LocaleManager.getCurrencyString((int) sellPrice);
+		String currencyString = LocaleManager.getCurrencyString(sellPrice);
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
@@ -119,9 +116,7 @@ public class GUIItems {
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
 
-		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
-
-		String currencyString = allowCents ? LocaleManager.getCurrencyString(price) : LocaleManager.getCurrencyString((int) price);
+		String currencyString = LocaleManager.getCurrencyString(price);
 
 		replacementMap.put("price", currencyString);
 
@@ -165,9 +160,7 @@ public class GUIItems {
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
 
-		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
-
-		String currencyString = allowCents ? LocaleManager.getCurrencyString(price) : LocaleManager.getCurrencyString((int) price);
+		String currencyString = LocaleManager.getCurrencyString(price);
 
 		replacementMap.put("price", currencyString);
 
@@ -215,7 +208,9 @@ public class GUIItems {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		replacementMap.put("funds", "§a"+LocaleManager.getCurrencyString(formatter.format(funds)));
+		//replacementMap.put("funds", "§a"+LocaleManager.getCurrencyString(formatter.format(funds)));
+		replacementMap.put("funds", "§a"+LocaleManager.getCurrencyString(funds));
+
 
 		meta.setLore(Arrays.asList(LocaleManager.replaceKey("general.general.funds-message", replacementMap)));
 
@@ -232,10 +227,6 @@ public class GUIItems {
 
 		double buyPerItem = 0;
 		double sellPerItem = 0;
-		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
-
-
-		NumberFormat formatter = new DecimalFormat("#0.00");
 
 		// TODO: Actually check if these are zero
 		try { buyPerItem = shop.quantity / shop.buyPrice; } catch (Exception e) {}
@@ -251,15 +242,13 @@ public class GUIItems {
 		replacementMap.put("owner", ownerName);
 		replacementMap.put("item", shop.item.getType());
 		replacementMap.put("quantity", shop.quantity);
-		if (allowCents) {
-			replacementMap.put("buyPrice", shop.buyPrice);
-			replacementMap.put("sellPrice", shop.sellPrice);
-		} else {
-			replacementMap.put("buyPrice", (int) shop.buyPrice);
-			replacementMap.put("sellPrice", (int) shop.sellPrice);
-		}
-		replacementMap.put("buyPerItem", LocaleManager.getCurrencyString(formatter.format(buyPerItem)));
-		replacementMap.put("sellPerItem", LocaleManager.getCurrencyString(formatter.format(sellPerItem)));
+
+		replacementMap.put("buyPrice", LocaleManager.getCurrencyString(shop.buyPrice));
+		replacementMap.put("sellPrice", LocaleManager.getCurrencyString(shop.sellPrice));
+
+
+		replacementMap.put("buyPerItem", LocaleManager.getCurrencyString(buyPerItem));
+		replacementMap.put("sellPerItem", LocaleManager.getCurrencyString(sellPerItem));
 
 		if (shop.shopLimit != null && shop.shopLimit.enabled) {
 			replacementMap.put("restockTime", shop.shopLimit.restockTime);

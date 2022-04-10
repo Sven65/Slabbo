@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.manager;
 
+import jdk.vm.ci.meta.Local;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -18,6 +20,9 @@ import java.util.regex.Pattern;
 
 public class LocaleManager {
 	private static HashMap<String, String> translationMap = new HashMap<String, String>();
+	private static boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+	private static boolean formatCurrencyWithVault = Slabbo.getInstance().getConfig().getString("currencyFormat", "vault").equalsIgnoreCase("vault");
+
 
 
 	/**
@@ -120,7 +125,27 @@ public class LocaleManager {
 	 * @param amount The amount of currency
 	 * @return String
 	 */
-	public static String getCurrencyString (Object amount) {
-		return replaceSingleKey("general.currency-format", "amount", amount);
+	public static String getCurrencyString (String amount) {
+		return LocaleManager.getCurrencyString(Double.parseDouble(amount));
+	}
+
+	/**
+	 * Gets the currency string with the amount
+	 * @param amount The amount of currency
+	 * @return String
+	 */
+	public static String getCurrencyString (int amount) {
+		return LocaleManager.getCurrencyString((double) amount);
+	}
+
+	/**
+	 * Gets the currency string with the amount
+	 * @param amount The amount of currency
+	 * @return String
+	 */
+	public static String getCurrencyString (double amount) {
+		if (formatCurrencyWithVault) return Slabbo.getEconomy().format(amount);
+
+		return allowCents ? replaceSingleKey("general.currency-format", "amount", amount) : replaceSingleKey("general.currency-format", "amount", (int) amount);
 	}
 }
