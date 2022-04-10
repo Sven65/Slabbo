@@ -47,6 +47,8 @@ success-message:
   general:
     admin-create: The shop is now an admin shop!
     admin-destroy: The shop is no longer an admin shop
+    owner-name-set: The displayed owner name has been set.
+    owner-name-removed: The displayed owner name has been removed.
     shops-saved: Saved shops!
     limited-stock:
       create: The shop now has a limited stock!
