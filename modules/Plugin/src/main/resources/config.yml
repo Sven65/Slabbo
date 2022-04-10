@@ -48,6 +48,11 @@ disableShops: false
 # If the shops should allow for setting prices using decimal points (i.e. 1.05)
 allowCents: false
 
+# How to format the currency strings.
+# If set to "Slabbo", the "general.currency-format" language key will be used.
+# If set to "Vault", the formatting from vault (and your economy plugin) will be used.
+currencyFormat: Vault
+
 ########################
 #     Chest links      #
 ########################
