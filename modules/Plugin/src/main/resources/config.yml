@@ -45,6 +45,9 @@ punchRestock:
 # If the shop functionality should be disabled
 disableShops: false
 
+# If the shops should allow for setting prices using decimal points (i.e. 1.05)
+allowCents: false
+
 ########################
 #     Chest links      #
 ########################

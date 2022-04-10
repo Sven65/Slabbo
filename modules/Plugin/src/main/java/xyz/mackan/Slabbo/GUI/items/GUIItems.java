@@ -18,12 +18,13 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
+import java.util.logging.Level;
 
 public class GUIItems {
 	private static SlabboItemAPI itemAPI = Bukkit.getServicesManager().getRegistration(SlabboItemAPI.class).getProvider();
 
 
-	public static ItemStack getBuyPriceItem (int buyPrice) {
+	public static ItemStack getBuyPriceItem (double buyPrice) {
 		ItemStack item = itemAPI.getGreenStainedGlassPane();
 		ItemMeta meta = item.getItemMeta();
 
@@ -32,7 +33,9 @@ public class GUIItems {
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		String explainer = LocaleManager.getString("general.general.not-for-sale-explain");
 
-		String currencyString = LocaleManager.getCurrencyString(buyPrice);
+		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+
+		String currencyString = allowCents ? LocaleManager.getCurrencyString(buyPrice) : LocaleManager.getCurrencyString((int) buyPrice);
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
@@ -41,7 +44,7 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getSellPriceItem (int sellPrice) {
+	public static ItemStack getSellPriceItem (double sellPrice) {
 		ItemStack item = itemAPI.getRedStainedGlassPane();
 
 		ItemMeta meta = item.getItemMeta();
@@ -51,8 +54,8 @@ public class GUIItems {
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		String explainer = LocaleManager.getString("general.general.not-buying-explain");
 
-		String currencyString = LocaleManager.getCurrencyString(sellPrice);
-
+		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+		String currencyString = allowCents ? LocaleManager.getCurrencyString(sellPrice) : LocaleManager.getCurrencyString((int) sellPrice);
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
 
@@ -107,7 +110,7 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getUserBuyItem (String itemName, int quantity, int price, int stock, boolean isAdmin, boolean isLimited) {
+	public static ItemStack getUserBuyItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
 		ItemStack item = new ItemStack(Material.GOLD_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
@@ -115,7 +118,12 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-		replacementMap.put("price", LocaleManager.getCurrencyString(price));
+
+		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+
+		String currencyString = allowCents ? LocaleManager.getCurrencyString(price) : LocaleManager.getCurrencyString((int) price);
+
+		replacementMap.put("price", currencyString);
 
 		if (isAdmin && !isLimited) {
 			replacementMap.put("count", "∞");
@@ -148,7 +156,7 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getUserSellItem (String itemName, int quantity, int price, int stock, boolean isAdmin, boolean isLimited) {
+	public static ItemStack getUserSellItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
 		ItemStack item = new ItemStack(Material.IRON_INGOT, 1);
 		ItemMeta meta = item.getItemMeta();
 
@@ -156,7 +164,12 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-		replacementMap.put("price", LocaleManager.getCurrencyString(price));
+
+		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+
+		String currencyString = allowCents ? LocaleManager.getCurrencyString(price) : LocaleManager.getCurrencyString((int) price);
+
+		replacementMap.put("price", currencyString);
 
 		if (isAdmin && !isLimited) {
 			replacementMap.put("count", "∞");
@@ -219,6 +232,8 @@ public class GUIItems {
 
 		double buyPerItem = 0;
 		double sellPerItem = 0;
+		boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+
 
 		NumberFormat formatter = new DecimalFormat("#0.00");
 
@@ -232,11 +247,18 @@ public class GUIItems {
 
 		String ownerName = Misc.getValueOrDefault(owner.getName(), LocaleManager.getString("general.general.unknown-user"));
 
+
+
 		replacementMap.put("owner", ownerName);
 		replacementMap.put("item", shop.item.getType());
 		replacementMap.put("quantity", shop.quantity);
-		replacementMap.put("buyPrice", shop.buyPrice);
-		replacementMap.put("sellPrice", shop.sellPrice);
+		if (allowCents) {
+			replacementMap.put("buyPrice", shop.buyPrice);
+			replacementMap.put("sellPrice", shop.sellPrice);
+		} else {
+			replacementMap.put("buyPrice", (int) shop.buyPrice);
+			replacementMap.put("sellPrice", (int) shop.sellPrice);
+		}
 		replacementMap.put("buyPerItem", LocaleManager.getCurrencyString(formatter.format(buyPerItem)));
 		replacementMap.put("sellPerItem", LocaleManager.getCurrencyString(formatter.format(sellPerItem)));
 

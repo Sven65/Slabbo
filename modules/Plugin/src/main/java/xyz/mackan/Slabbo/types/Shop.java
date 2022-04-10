@@ -6,12 +6,14 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.logging.Level;
 
 @SerializableAs("Shop")
 public class Shop implements Cloneable, ConfigurationSerializable {
@@ -67,10 +69,10 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 
-	private static final long serialVersionUID = -1358999872552913870L;
+	private static final long serialVersionUID = -1358999872552913871L;
 
-	public int buyPrice;
-	public int sellPrice;
+	public double buyPrice;
+	public double sellPrice;
 
 	public int quantity;
 
@@ -94,6 +96,42 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public CommandList commandList = null;
 
+	// <editor-fold desc="Shop constructors with double prices">
+
+
+	public Shop (double buyPrice, double sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
+		this.buyPrice = buyPrice;
+		this.sellPrice = sellPrice;
+		this.quantity = quantity;
+		this.location = location;
+		this.item = item;
+		this.stock = stock;
+		this.ownerId = ownerId;
+		this.admin = admin;
+		this.linkedChestLocation = linkedChestLocation;
+	}
+
+	public Shop (double buyPrice, double sellPrice, int quantity, Location location, ItemStack item, int stock) {
+		this.buyPrice = buyPrice;
+		this.sellPrice = sellPrice;
+		this.quantity = quantity;
+		this.location = location;
+		this.item = item;
+		this.stock = stock;
+	}
+
+	public Shop (double buyPrice, double sellPrice, int quantity, Location location, ItemStack item) {
+		this.buyPrice = buyPrice;
+		this.sellPrice = sellPrice;
+		this.quantity = quantity;
+		this.location = location;
+		this.item = item;
+	}
+
+	// </editor-fold>
+
+
+	// <editor-fold desc="Shop constructors with int prices">
 
 	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
 		this.buyPrice = buyPrice;
@@ -108,6 +146,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	public Shop (int buyPrice, int sellPrice, int quantity, Location location, ItemStack item, int stock) {
+
 		this.buyPrice = buyPrice;
 		this.sellPrice = sellPrice;
 		this.quantity = quantity;
@@ -123,6 +162,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		this.location = location;
 		this.item = item;
 	}
+
+	// </editor-fold>
 
 	@Override
 	public Map<String, Object> serialize () {
@@ -148,8 +189,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	public static Shop deserialize (Map<String, Object> args) {
-		int buyPrice = (Integer) args.get("buyPrice");
-		int sellPrice = (Integer) args.get("sellPrice");
+		double buyPrice = (Double) args.get("buyPrice");
+		double sellPrice = (Double) args.get("sellPrice");
 		int quantity = (Integer) args.get("quantity");
 		int stock = (Integer) args.get("stock");
 

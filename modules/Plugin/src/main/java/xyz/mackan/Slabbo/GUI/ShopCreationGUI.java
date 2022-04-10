@@ -38,8 +38,8 @@ public class ShopCreationGUI implements Listener {
 	private ChatWaitingType waitingType;
 	private UUID waitingPlayerId;
 
-	private int buyPrice = 0;
-	private int sellPrice = 0;
+	private double buyPrice = 0;
+	private double sellPrice = 0;
 	private int quantity = 0;
 	private int stock = 0;
 
@@ -51,6 +51,9 @@ public class ShopCreationGUI implements Listener {
 
 	private boolean isModifying = false;
 	private boolean isAdmin = false;
+
+	private boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
+
 
 	public ShopCreationGUI (Location slabLocation, Shop shop) {
 		isModifying = true;
@@ -309,13 +312,18 @@ public class ShopCreationGUI implements Listener {
 
 		e.setCancelled(true);
 
-		int value = 0;
+		double value = 0;
 
 		String shopNoteInput = "";
 
 		if (waitingType != ChatWaitingType.SELLERS_NOTE) {
 			try {
-				value = Integer.parseInt(e.getMessage());
+				if (this.allowCents) {
+					value = Double.parseDouble(e.getMessage());
+				} else {
+					value = Integer.parseInt(e.getMessage());
+				}
+
 			} catch (NumberFormatException error) {
 				e.getPlayer().sendMessage(ChatColor.RED + LocaleManager.getString("error-message.modify.not-a-valid-number"));
 			}
@@ -339,7 +347,7 @@ public class ShopCreationGUI implements Listener {
 					value = 0;
 				}
 
-				quantity = value;
+				quantity = (int)value;
 				break;
 			case SELLERS_NOTE:
 				if (shopNoteInput.equalsIgnoreCase("#")) {
