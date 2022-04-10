@@ -63,6 +63,10 @@ Destroying: Right click existing shop with stick
 | `slabbo.save`                          | Saves the slabbo shops to disk                                                |
 | `slabbo.list.all`                      | Lets a user list all shops on the server                                      |
 | `slabbo.list.self`                     | Lets a user list all their shops                                              |
+| `slabbo.unlink.self`                   | Lets you unlink chests of your shops with a command                           |
+| `slabbo.unlink.others`                 | Lets you unlink chests from other peoples shops with a command                |
+| `slabbo.admin.set.owner_name`          | Lets you set the displayed owner name of an admin shop                        |
+| `slabbo.admin.set.*`                   | Gives you access to set all properties on an admin shop                       |
 
 ## Commands
 
