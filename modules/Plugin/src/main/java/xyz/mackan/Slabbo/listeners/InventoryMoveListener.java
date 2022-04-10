@@ -3,6 +3,7 @@ package xyz.mackan.Slabbo.listeners;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -28,16 +29,25 @@ public class InventoryMoveListener implements Listener {
 		if (!Slabbo.getInstance().getConfig().getBoolean("chestlinks.hoppers.enabled")) return;
 
 		Inventory destinationInventory = e.getDestination();
+		Inventory sourceInventory = e.getSource();
 
 		if (destinationInventory == null) return;
 
 		Location destinationLocation = Misc.getInventoryLocation(destinationInventory);
+		Location sourceLocation = Misc.getInventoryLocation(sourceInventory);
 
 		if (destinationLocation == null) return;
 
 		Block destinationBlock = destinationLocation.getBlock();
+		Block sourceBlock = sourceLocation.getBlock();
+
 
 		if (!ChestLinkManager.isChestLinked(destinationBlock)) return;
+
+		if (ChestLinkManager.isChestLinked(sourceBlock)) {
+			e.setCancelled(true);
+			return;
+		}
 
 		Shop shop = ChestLinkManager.getShopByChestLocation(destinationBlock.getLocation());
 

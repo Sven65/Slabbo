@@ -30,6 +30,11 @@ public class ChestLinkManager {
 		return pendingLinks.containsKey(id);
 	}
 
+	/**
+	 * Returns if the given block is a linked chest
+	 * @param block The block to check
+	 * @return If the block is a linked chest
+	 */
 	public static boolean isChestLinked (Block block) {
 		BlockState blockState = block.getState();
 
