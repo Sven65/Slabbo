@@ -319,6 +319,39 @@ public class SlabboCommand extends BaseCommand {
 			}
 		}
 
+		@Subcommand("set")
+		@Description("Sets properties for the admin shop")
+		public class SlabboAdminSetCommand extends BaseCommand {
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
+
+			@Subcommand("owner_name")
+			@Description("Sets the name to display as the shop owner")
+			@CommandPermission("slabbo.admin.set.owner_name")
+			@Conditions("lookingAtShop|isAdminShop")
+			public void onSetOwnerName (Player player, SlabboContextResolver slabboContext, @Optional String newName) {
+				Shop lookingAtShop = slabboContext.shop;
+
+				if (newName == null || newName.equals("")) {
+					lookingAtShop.displayedOwnerName = null;
+
+					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.owner-name-removed"));
+				} else {
+					lookingAtShop.displayedOwnerName = newName;
+
+					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.owner-name-set"));
+				}
+
+				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+			}
+		}
 	}
 
 	@Subcommand("destroy")
@@ -530,7 +563,7 @@ public class SlabboCommand extends BaseCommand {
 			player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.modify.stock-set", replacementMap));
 		}
 
-		@Subcommand("stock")
+		@Subcommand("note")
 		@Description("Sets the sellers note for the shop")
 		@CommandPermission("slabbo.modify.self.note")
 		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.note")
@@ -558,6 +591,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
+
 
 	}
 

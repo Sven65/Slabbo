@@ -173,12 +173,23 @@ permissions:
       slabbo.admin.limit.stock.*: true
       slabbo.admin.limit.time: true
 
+  slabbo.admin.set.owner_name:
+    default: op
+    description: Lets you set the displayed owner name of an admin shop
+
+  slabbo.admin.set.*:
+    default: op
+    description: Gives you access to set all properties on an admin shop
+    children:
+      slabbo.admin.set.owner_name: true
+
   slabbo.admin.*:
     default: op
     description: Gives you access to all admin commands
     children:
       slabbo.admin.toggle: true
       slabbo.admin.limit.*: true
+      slabbo.admin.set.*: true
 
   # ============================================================================== #
 

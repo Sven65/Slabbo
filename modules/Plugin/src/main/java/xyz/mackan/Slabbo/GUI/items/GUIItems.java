@@ -245,8 +245,7 @@ public class GUIItems {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
-		String ownerName = Misc.getValueOrDefault(owner.getName(), LocaleManager.getString("general.general.unknown-user"));
-
+		String ownerName = shop.displayedOwnerName != null ? shop.displayedOwnerName : Misc.getValueOrDefault(owner.getName(), LocaleManager.getString("general.general.unknown-user"));
 
 
 		replacementMap.put("owner", ownerName);

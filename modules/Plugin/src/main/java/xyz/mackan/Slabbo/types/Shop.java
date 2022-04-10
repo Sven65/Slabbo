@@ -92,6 +92,8 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public String linkedChestLocation = "";
 
+	public String displayedOwnerName = null;
+
 	public ShopLimit shopLimit = null;
 
 	public CommandList commandList = null;
@@ -184,6 +186,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("note", note);
 
 		result.put("commandList", commandList);
+		result.put("displayedOwnerName", displayedOwnerName);
 
 		return result;
 	}
@@ -201,6 +204,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		String loadedOwnerId = (String) args.get("ownerId");
 		String linkedChestLocation = (String) args.get("linkedChestLocation");
 		String note = (String) args.getOrDefault("note", "Let's trade!");
+		String displayedOwnerName = (String) args.get("displayedOwnerName");
 
 		UUID ownerId = UUID.fromString(loadedOwnerId);
 
@@ -215,6 +219,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		newShop.note = note;
 		newShop.shopLimit = shopLimit;
 		newShop.commandList = commandList;
+		newShop.displayedOwnerName = displayedOwnerName;
 
 		return newShop;
 	}
@@ -244,13 +249,15 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	public String getInfoString () {
 		SlabboAPI api = Bukkit.getServicesManager().getRegistration(SlabboAPI.class).getProvider();
 
+		String ownerName = displayedOwnerName != null ? displayedOwnerName : Bukkit.getOfflinePlayer(ownerId).getName();
+
 		return String.format(
 			"§d[%s]§r §7| §d%s: §6%s §7| §d%s: §6%s",
 			getLocationString(),
 			LocaleManager.getString("general.general.item"),
 			api.getItemName(item),
 			LocaleManager.getString("gui.owner-title"),
-			Bukkit.getOfflinePlayer(ownerId).getName()
+			ownerName
 		);
 	}
 }
