@@ -30,6 +30,16 @@ permissions:
     children:
       slabbo.destroy.self: true
 
+  slabbo.unlink.self:
+    default: op
+    description: Lets you unlink chests your shops with a command
+
+  slabbo.unlink.others:
+    default: op
+    description: Lets you unlink chests from other peoples shops with a command
+    children:
+      slabbo.unlink.self: true
+
   slabbo.link:
     default: op
     description: Lets you link a shop to a chest
@@ -98,6 +108,7 @@ permissions:
       slabbo.modify.others.sellprice: true
       slabbo.modify.others.quantity: true
       slabbo.modify.others.note: true
+
 
   # ============================================================================== #
 

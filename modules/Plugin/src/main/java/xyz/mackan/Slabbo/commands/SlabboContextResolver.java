@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;
@@ -37,6 +38,7 @@ public class SlabboContextResolver {
 		return null;
 	}
 
+
 	public static IssuerOnlyContextResolver<SlabboContextResolver, BukkitCommandExecutionContext> getContextResolver () {
 		return (c) -> {
 			Player player = c.getPlayer();
@@ -50,7 +52,7 @@ public class SlabboContextResolver {
 				throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-a-shop"));
 			}
 
-			return new SlabboContextResolver(getLookingAtShop(player));
+			return new SlabboContextResolver(shop);
 		};
 	}
 }

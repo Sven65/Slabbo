@@ -15,10 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
-import xyz.mackan.Slabbo.commands.Conditions;
-import xyz.mackan.Slabbo.commands.SlabboCommand;
-import xyz.mackan.Slabbo.commands.SlabboCommandCompletions;
-import xyz.mackan.Slabbo.commands.SlabboContextResolver;
+import xyz.mackan.Slabbo.commands.*;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
@@ -209,6 +206,7 @@ public class Slabbo extends JavaPlugin {
 		Conditions.registerConditions(manager);
 
 		manager.getCommandContexts().registerIssuerOnlyContext(SlabboContextResolver.class, SlabboContextResolver.getContextResolver());
+		manager.getCommandContexts().registerIssuerOnlyContext(LCContextResolver.class, LCContextResolver.getContextResolver());
 
 		manager.registerCommand(new SlabboCommand());
 	}
