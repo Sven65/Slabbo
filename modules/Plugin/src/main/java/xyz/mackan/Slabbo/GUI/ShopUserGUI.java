@@ -113,7 +113,7 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-		int totalCost = shop.buyPrice;// * itemCount;
+		double totalCost = shop.buyPrice;// * itemCount;
 
 		if (playerFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.not-enough-funds"));
@@ -187,7 +187,7 @@ public class ShopUserGUI implements Listener {
 		}
 
 		//int actualCost = totalBought * shop.buyPrice;
-		int actualCost = shop.buyPrice;
+		double actualCost = shop.buyPrice;
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
@@ -278,7 +278,7 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-		int totalCost = shop.sellPrice;
+		double totalCost = shop.sellPrice;
 
 		if (shopFunds < totalCost) {
 			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.not-enough-shop-funds"));

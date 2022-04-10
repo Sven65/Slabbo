@@ -44,7 +44,7 @@ public class Slabbo extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Shop.CommandList.class, "Shop.CommandList");
 	}
 
-	private static final Logger log = Logger.getLogger("Minecraft");
+	public static final Logger log = Logger.getLogger("Minecraft");
 
 	private static String dataPath = null;
 
