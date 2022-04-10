@@ -67,7 +67,6 @@ public class Slabbo extends JavaPlugin {
 	public void onEnable () {
 		dataPath = this.getDataFolder().getPath();
 		if (!setupEconomy()) {
-			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
@@ -216,10 +215,14 @@ public class Slabbo extends JavaPlugin {
 
 	private boolean setupEconomy () {
 		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			log.severe(String.format("[%s] - Disabled as Vault dependency wasn't found!", getDescription().getName()));
+
 			return false;
 		}
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
 		if (rsp == null) {
+			log.severe(String.format("[%s] - Disabled as no economy provider was found!", getDescription().getName()));
+
 			return false;
 		}
 		econ = rsp.getProvider();
