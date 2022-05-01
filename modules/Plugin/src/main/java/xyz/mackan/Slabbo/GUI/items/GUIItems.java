@@ -33,9 +33,6 @@ public class GUIItems {
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		String explainer = LocaleManager.getString("general.general.not-for-sale-explain");
 
-		Slabbo.getInstance().getLogger().info("(GUIItems) BPI "+buyPrice);
-
-
 		String currencyString = LocaleManager.getCurrencyString(buyPrice);
 
 		meta.setLore(Arrays.asList("§r"+currencyString, clickToSet, "§r"+explainer));
@@ -54,9 +51,6 @@ public class GUIItems {
 
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		String explainer = LocaleManager.getString("general.general.not-buying-explain");
-
-		Slabbo.getInstance().getLogger().info("(GUIItems) SPI "+sellPrice);
-
 
 		String currencyString = LocaleManager.getCurrencyString(sellPrice);
 
@@ -122,9 +116,6 @@ public class GUIItems {
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
 
-		Slabbo.getInstance().getLogger().info("(GUIItems) UPI "+price);
-
-
 		String currencyString = LocaleManager.getCurrencyString(price);
 
 		replacementMap.put("price", currencyString);
@@ -168,9 +159,6 @@ public class GUIItems {
 
 		replacementMap.put("item", "'"+itemName+"'");
 		replacementMap.put("quantity", quantity);
-
-		Slabbo.getInstance().getLogger().info("(GUIItems) USI "+price);
-
 
 		String currencyString = LocaleManager.getCurrencyString(price);
 
@@ -221,8 +209,6 @@ public class GUIItems {
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
 		//replacementMap.put("funds", "§a"+LocaleManager.getCurrencyString(formatter.format(funds)));
-		Slabbo.getInstance().getLogger().info("(GUIItems) UFI "+funds);
-
 
 		replacementMap.put("funds", "§a"+LocaleManager.getCurrencyString(funds));
 
@@ -264,12 +250,6 @@ public class GUIItems {
 		replacementMap.put("owner", ownerName);
 		replacementMap.put("item", shop.item.getType());
 		replacementMap.put("quantity", shop.quantity);
-
-		Slabbo.getInstance().getLogger().info("(GUIItems) UII shop buy "+shop.buyPrice);
-		Slabbo.getInstance().getLogger().info("(GUIItems) UII shop sell "+shop.sellPrice);
-		Slabbo.getInstance().getLogger().info("(GUIItems) UII buy per item "+buyPerItem);
-		Slabbo.getInstance().getLogger().info("(GUIItems) UII sell per item"+sellPerItem);
-
 
 		replacementMap.put("buyPrice", LocaleManager.getCurrencyString(shop.buyPrice));
 		replacementMap.put("sellPrice", LocaleManager.getCurrencyString(shop.sellPrice));

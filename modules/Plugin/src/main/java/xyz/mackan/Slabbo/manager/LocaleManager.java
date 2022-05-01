@@ -135,8 +135,6 @@ public class LocaleManager {
 	 * @return String
 	 */
 	public static String getCurrencyString (int amount) {
-		Slabbo.getInstance().getLogger().info("Formatting int amount "+amount);
-
 		return LocaleManager.getCurrencyString((double) amount);
 	}
 
@@ -146,7 +144,6 @@ public class LocaleManager {
 	 * @return String
 	 */
 	public static String getCurrencyString (double amount) {
-		Slabbo.getInstance().getLogger().info("Formatting double amount "+amount);
 		if (formatCurrencyWithVault) return Slabbo.getEconomy().format(amount);
 
 		return allowCents ? replaceSingleKey("general.currency-format", "amount", amount) : replaceSingleKey("general.currency-format", "amount", (int) amount);
