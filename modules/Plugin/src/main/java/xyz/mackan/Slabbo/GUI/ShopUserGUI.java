@@ -191,6 +191,8 @@ public class ShopUserGUI implements Listener {
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
+		Slabbo.getInstance().getLogger().info("(ShopUserGUI) Actual cost is "+actualCost);
+
 		replacementMap.put("count", totalBought);
 		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
 		replacementMap.put("cost", LocaleManager.getCurrencyString(actualCost));
@@ -306,6 +308,9 @@ public class ShopUserGUI implements Listener {
 		Slabbo.getEconomy().depositPlayer((OfflinePlayer)humanEntity, totalCost);
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
+
+		Slabbo.getInstance().getLogger().info("(ShopUserGUI) Total cost is "+totalCost);
+
 
 		replacementMap.put("count", itemCount);
 		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
