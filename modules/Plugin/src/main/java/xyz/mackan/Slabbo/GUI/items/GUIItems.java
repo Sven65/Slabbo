@@ -232,13 +232,14 @@ public class GUIItems {
 		// TODO: Actually check if these are zero
 		try {
 			buyPerItem = shop.quantity / shop.buyPrice;
-			if (buyPerItem == Double.POSITIVE_INFINITY || buyPerItem == Double.NEGATIVE_INFINITY) buyPerItem = 0;
+			if (Double.isInfinite(buyPerItem) || Double.isNaN(buyPerItem)) buyPerItem = 0;
 		} catch (Exception e) {}
 
 		try {
 			sellPerItem = shop.quantity / shop.sellPrice;
-			if (sellPerItem == Double.POSITIVE_INFINITY || sellPerItem == Double.NEGATIVE_INFINITY) sellPerItem = 0;
+			if (Double.isInfinite(sellPerItem) || Double.isNaN(sellPerItem)) sellPerItem = 0;
 		} catch (Exception e) {}
+
 
 		OfflinePlayer owner = Bukkit.getOfflinePlayer(shop.ownerId);
 
