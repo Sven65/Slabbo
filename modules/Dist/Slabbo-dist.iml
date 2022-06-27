@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="minecraft" name="Minecraft">
+      <configuration>
+        <autoDetectTypes>
+          <platformType>MCP</platformType>
+          <platformType>BUKKIT</platformType>
+        </autoDetectTypes>
+      </configuration>
+    </facet>
+  </component>
+  <component name="McpModuleSettings">
+    <option name="srgType" value="SRG" />
+  </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_5">
     <output url="file://$MODULE_DIR$/../../target/classes" />
     <output-test url="file://$MODULE_DIR$/../../target/test-classes" />
@@ -11,6 +24,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Slabbo-plugin" />
     <orderEntry type="library" name="Maven: co.aikar:acf-paper:0.5.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="Slabbo-1_19_R1" />
     <orderEntry type="module" module-name="Slabbo-1_18_R2" />
     <orderEntry type="module" module-name="Slabbo-1_18_R1" />
     <orderEntry type="module" module-name="Slabbo-1_17_R1" />
