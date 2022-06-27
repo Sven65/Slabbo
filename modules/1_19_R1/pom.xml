@@ -77,10 +77,5 @@
             <artifactId>Slabbo-plugin</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 </project>
