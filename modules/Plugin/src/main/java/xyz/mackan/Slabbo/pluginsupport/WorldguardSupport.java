@@ -70,11 +70,11 @@ public class WorldguardSupport {
 				isOwner = true;
 			}
 
-			String createShopsValue = region.getFlag(CREATE_SHOPS).toString();
+			StateFlag.State createShopsValue = region.getFlag(CREATE_SHOPS);
 
 			if (createShopsValue == null) continue;
 
-			if (createShopsValue.equalsIgnoreCase("DENY")) {
+			if (createShopsValue == StateFlag.State.DENY) {
 				canOthersCreate = false;
 			}
 		}
@@ -96,11 +96,11 @@ public class WorldguardSupport {
 				isOwner = true;
 			}
 
-			String useShopsValue = region.getFlag(USE_SHOPS).toString();
+			StateFlag.State useShopsValue = region.getFlag(USE_SHOPS);
 
 			if (useShopsValue == null) continue;
 
-			if (useShopsValue.equalsIgnoreCase("DENY")) {
+			if (useShopsValue == StateFlag.State.DENY) {
 				canOthersUse = false;
 			}
 		}
