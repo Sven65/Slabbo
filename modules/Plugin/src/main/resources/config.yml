@@ -82,3 +82,11 @@ chestlinks:
     # Delay in seconds
     savetime: 5
 
+########################
+#     Shop Defaults    #
+########################
+
+defaults:
+    buyPrice: 0
+    sellPrice: 0
+    quantity: 0

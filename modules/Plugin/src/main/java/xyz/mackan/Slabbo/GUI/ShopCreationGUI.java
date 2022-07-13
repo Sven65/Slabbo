@@ -38,9 +38,18 @@ public class ShopCreationGUI implements Listener {
 	private ChatWaitingType waitingType;
 	private UUID waitingPlayerId;
 
-	private double buyPrice = 0;
-	private double sellPrice = 0;
-	private int quantity = 0;
+
+
+
+
+	private double defaultBuyPrice = Slabbo.getInstance().getConfig().getDouble("defaults.buyPrice", 0);
+	private double defaultSellPrice = Slabbo.getInstance().getConfig().getDouble("defaults.sellPrice", 0);
+	private int defaultQuantity = Slabbo.getInstance().getConfig().getInt("defaults.quantity", 0);
+
+	private double buyPrice = defaultBuyPrice;
+	private double sellPrice = defaultSellPrice;
+	private int quantity = defaultQuantity;
+
 	private int stock = 0;
 
 	private String linkedChestLocation = "";
@@ -98,9 +107,9 @@ public class ShopCreationGUI implements Listener {
 		slabLocation = null;
 		shopItem = null;
 		waitingType = ChatWaitingType.NONE;
-		buyPrice = 0;
-		sellPrice = 0;
-		quantity = 0;
+		buyPrice = defaultBuyPrice;
+		sellPrice = defaultSellPrice;
+		quantity = defaultQuantity;
 		stock = 0;
 
 		sellersNote = "";
