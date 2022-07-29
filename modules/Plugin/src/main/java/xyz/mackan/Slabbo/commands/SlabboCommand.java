@@ -114,6 +114,8 @@ public class SlabboCommand extends BaseCommand {
 	@Description("Reloads Slabbo")
 	@CommandPermission("slabbo.reload")
 	public void onReload (Player player) {
+		boolean shouldSave = false;
+
 		player.sendMessage(LocaleManager.getString("general.general.reloading")+" Slabbo");
 
 		Slabbo.getInstance().reloadConfig();
@@ -129,9 +131,20 @@ public class SlabboCommand extends BaseCommand {
 		for (Map.Entry<String, Shop> shopEntry : ShopManager.shops.entrySet()) {
 			Shop shop = shopEntry.getValue();
 
+			if (shop.location == null) {
+				Location shopLocation = ShopManager.fromString(shopEntry.getKey());
+
+				shop.location = shopLocation;
+
+				shouldSave = true;
+			}
+
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
 		}
 
+		if (shouldSave) {
+			DataUtil.saveShops();
+		}
 
 		player.sendMessage("Slabbo "+LocaleManager.getString("general.general.reloaded")+"!");
 	}
