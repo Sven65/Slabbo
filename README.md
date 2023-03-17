@@ -114,6 +114,21 @@ In order to develop Slabbo, you first need to setup the development environment.
 [[1.8+](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-legacy/)]
 [[1.10 to 1.15](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-10-1-15/)]
 [[1.16+](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/)]
+
 2.1. In order to install dependencies for 1.18+, please run buildtools with the `--remapped` option to get the remapped revision jar.
+
 2.2. Be sure to compile craftbukkit using the `--compile craftbukkit` option
 3. Install the compiled JAR files to your local maven using `mvn install:install-file -Dfile="spigot-version.jar" -DgroupId=org.spigotmc -DartifactId=spigot -Dversion=version-R0.1-SNAPSHOT -Dpackaging=jar`
+
+### Common issues with NMS Compile
+
+#### Error with applyPatches.sh
+
+If you get an error with `\r` and alike when running applyPatches, make sure you're running with git bash and not WSL bash.
+
+#### Can't find bungeecoord-chat
+
+Run
+```sh
+mvn dependency:get -DrepoUrl=https://oss.sonatype.org/content/repositories/snapshots -DgroupId=net.md-5 -DartifactId=bungeecord-chat -Dversion=<version>-SNAPSHOT
+```
