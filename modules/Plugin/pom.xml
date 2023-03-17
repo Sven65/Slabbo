@@ -12,13 +12,13 @@
     <parent>
         <artifactId>Slabbo-parent</artifactId>
         <groupId>xyz.mackan</groupId>
-        <version>1.0.36</version>
+        <version>1.0.37</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <groupId>xyz.mackan</groupId>
     <artifactId>Slabbo-plugin</artifactId>
-    <version>1.0.36</version>
+    <version>1.0.37</version>
     <packaging>jar</packaging>
 
     <description>Slab shops for spigot</description>
@@ -69,13 +69,18 @@
             <id>aikar</id>
             <url>https://repo.aikar.co/content/groups/aikar/</url>
         </repository>
+        <repository>
+            <!-- ClearLag -->
+            <id>walshy-public</id>
+            <url>https://repo.walshy.dev/public</url>
+        </repository>
     </repositories>
 
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.19.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -114,7 +119,7 @@
         <dependency>
             <groupId>com.github.TechFortress</groupId>
             <artifactId>GriefPrevention</artifactId>
-            <version>16.7.1</version>
+            <version>16.18</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

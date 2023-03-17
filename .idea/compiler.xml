@@ -13,6 +13,7 @@
         <module name="Slabbo-1_14_R1" />
         <module name="Slabbo-1_16_R2" />
         <module name="Slabbo-1_16_R1" />
+        <module name="Slabbo-1_19_R2" />
         <module name="Slabbo-1_18_R1" />
         <module name="Slabbo-1_19_R1" />
         <module name="Slabbo-1_12_R1" />
@@ -36,25 +37,26 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Slabbo" target="1.5" />
-      <module name="Slabbo-1_10_R1" target="8" />
-      <module name="Slabbo-1_11_R1" target="8" />
-      <module name="Slabbo-1_12_R1" target="8" />
-      <module name="Slabbo-1_13_R1" target="8" />
-      <module name="Slabbo-1_13_R2" target="8" />
-      <module name="Slabbo-1_14_R1" target="8" />
-      <module name="Slabbo-1_15_R1" target="8" />
-      <module name="Slabbo-1_16_R1" target="8" />
-      <module name="Slabbo-1_16_R2" target="8" />
-      <module name="Slabbo-1_16_R3" target="8" />
+      <module name="Slabbo-1_10_R1" target="1.8" />
+      <module name="Slabbo-1_11_R1" target="1.8" />
+      <module name="Slabbo-1_12_R1" target="1.8" />
+      <module name="Slabbo-1_13_R1" target="1.8" />
+      <module name="Slabbo-1_13_R2" target="1.8" />
+      <module name="Slabbo-1_14_R1" target="1.8" />
+      <module name="Slabbo-1_15_R1" target="1.8" />
+      <module name="Slabbo-1_16_R1" target="1.8" />
+      <module name="Slabbo-1_16_R2" target="1.8" />
+      <module name="Slabbo-1_16_R3" target="1.8" />
       <module name="Slabbo-1_17_R1" target="14" />
       <module name="Slabbo-1_18_R1" target="14" />
       <module name="Slabbo-1_18_R2" target="14" />
       <module name="Slabbo-1_19_R1" target="17" />
-      <module name="Slabbo-1_8_R1" target="8" />
-      <module name="Slabbo-1_8_R2" target="8" />
-      <module name="Slabbo-1_8_R3" target="8" />
-      <module name="Slabbo-1_9_R1" target="8" />
-      <module name="Slabbo-1_9_R2" target="8" />
+      <module name="Slabbo-1_19_R2" target="17" />
+      <module name="Slabbo-1_8_R1" target="1.8" />
+      <module name="Slabbo-1_8_R2" target="1.8" />
+      <module name="Slabbo-1_8_R3" target="1.8" />
+      <module name="Slabbo-1_9_R1" target="1.8" />
+      <module name="Slabbo-1_9_R2" target="1.8" />
       <module name="Slabbo-dist" target="1.5" />
       <module name="Slabbo-parent" target="1.5" />
       <module name="Slabbo-plugin" target="1.8" />

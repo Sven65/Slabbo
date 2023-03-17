@@ -22,6 +22,11 @@
       <option name="url" value="https://repo.aikar.co/content/groups/aikar/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="walshy-public" />
+      <option name="name" value="walshy-public" />
+      <option name="url" value="https://repo.walshy.dev/public" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="minebuilders-repo" />
       <option name="name" value="minebuilders-repo" />
       <option name="url" value="http://minebuilders.me:8080/plugin/repository/everything/" />
@@ -37,14 +42,14 @@
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="spigot-repo" />
-      <option name="name" value="spigot" />
-      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="sk89q-repo" />
       <option name="name" value="sk89q-repo" />
       <option name="url" value="https://maven.enginehub.org/repo/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="spigot-repo" />
+      <option name="name" value="spigot" />
+      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
     </remote-repository>
   </component>
 </project>
