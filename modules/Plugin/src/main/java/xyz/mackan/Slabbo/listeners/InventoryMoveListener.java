@@ -36,7 +36,7 @@ public class InventoryMoveListener implements Listener {
 		Location destinationLocation = Misc.getInventoryLocation(destinationInventory);
 		Location sourceLocation = Misc.getInventoryLocation(sourceInventory);
 
-		if (destinationLocation == null) return;
+		if (destinationLocation == null || sourceLocation == null ) return;
 
 		Block destinationBlock = destinationLocation.getBlock();
 		Block sourceBlock = sourceLocation.getBlock();
