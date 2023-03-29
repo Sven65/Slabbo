@@ -168,6 +168,7 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new InventoryMoveListener(), this);
 		getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
 		getServer().getPluginManager().registerEvents(new InventoryPickupItemListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerFishEventListener(), this);
 
 		BukkitVersion version = BukkitVersion.getCurrentVersion();
 
