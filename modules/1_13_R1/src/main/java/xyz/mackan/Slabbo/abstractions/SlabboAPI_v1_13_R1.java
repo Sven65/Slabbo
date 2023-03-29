@@ -42,6 +42,10 @@ public class SlabboAPI_v1_13_R1 implements SlabboAPI {
 		return e.getItem();
 	}
 
+	public ItemStack getInteractionItemInOffHand (PlayerInteractEvent e) {
+		return e.getPlayer().getInventory().getItemInOffHand();
+	}
+
 	public ItemStack getItemInOffHand (org.bukkit.inventory.PlayerInventory inv) { return inv.getItemInOffHand(); }
 
 

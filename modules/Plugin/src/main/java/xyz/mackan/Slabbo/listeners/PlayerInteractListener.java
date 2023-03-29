@@ -250,8 +250,32 @@ public class PlayerInteractListener implements Listener {
 		}
 	}
 
+	/**
+	 * Prevents the shop from being waterlogged
+	 * @param e The event to prevent waterlogging with
+	 */
+	void preventWaterLogging(PlayerInteractEvent e) {
+		Block clickedBlock = e.getClickedBlock();
+
+		if (clickedBlock == null) return;
+
+		ItemStack offhand = api.getInteractionItemInHand(e);
+		ItemStack mainHand = api.getInteractionItemInOffHand(e);
+
+		String clickedLocation = ShopManager.locationToString(clickedBlock.getLocation());
+
+		boolean shopExists = ShopManager.shops.containsKey(clickedLocation);
+		Shop shop = ShopManager.shops.get(clickedLocation);
+
+		if (!shopExists || shop == null) return;
+
+		if (offhand != null && offhand.getType() == Material.WATER_BUCKET || mainHand != null && mainHand.getType() == Material.WATER_BUCKET) e.setCancelled(true);
+	}
+
 	@EventHandler
 	public void onInteract (PlayerInteractEvent e) {
+		preventWaterLogging(e);
+
 		ItemStack itemInHand = api.getInteractionItemInHand(e);
 
 		Player player = e.getPlayer();
