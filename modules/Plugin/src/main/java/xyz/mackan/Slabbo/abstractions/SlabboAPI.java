@@ -34,6 +34,13 @@ public interface SlabboAPI {
 	ItemStack getInteractionItemInHand (PlayerInteractEvent e);
 
 	/**
+	 * Gets the item a user is holding in their offhand when interacting
+	 * @param e
+	 * @return The ItemStack the user's holding in their offhand
+	 */
+	ItemStack getInteractionItemInOffHand (PlayerInteractEvent e);
+
+	/**
 	 * Gets the item in the players offhand
 	 * @param inv
 	 * @return The ItemStack the user's holding in their offhand

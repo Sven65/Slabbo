@@ -17,11 +17,7 @@ public class PlayerFishEventListener implements Listener {
 
     @EventHandler
     public void onFish (PlayerFishEvent e) {
-        Slabbo.getInstance().getLogger().info("Hello World, we're fishing!");
-
-        Entity hooked = e.getHook().getHookedEntity();
         Entity caught = e.getCaught();
-
 
         if (caught == null) return;
 
@@ -29,8 +25,6 @@ public class PlayerFishEventListener implements Listener {
 
         Item item = (Item) caught;
 
-        Slabbo.log.info("caught entity");
-        Slabbo.log.info(e.getCaught().toString());
 
         if (!api.isSlabboItem(item)) return;
 
