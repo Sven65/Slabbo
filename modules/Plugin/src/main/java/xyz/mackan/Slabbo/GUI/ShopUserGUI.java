@@ -234,6 +234,7 @@ public class ShopUserGUI implements Listener {
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
 	}
 
+	// Player selling to a shop
 	public void handleSell (HumanEntity humanEntity) {
 		OfflinePlayer shopOwner = Bukkit.getOfflinePlayer(shop.ownerId);
 
@@ -250,6 +251,7 @@ public class ShopUserGUI implements Listener {
 		int itemCount = 0;
 
 		ItemStack[] itemStacks = pInv.getContents();
+		ItemStack offhandStack = pInv.getItemInOffHand();
 
 		for (ItemStack inventoryItem : itemStacks) {
 			if (inventoryItem == null || inventoryItem.getType() == Material.AIR) continue;
@@ -301,7 +303,20 @@ public class ShopUserGUI implements Listener {
 
 		shopItemClone.setAmount(itemCount);
 
-		pInv.removeItem(shopItemClone);
+		ItemStack itemInShop = shop.item.clone();
+		itemInShop.setAmount(1);
+
+		ItemStack offhandClone = offhandStack.clone();
+		offhandClone.setAmount(1);
+
+		if (itemInShop.equals(offhandClone)) {
+			offhandClone.setAmount(offhandStack.getAmount() - shop.quantity);
+
+			pInv.setItemInOffHand(offhandClone);
+		} else {
+			// This removes the item from player inv
+			pInv.removeItem(shopItemClone);
+		}
 
 		Slabbo.getEconomy().depositPlayer((OfflinePlayer)humanEntity, totalCost);
 
