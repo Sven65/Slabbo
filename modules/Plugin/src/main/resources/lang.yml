@@ -16,6 +16,7 @@ error-message:
     no-buy-commands-in-shop: That shop doesn't have any buy commands.
     no-sell-commands-in-shop: That shop doesn't have any sell commands.
     invalid-index: That's not a valid index!
+    shop-does-not-exist: That shop doesn't exist!
   import:
     file-not-found: That file can't be found
     plugin-not-supported: That plugin can't be imported

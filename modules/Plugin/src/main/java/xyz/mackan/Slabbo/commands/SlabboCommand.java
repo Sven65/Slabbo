@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
+import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
@@ -985,5 +986,40 @@ public class SlabboCommand extends BaseCommand {
 		DataUtil.saveShops();
 
 		player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.chestlink.linking-removed"));
+	}
+
+	@Subcommand("shop")
+	@Description("Slabbo shop commands")
+	public class SlabboShopCommand extends BaseCommand {
+		@HelpCommand
+		@CatchUnknown
+		public void onCommand(CommandSender sender, CommandHelp help) {
+			help.showHelp();
+		}
+
+		@Subcommand("open")
+		@Description("Open a slabbo shop by location")
+		@CommandPermission("slabbo.shop.commandopen")
+		public void openShopCommand(Player player, int x, int y, int z, @Optional String world) {
+			String shopWorld = (world != null) ? world : "world";
+
+			String locationString = String.format(
+					"%s,%d,%d,%d",
+					world,
+					x,
+					y,
+					z
+			);
+
+			if (!ShopManager.shops.containsKey(locationString)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(locationString);
+
+			ShopUserGUI gui = new ShopUserGUI(shop, player);
+			gui.openInventory(player);
+		}
 	}
 }
