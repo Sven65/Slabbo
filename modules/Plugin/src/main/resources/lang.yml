@@ -38,6 +38,10 @@ error-message:
     not-enough-stock: The shop doesn't have enough stock left!
     stock-limit-reached: The shop can't have more than {limit} items in stock!
     change-item-disallowed: Please empty the shop before changing the item!
+  plugin:
+    worldguard:
+      region-creation-prevented: WorldGuard prevents you from creating a shop in this region.
+      region-creation-limit-reached: You've created the maximum amount of shops in this region.
 
 success-message:
   chestlink:

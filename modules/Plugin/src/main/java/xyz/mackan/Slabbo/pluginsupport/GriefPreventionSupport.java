@@ -7,20 +7,20 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 public class GriefPreventionSupport {
-	public static boolean canCreateShop (Location location, Player player) {
+	public static PluginSupport.CanCreateShopResult canCreateShop (Location location, Player player) {
 		Claim claim = GriefPrevention.instance.dataStore.getClaimAt(location, false, null);
 
 		if (claim == null) {
-			return true;
+			return new PluginSupport.CanCreateShopResult(true);
 		}
 
 		String error = claim.allowBuild(player, Material.AIR);
 
 		if (error == null || error.equalsIgnoreCase("")) {
-			return true;
+			return new PluginSupport.CanCreateShopResult(true);
 		}
 
-		return false;
+		return new PluginSupport.CanCreateShopResult(false);
 	}
 
 	public static boolean canUseShop (Location location, Player player) {

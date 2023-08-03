@@ -44,7 +44,15 @@ public class PlayerInteractListener implements Listener {
 
 		boolean isShopOwner = false;
 
-		boolean canCreateShop = PermissionUtil.canCreateShop(player) && PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
+		boolean hasPermissionCreateShop = PermissionUtil.canCreateShop(player);
+		PluginSupport.CanCreateShopResult canCreateShopResult = PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
+
+		if (!canCreateShopResult.canCreateShop) {
+			if(canCreateShopResult.errorMessage != null) player.sendMessage(ChatColor.RED + canCreateShopResult.errorMessage);
+			return new ShopAction(ShopAction.ShopActionType.NONE);
+		}
+
+		boolean canCreateShop = hasPermissionCreateShop && canCreateShopResult.canCreateShop;
 		boolean canUseShop = PermissionUtil.canUseShop(player) && PluginSupport.canUseShop(clickedBlock.getLocation(), player);
 
 		if (shopExists) {
@@ -134,9 +142,12 @@ public class PlayerInteractListener implements Listener {
 
 			if (!ChestLinkManager.hasPendingLink(player)) return new ShopAction(ShopAction.ShopActionType.NONE);
 
-			boolean canCreateShop = PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
+			PluginSupport.CanCreateShopResult canCreateShopResult = PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
 
-			if (!canCreateShop) return new ShopAction(ShopAction.ShopActionType.NONE);
+			if (!canCreateShopResult.canCreateShop) {
+				if(canCreateShopResult.errorMessage != null) player.sendMessage(ChatColor.RED + canCreateShopResult.errorMessage);
+				return new ShopAction(ShopAction.ShopActionType.NONE);
+			}
 
 			return new ShopAction(ShopAction.ShopActionType.LINK_CHEST);
 		}
