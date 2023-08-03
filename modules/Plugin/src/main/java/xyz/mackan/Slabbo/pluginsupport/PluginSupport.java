@@ -4,7 +4,22 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.Slabbo;
 
+
 public class PluginSupport {
+
+	public static class CanCreateShopResult {
+		public boolean canCreateShop;
+		public String errorMessage;
+
+		public CanCreateShopResult(boolean canCreateShop) {
+			this.canCreateShop = canCreateShop;
+		}
+
+		public CanCreateShopResult(boolean canCreateShop, String errorMessage) {
+			this.canCreateShop = canCreateShop;
+			this.errorMessage = errorMessage;
+		}
+	}
 
 	public static class EnabledPlugins {
 		public static boolean worldguard = false;
@@ -13,22 +28,30 @@ public class PluginSupport {
 		public static boolean magic = false;
 	}
 
-	public static boolean canCreateShop (Location location, Player player) {
-		boolean canCreateShop = true;
+	public static CanCreateShopResult canCreateShop (Location location, Player player) {
+		CanCreateShopResult canCreateShopResult = new CanCreateShopResult(true);
 
 		if (EnabledPlugins.worldguard) {
-			canCreateShop = WorldguardSupport.canCreateShop(location, player);
+			canCreateShopResult = WorldguardSupport.canCreateShop(location, player);
 		}
 
 		if (EnabledPlugins.griefprevention) {
-			canCreateShop = GriefPreventionSupport.canCreateShop(location, player);
+			canCreateShopResult = GriefPreventionSupport.canCreateShop(location, player);
 		}
 
 		if (EnabledPlugins.worldguard && EnabledPlugins.griefprevention) {
-			canCreateShop = WorldguardSupport.canCreateShop(location, player) && GriefPreventionSupport.canCreateShop(location, player);
+			CanCreateShopResult canCreateWg = WorldguardSupport.canCreateShop(location, player);
+			CanCreateShopResult canCreateGp = GriefPreventionSupport.canCreateShop(location, player);
+
+			String error = null;
+
+			if (!canCreateWg.canCreateShop) error = canCreateWg.errorMessage;
+			if (!canCreateGp.canCreateShop) error = canCreateGp.errorMessage;
+
+			canCreateShopResult = new CanCreateShopResult(canCreateWg.canCreateShop && canCreateWg.canCreateShop, error);
 		}
 
-		return canCreateShop;
+		return canCreateShopResult;
 	}
 
 	public static boolean canUseShop (Location location, Player player) {
