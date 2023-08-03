@@ -1005,7 +1005,7 @@ public class SlabboCommand extends BaseCommand {
 
 			String locationString = String.format(
 					"%s,%d,%d,%d",
-					world,
+					shopWorld,
 					x,
 					y,
 					z
