@@ -26,6 +26,11 @@ barriershops: true
 # an oversized stack can have 64 items.
 sellOversized: false
 
+# If shops can withdraw oversized stacks
+# I.e, a regular stack of pickaxes can only have one item,
+# an oversized stack can have 64 items.
+withdrawOversized: false
+
 # The maximum amount of items a shop can keep in stock.
 # Set to -1 for unlimited
 maxStockSize: -1

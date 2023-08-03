@@ -26,6 +26,7 @@ import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.types.ShopAction;
 import xyz.mackan.Slabbo.utils.DataUtil;
+import xyz.mackan.Slabbo.utils.InventoryUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
 
@@ -198,6 +199,8 @@ public class ShopAdminGUI implements Listener {
 
 	public void handleWithdraw (HumanEntity humanEntity, ClickType clickType) {
 		boolean isBulk = clickType.equals(ClickType.SHIFT_LEFT);
+		boolean withdrawOversized = Slabbo.getInstance().getConfig().getBoolean("withdrawOversized", false);
+
 
 		Player player = (Player) humanEntity;
 
@@ -227,15 +230,8 @@ public class ShopAdminGUI implements Listener {
 
 		ItemStack shopItemClone = shop.item.clone();
 
-		shopItemClone.setAmount(tempTransferRate);
+		int leftoverCount = InventoryUtil.addItemsToPlayerInventory(pInv, shopItemClone, tempTransferRate, withdrawOversized);
 
-		HashMap<Integer, ItemStack> leftovers = pInv.addItem(shopItemClone);
-
-		int leftoverCount = leftovers
-				.values()
-				.stream()
-				.map(stack -> stack.getAmount())
-				.reduce(0, (total, el) -> total + el);
 
 		if (!shop.admin) {
 			shop.stock -= (tempTransferRate - leftoverCount);
