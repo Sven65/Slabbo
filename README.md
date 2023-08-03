@@ -67,6 +67,7 @@ Destroying: Right click existing shop with stick
 | `slabbo.unlink.others`                 | Lets you unlink chests from other peoples shops with a command                |
 | `slabbo.admin.set.owner_name`          | Lets you set the displayed owner name of an admin shop                        |
 | `slabbo.admin.set.*`                   | Gives you access to set all properties on an admin shop                       |
+| `slabbo.shop.commandopen`              | Lets you open a shop by command                                               |
 
 ## Commands
 
@@ -100,6 +101,7 @@ Destroying: Right click existing shop with stick
 - `/slabbo shopcommands remove sell`
 - `/slabbo shopcommands list buy`
 - `/slabbo shopcommands list sell`
+- `/slabbo shop open <x> <y> <z> [world]`
 
 ## Legal
 

@@ -243,6 +243,16 @@ permissions:
       slabbo.shopcommands.list.self.sell: true
 
 
+  # ============================================================================== #
+
+  ## Shop commands (open etc)
+
+  ### Self
+
+  slabbo.shop.commandopen:
+    default: op
+    description: Lets you open a shop by command
+
 
   # ============================================================================== #
 
