@@ -17,6 +17,7 @@ import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
+import xyz.mackan.Slabbo.utils.InventoryUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 
 import java.util.ArrayList;
@@ -125,47 +126,9 @@ public class ShopUserGUI implements Listener {
 
 		PlayerInventory pInv = humanEntity.getInventory();
 
-		List<ItemStack> stacksToAdd = new ArrayList<ItemStack>();
-
 		ItemStack shopItemClone = shop.item.clone();
 
-		if (sellOversized) {
-			shopItemClone.setAmount(itemCount);
-			stacksToAdd.add(shopItemClone);
-		} else {
-			int maxStackSize = slabboAPI.getMaxStack(shopItemClone);
-
-			int stacks = (int)Math.floor(itemCount / maxStackSize);
-			int lastStack = itemCount % maxStackSize;
-
-			//int totalStacks = (totalItems / maxStackSize + (totalItems % maxStackSize));
-
-
-			for (int i = 0;i<stacks;i++) {
-				int size = maxStackSize;
-
-				ItemStack clonedStack = shop.item.clone();
-				clonedStack.setAmount(size);
-				stacksToAdd.add(clonedStack);
-			}
-
-			if (lastStack > 0) {
-				ItemStack clonedStack = shop.item.clone();
-				clonedStack.setAmount(lastStack);
-				stacksToAdd.add(clonedStack);
-			}
-		}
-
-		ItemStack[] stackArray = stacksToAdd.toArray(new ItemStack[stacksToAdd.size()]);
-		HashMap<Integer, ItemStack> leftovers = pInv.addItem(stackArray);
-
-		// TODO: Make this do a dry run to see if the player can acutally get all the items
-		int leftoverCount = leftovers
-				.values()
-				.stream()
-				.map(stack -> stack.getAmount())
-				.reduce(0, (total, el) -> total + el);
-
+		int leftoverCount = InventoryUtil.addItemsToPlayerInventory(pInv, shopItemClone, itemCount, sellOversized);
 
 		int totalBought = itemCount - leftoverCount;
 
