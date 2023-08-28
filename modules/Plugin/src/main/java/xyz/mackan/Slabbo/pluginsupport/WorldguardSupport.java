@@ -89,6 +89,8 @@ public class WorldguardSupport {
 		return shopsInRegion;
 	}
 
+
+
 	/**
 	 * Gets the highest priority region for a location
 	 * @param location The location to get region for

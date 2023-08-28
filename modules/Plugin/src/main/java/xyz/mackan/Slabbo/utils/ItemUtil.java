@@ -90,7 +90,7 @@ public class ItemUtil {
 		if (clonedItem.hasItemMeta() && meta != null) {
 			meta.setDisplayName("Slabbo Item " + ShopManager.locationToString(location));
 
-			if (PluginSupport.EnabledPlugins.holoDropsX) {
+			if (PluginSupport.isPluginEnabled("HoloDropsX")) {
 				ArrayList<String> lore = new ArrayList<String>();
 
 				lore.add("Display Item");
@@ -109,7 +109,7 @@ public class ItemUtil {
 
 		itemEnt.setVelocity(itemEnt.getVelocity().zero());
 
-		if (PluginSupport.EnabledPlugins.magic) {
+		if (PluginSupport.isPluginEnabled("Magic")) {
 			itemEnt.setPickupDelay(Integer.MAX_VALUE);
 		}
 
