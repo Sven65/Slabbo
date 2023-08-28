@@ -47,6 +47,11 @@
       <option name="url" value="https://maven.enginehub.org/repo/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="alex9849" />
+      <option name="name" value="alex9849" />
+      <option name="url" value="https://nexus.alex9849.net/repository/maven-releases/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="spigot-repo" />
       <option name="name" value="spigot" />
       <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />

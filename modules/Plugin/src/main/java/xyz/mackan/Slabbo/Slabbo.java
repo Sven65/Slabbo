@@ -55,7 +55,7 @@ public class Slabbo extends JavaPlugin {
 
 	@Override
 	public void onLoad () {
-		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+		if (PluginSupport.isPluginEnabled("WorldGuard")) {
 			WorldguardSupport.registerFlags();
 		}
 	}
@@ -131,21 +131,12 @@ public class Slabbo extends JavaPlugin {
 
 
 	private void setupPluginSupport () {
-		if (getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-			PluginSupport.EnabledPlugins.worldguard = true;
-		}
-
-		if (getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
-			PluginSupport.EnabledPlugins.griefprevention = true;
-		}
-
-		if (getServer().getPluginManager().getPlugin("HoloDropsX") != null) {
-			PluginSupport.EnabledPlugins.holoDropsX = true;
-		}
-
-		if (getServer().getPluginManager().getPlugin("Magic") != null) {
-			PluginSupport.EnabledPlugins.magic = true;
-		}
+		PluginSupport.checkPlugin("WorldGuard");
+		PluginSupport.checkPlugin("GriefPrevention");
+		PluginSupport.checkPlugin("HoloDropsX");
+		PluginSupport.checkPlugin("Magic");
+		PluginSupport.checkPlugin("AdvancedRegionMarket");
+		PluginSupport.checkPlugin("ClearLag");
 	}
 
 	private void checkUpdates () {
@@ -183,8 +174,14 @@ public class Slabbo extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 		}
 
-		if (getServer().getPluginManager().getPlugin("ClearLag") != null) {
+		if (PluginSupport.isPluginEnabled("ClearLag")) {
 			getServer().getPluginManager().registerEvents(new ClearlagItemRemoveListener(), this);
+		}
+
+		if (PluginSupport.isPluginEnabled("AdvancedRegionMarket")) {
+			this.getLogger().info("[Slabbo] ARM Found, enabling listeners");
+
+			getServer().getPluginManager().registerEvents(new ARMListener(), this);
 		}
 	}
 

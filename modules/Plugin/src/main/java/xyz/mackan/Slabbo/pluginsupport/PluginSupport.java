@@ -4,6 +4,13 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import xyz.mackan.Slabbo.Slabbo;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
+import static org.bukkit.Bukkit.getServer;
+
 
 public class PluginSupport {
 
@@ -21,25 +28,29 @@ public class PluginSupport {
 		}
 	}
 
-	public static class EnabledPlugins {
-		public static boolean worldguard = false;
-		public static boolean griefprevention = false;
-		public static boolean holoDropsX = false;
-		public static boolean magic = false;
+	public static Map<String, Boolean> pluginStatus = new HashMap<String, Boolean>();
+
+	public static boolean isPluginEnabled (String pluginName) {
+		return pluginStatus.getOrDefault(pluginName, false);
+	}
+
+	public static void checkPlugin(String pluginName) {
+		if (getServer().getPluginManager().getPlugin(pluginName) == null) return;
+		pluginStatus.put(pluginName, true);
 	}
 
 	public static CanCreateShopResult canCreateShop (Location location, Player player) {
 		CanCreateShopResult canCreateShopResult = new CanCreateShopResult(true);
 
-		if (EnabledPlugins.worldguard) {
+		if (isPluginEnabled("WorldGuard")) {
 			canCreateShopResult = WorldguardSupport.canCreateShop(location, player);
 		}
 
-		if (EnabledPlugins.griefprevention) {
+		if (isPluginEnabled("GriefPrevention")) {
 			canCreateShopResult = GriefPreventionSupport.canCreateShop(location, player);
 		}
 
-		if (EnabledPlugins.worldguard && EnabledPlugins.griefprevention) {
+		if (isPluginEnabled("WorldGuard") && isPluginEnabled("GriefPrevention")) {
 			CanCreateShopResult canCreateWg = WorldguardSupport.canCreateShop(location, player);
 			CanCreateShopResult canCreateGp = GriefPreventionSupport.canCreateShop(location, player);
 
@@ -57,15 +68,15 @@ public class PluginSupport {
 	public static boolean canUseShop (Location location, Player player) {
 		boolean canUseShop = true;
 
-		if (EnabledPlugins.worldguard) {
+		if (isPluginEnabled("WorldGuard")) {
 			canUseShop = WorldguardSupport.canUseShop(location, player);
 		}
 
-		if (EnabledPlugins.griefprevention) {
+		if (isPluginEnabled("GriefPrevention")) {
 			canUseShop = GriefPreventionSupport.canUseShop(location, player);
 		}
 
-		if (EnabledPlugins.worldguard && EnabledPlugins.griefprevention) {
+		if (isPluginEnabled("WorldGuard") && isPluginEnabled("GriefPrevention")) {
 			canUseShop = WorldguardSupport.canUseShop(location, player) || GriefPreventionSupport.canUseShop(location, player);
 		}
 

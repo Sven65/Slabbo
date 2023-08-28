@@ -145,5 +145,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.sk89q:commandbook:2.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.bstats:bstats-bukkit:1.7" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.TechFortress:GriefPrevention:16.18" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: net.alex9849.advancedregionmarket:advancedregionmarket:3.5.3" level="project" />
   </component>
 </module>
