@@ -16,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
@@ -1058,6 +1059,52 @@ public class SlabboCommand extends BaseCommand {
 
 			ShopCreationGUI gui = new ShopCreationGUI(shopName, true);
 
+			gui.openInventory(player);
+		}
+
+		@Subcommand("edit virtual")
+		@Description("Edits a virtual slabbo shop")
+		@CommandCompletion("@virtualShopNames")
+		@CommandPermission("slabbo.shop.virtual.edit")
+		public void editVirtualShopCommand(Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			if (!shop.ownerId.equals(player.getUniqueId())) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-shop-owner"));
+				return;
+			}
+
+			ShopAdminGUI gui = new ShopAdminGUI(shop, player);
+			gui.openInventory(player);
+		}
+
+		@Subcommand("delete virtual")
+		@Description("Deletes a virtual slabbo shop")
+		@CommandCompletion("@virtualShopNames")
+		@CommandPermission("slabbo.shop.virtual.delete")
+		public void deleteVirtualShopCommand(Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			if (!shop.ownerId.equals(player.getUniqueId())) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-shop-owner"));
+				return;
+			}
+
+			ShopDeletionGUI gui = new ShopDeletionGUI(shop);
 			gui.openInventory(player);
 		}
 	}

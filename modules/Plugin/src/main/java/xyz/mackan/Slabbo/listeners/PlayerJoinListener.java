@@ -41,7 +41,7 @@ public class PlayerJoinListener implements Listener {
 						player.sendMessage(LocaleManager.replaceKey("general.general.virtual-restock-message", replacementMap));
 					} else {
 						replacementMap.put("location", ShopManager.locationToString(shop.location));
-						
+
 						player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
 					}
 				}

@@ -42,11 +42,11 @@ public class ShopDeletionGUI  implements Listener {
 	public void handleDestroy (HumanEntity humanEntity) {
 		UUID userId = humanEntity.getUniqueId();
 
-		ItemUtil.removeShopItemsAtLocation(shop.location);
+		if (!shop.virtual) ItemUtil.removeShopItemsAtLocation(shop.location);
 
 		ShopManager.removeShop(shop);
 
-		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
+		((Player) humanEntity).playSound(shop.location == null ? humanEntity.getLocation() : shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
 
 		DataUtil.saveShops();
 
@@ -56,7 +56,7 @@ public class ShopDeletionGUI  implements Listener {
 	public void handleCancel (HumanEntity humanEntity) {
 		humanEntity.closeInventory();
 
-		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
+		((Player) humanEntity).playSound(shop.location == null ? humanEntity.getLocation() : shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 
 	}
 
