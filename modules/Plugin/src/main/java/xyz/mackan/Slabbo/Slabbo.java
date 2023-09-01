@@ -202,7 +202,11 @@ public class Slabbo extends JavaPlugin {
 		});
 
 		manager.getCommandCompletions().registerCompletion("virtualShopNames", c -> {
-			return SlabboCommandCompletions.getVirtualShops();
+			return SlabboCommandCompletions.getVirtualShopNames();
+		});
+
+		manager.getCommandCompletions().registerCompletion("virtualAdminShopNames", c -> {
+			return SlabboCommandCompletions.getVirtualAdminShopNames();
 		});
 
 		Conditions.registerConditions(manager);

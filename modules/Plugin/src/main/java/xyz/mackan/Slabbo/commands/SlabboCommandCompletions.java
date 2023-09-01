@@ -20,9 +20,17 @@ public class SlabboCommandCompletions {
 				.collect(Collectors.toList());
 	}
 
-	public static List<String> getVirtualShops() {
+	public static List<String> getVirtualShopNames() {
 		return Arrays.stream(ShopManager.shops.values().toArray())
 				.filter(shop -> ((Shop)shop).virtual)
+				.map(shop -> ((Shop) shop).shopName)
+				.collect(Collectors.toList());
+	}
+
+	public static List<String> getVirtualAdminShopNames() {
+		return Arrays.stream(ShopManager.shops.values().toArray())
+				.filter(shop -> ((Shop)shop).virtual)
+				.filter(shop -> ((Shop) shop).admin)
 				.map(shop -> ((Shop) shop).shopName)
 				.collect(Collectors.toList());
 	}
