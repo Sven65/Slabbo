@@ -45,7 +45,7 @@ public class ShopManager {
 	}
 
 	public static void removeShop(Shop shop) {
-		String locationString = ShopManager.locationToString(shop.location);
+		String locationString = ShopManager.locationToString(shop.location, shop.shopName);
 
 		shops.remove(locationString);
 
