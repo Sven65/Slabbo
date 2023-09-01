@@ -1309,8 +1309,6 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Creates a virtual shop")
 		@CommandPermission("slabbo.shop.virtual.create")
 		public void createVirtualShopCommand(Player player, String shopName) {
-			player.sendMessage("Create virtual shop");
-
 			if (ShopManager.shops.containsKey(shopName.toLowerCase())) {
 				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.named-shop-already-exists"));
 				return;
