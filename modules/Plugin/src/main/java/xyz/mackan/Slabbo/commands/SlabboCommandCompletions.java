@@ -1,6 +1,8 @@
 package xyz.mackan.Slabbo.commands;
 
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.manager.ShopManager;
+import xyz.mackan.Slabbo.types.Shop;
 
 import java.io.File;
 import java.util.Arrays;
@@ -15,6 +17,21 @@ public class SlabboCommandCompletions {
 		return Arrays.stream(folder.listFiles())
 				.filter(file -> file.isFile() && !file.getName().equalsIgnoreCase("shops.yml") && file.getName().endsWith(".yml"))
 				.map(file -> file.getName())
+				.collect(Collectors.toList());
+	}
+
+	public static List<String> getVirtualShopNames() {
+		return Arrays.stream(ShopManager.shops.values().toArray())
+				.filter(shop -> ((Shop)shop).virtual)
+				.map(shop -> ((Shop) shop).shopName)
+				.collect(Collectors.toList());
+	}
+
+	public static List<String> getVirtualAdminShopNames() {
+		return Arrays.stream(ShopManager.shops.values().toArray())
+				.filter(shop -> ((Shop)shop).virtual)
+				.filter(shop -> ((Shop) shop).admin)
+				.map(shop -> ((Shop) shop).shopName)
 				.collect(Collectors.toList());
 	}
 }

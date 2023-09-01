@@ -16,6 +16,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
+import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
@@ -199,6 +201,35 @@ public class SlabboCommand extends BaseCommand {
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
 
+		@Subcommand("toggle virtual")
+		@Description("Toggles a virtual shop as being an admin shop")
+		@CommandPermission("slabbo.admin.toggle.virtual")
+		@CommandCompletion("@virtualShopNames")
+		public void onToggleVirtualAdmin (Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			shop.admin = !shop.admin;
+
+			if (shop.admin) {
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.admin-create"));
+			} else {
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.admin-destroy"));
+			}
+
+			ShopManager.shops.put(shop.shopName, shop);
+
+			DataUtil.saveShops();
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+		}
+
 		@Subcommand("limit")
 		@Description("Commands for setting the shop to have a limited stock")
 //		@CommandPermission("slabbo.admin.limit|slabbo.admin.limit.toggle|slabbo.admin.limit.time|slabbo.admin.limit.stock|slabbo.admin.limit.stock.buy|slabbo.admin.limit.stock.sell")
@@ -337,6 +368,190 @@ public class SlabboCommand extends BaseCommand {
 			}
 		}
 
+		@Subcommand("limit virtual")
+		@Description("Commands for setting virtual shops to have a limited stock")
+		public class SlabboAdminLimitVirtualCommand extends BaseCommand {
+
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
+
+			@Subcommand("toggle")
+			@Description("Toggles the virtual admin shop as having limited stock")
+			@CommandCompletion("@virtualAdminShopNames")
+			@CommandPermission("slabbo.admin.limit.virtual.toggle")
+			public void onToggleVirtualLimit (Player player, String name) {
+				String loweredName = name.toLowerCase();
+
+				if (!ShopManager.shops.containsKey(loweredName)) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+					return;
+				}
+
+				Shop shop = ShopManager.shops.get(loweredName);
+
+				if (!shop.admin) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
+					return;
+				}
+
+				ShopLimit limit = shop.shopLimit;
+
+				if (shop.shopLimit == null) {
+					limit = new ShopLimit(0, 0, 0, 0L, false);
+				}
+
+				limit.enabled = !limit.enabled;
+
+				shop.shopLimit = limit;
+
+				if (limit.enabled) {
+					limit.restock();
+					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.limited-stock.create"));
+				} else {
+					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.limited-stock.destroy"));
+				}
+
+				ShopManager.shops.put(shop.getLocationString(), shop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+			}
+
+			@Subcommand("stock")
+			@Description("Commands for setting the limited stocks")
+			public class SlabboAdminLimitVirtualStockCommand extends BaseCommand {
+
+				@HelpCommand
+				@CatchUnknown
+				public void onCommand(CommandSender sender, CommandHelp help) {
+					help.showHelp();
+				}
+
+				@Subcommand("buy")
+				@Description("Sets the limited buy stock the virtual shop has")
+				@CommandCompletion("@virtualAdminShopNames")
+				@CommandPermission("slabbo.admin.limit.virtual.stock.buy")
+				public void onSetVirtualBuyStock (Player player, String name, int stock) {
+					String loweredName = name.toLowerCase();
+
+					if (!ShopManager.shops.containsKey(loweredName)) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+						return;
+					}
+
+					Shop shop = ShopManager.shops.get(loweredName);
+
+					if (!shop.admin) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
+						return;
+					}
+
+					ShopLimit limit = shop.shopLimit;
+
+					if (shop.shopLimit == null) {
+						limit = new ShopLimit(0, 0, 0, 0L, false);
+					}
+
+					limit.buyStock = stock;
+
+					limit.restock();
+
+					shop.shopLimit = limit;
+
+					player.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-buy-stock", "stock", stock));
+
+					ShopManager.shops.put(shop.getLocationString(), shop);
+
+					DataUtil.saveShops();
+
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+				}
+
+				@Subcommand("sell")
+				@Description("Sets the limited sell stock the virtual shop has")
+				@CommandCompletion("@virtualAdminShopNames")
+				@CommandPermission("slabbo.admin.limit.virtual.stock.sell")
+				public void onSetVirtualSellStock (Player player, String name, int stock) {
+					String loweredName = name.toLowerCase();
+
+					if (!ShopManager.shops.containsKey(loweredName)) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+						return;
+					}
+
+					Shop shop = ShopManager.shops.get(loweredName);
+
+					if (!shop.admin) {
+						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
+						return;
+					}
+
+					ShopLimit limit = shop.shopLimit;
+
+					if (shop.shopLimit == null) {
+						limit = new ShopLimit(0, 0, 0, 0L, false);
+					}
+
+					limit.sellStock = stock;
+
+					limit.restock();
+
+					shop.shopLimit = limit;
+
+					player.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-sell-stock", "stock", stock));
+
+					ShopManager.shops.put(shop.getLocationString(), shop);
+
+					DataUtil.saveShops();
+
+					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+				}
+
+			}
+
+			@Subcommand("time")
+			@Description("Sets the time before the virtual shop restocks, in seconds")
+			@CommandCompletion("@virtualAdminShopNames")
+			@CommandPermission("slabbo.admin.limit.virtual.time")
+			public void onSetVirtualTime (Player player, String name, int time) {
+				String loweredName = name.toLowerCase();
+
+				if (!ShopManager.shops.containsKey(loweredName)) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+					return;
+				}
+
+				Shop shop = ShopManager.shops.get(loweredName);
+
+				if (!shop.admin) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
+					return;
+				}
+
+				ShopLimit limit = shop.shopLimit;
+
+				if (shop.shopLimit == null) {
+					limit = new ShopLimit(0, 0, 0, 0L, false);
+				}
+
+				limit.restockTime = time;
+
+				shop.shopLimit = limit;
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-time", "time", time));
+
+				ShopManager.shops.put(shop.getLocationString(), shop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+			}
+		}
+
 		@Subcommand("set")
 		@Description("Sets properties for the admin shop")
 		public class SlabboAdminSetCommand extends BaseCommand {
@@ -364,6 +579,52 @@ public class SlabboCommand extends BaseCommand {
 				}
 
 				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+
+				DataUtil.saveShops();
+
+				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+			}
+		}
+
+		@Subcommand("set virtual")
+		@Description("Sets properties for the virtual admin shop")
+		public class SlabboAdminVirtualSetCommand extends BaseCommand {
+			@HelpCommand
+			@CatchUnknown
+			public void onCommand(CommandSender sender, CommandHelp help) {
+				help.showHelp();
+			}
+
+			@Subcommand("owner_name")
+			@Description("Sets the name to display as the shop owner")
+			@CommandCompletion("@virtualAdminShopNames")
+			@CommandPermission("slabbo.admin.set.virtual.owner_name")
+			public void onSetVirtualOwnerName (Player player, String name, @Optional String newName) {
+				String loweredName = name.toLowerCase();
+
+				if (!ShopManager.shops.containsKey(loweredName)) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+					return;
+				}
+
+				Shop shop = ShopManager.shops.get(loweredName);
+
+				if (!shop.admin) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
+					return;
+				}
+
+				if (newName == null || newName.equals("")) {
+					shop.displayedOwnerName = null;
+
+					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.owner-name-removed"));
+				} else {
+					shop.displayedOwnerName = newName;
+
+					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.owner-name-set"));
+				}
+
+				ShopManager.shops.put(shop.getLocationString(), shop);
 
 				DataUtil.saveShops();
 
@@ -1023,6 +1284,84 @@ public class SlabboCommand extends BaseCommand {
 			Shop shop = ShopManager.shops.get(locationString);
 
 			ShopUserGUI gui = new ShopUserGUI(shop, player);
+			gui.openInventory(player);
+		}
+
+		@Subcommand("open virtual")
+		@Description("Open a virtual slabbo shop")
+		@CommandCompletion("@virtualShopNames")
+		@CommandPermission("slabbo.shop.virtual.open")
+		public void openVirtualShopCommand(Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			ShopUserGUI gui = new ShopUserGUI(shop, player);
+			gui.openInventory(player);
+		}
+
+		@Subcommand("create virtual")
+		@Description("Creates a virtual shop")
+		@CommandPermission("slabbo.shop.virtual.create")
+		public void createVirtualShopCommand(Player player, String shopName) {
+			if (ShopManager.shops.containsKey(shopName.toLowerCase())) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.named-shop-already-exists"));
+				return;
+			}
+
+			ShopCreationGUI gui = new ShopCreationGUI(shopName, true);
+
+			gui.openInventory(player);
+		}
+
+		@Subcommand("edit virtual")
+		@Description("Edits a virtual slabbo shop")
+		@CommandCompletion("@virtualShopNames")
+		@CommandPermission("slabbo.shop.virtual.edit")
+		public void editVirtualShopCommand(Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			if (!shop.ownerId.equals(player.getUniqueId())) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-shop-owner"));
+				return;
+			}
+
+			ShopAdminGUI gui = new ShopAdminGUI(shop, player);
+			gui.openInventory(player);
+		}
+
+		@Subcommand("delete virtual")
+		@Description("Deletes a virtual slabbo shop")
+		@CommandCompletion("@virtualShopNames")
+		@CommandPermission("slabbo.shop.virtual.delete")
+		public void deleteVirtualShopCommand(Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			if (!shop.ownerId.equals(player.getUniqueId())) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-shop-owner"));
+				return;
+			}
+
+			ShopDeletionGUI gui = new ShopDeletionGUI(shop);
 			gui.openInventory(player);
 		}
 	}

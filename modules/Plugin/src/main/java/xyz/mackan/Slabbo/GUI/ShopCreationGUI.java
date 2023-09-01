@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.GUI;
 
+import jline.internal.Nullable;
 import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -61,6 +62,9 @@ public class ShopCreationGUI implements Listener {
 	private boolean isModifying = false;
 	private boolean isAdmin = false;
 
+	private String shopName = "";
+	private boolean virtual = false;
+
 	private boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
 
 
@@ -88,6 +92,9 @@ public class ShopCreationGUI implements Listener {
 
 		commandList = shop.commandList;
 
+		virtual = shop.virtual;
+		shopName = shop.shopName;
+
 
 		initializeStage2();
 	}
@@ -100,6 +107,47 @@ public class ShopCreationGUI implements Listener {
 		this.slabLocation = slabLocation;
 
 		initializeItems();
+	}
+
+	public ShopCreationGUI(String shopName, boolean virtual) {
+		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
+
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("general.general.new-shop"));
+
+		this.shopName = shopName;
+		this.virtual = virtual;
+
+		initializeItems();
+	}
+
+	public ShopCreationGUI (Shop shop, boolean virtual) {
+		isModifying = true;
+		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
+
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+ LocaleManager.getString("gui.editing-shop"));
+
+		this.virtual = virtual;
+
+		shopItem = shop.item;
+
+		buyPrice = shop.buyPrice;
+		sellPrice = shop.sellPrice;
+		quantity = shop.quantity;
+
+		linkedChestLocation = shop.linkedChestLocation;
+
+		stock = shop.stock;
+
+		isAdmin = shop.admin;
+
+		sellersNote = shop.note;
+
+		commandList = shop.commandList;
+
+		shopName = shop.shopName;
+
+
+		initializeStage2();
 	}
 
 	public void resetGUI () {
@@ -135,6 +183,12 @@ public class ShopCreationGUI implements Listener {
 		}
 	}
 
+	private String getShopLocationString() {
+		if (this.virtual) return this.shopName;
+
+		return ShopManager.locationToString(slabLocation);
+	}
+
 	public void initializeStage2 () {
 		boolean disableShops = Slabbo.getInstance().getConfig().getBoolean("disableShops", false);
 
@@ -151,7 +205,7 @@ public class ShopCreationGUI implements Listener {
 			inv.setItem(5, GUIItems.getAmountItem(quantity));
 		}
 
-		inv.setItem(7, GUIItems.getConfirmItem(ShopManager.locationToString(slabLocation)));
+		inv.setItem(7, GUIItems.getConfirmItem(this.getShopLocationString()));
 		inv.setItem(8, GUIItems.getCancelItem());
 	}
 
@@ -164,7 +218,7 @@ public class ShopCreationGUI implements Listener {
 
 		meta.setDisplayName(ChatColor.RED+LocaleManager.getString("gui.items.new-shop.click-item-below"));
 
-		meta.setLore(Arrays.asList(LocaleManager.getString("general.general.new-shop"), ShopManager.locationToString(slabLocation)));
+		meta.setLore(Arrays.asList(LocaleManager.getString("general.general.new-shop"), this.getShopLocationString()));
 
 		item.setItemMeta(meta);
 
@@ -203,7 +257,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(LocaleManager.getString("general.general.type-new-note"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 3) {
 					// Buy Price
 					waitingType = ChatWaitingType.BUY_PRICE;
@@ -211,7 +265,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(LocaleManager.getString("general.general.type-new-buy-price"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 4) {
 					//Sell Price
 					waitingType = ChatWaitingType.SELL_PRICE;
@@ -219,7 +273,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(LocaleManager.getString("general.general.type-new-sell-price"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 5) {
 					// Amount
 					waitingType = ChatWaitingType.QUANTITY;
@@ -227,7 +281,7 @@ public class ShopCreationGUI implements Listener {
 					p.sendMessage(LocaleManager.getString("general.general.type-new-quantity"));
 					e.getWhoClicked().closeInventory();
 
-					p.playSound(this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("QUESTION"), 1, 1);
 				} else if (slot == 7) {
 					// Confirm
 
@@ -244,27 +298,29 @@ public class ShopCreationGUI implements Listener {
 
 					shop.commandList = commandList;
 
+					shop.virtual = virtual;
+					shop.shopName = shopName;
 
-					ShopManager.put(ShopManager.locationToString(slabLocation), shop);
+					ShopManager.put(this.getShopLocationString(), shop);
 
 					DataUtil.saveShops();
 
 					e.getWhoClicked().closeInventory();
 
-					if (isModifying) {
+					if (isModifying && !virtual) {
 						ItemUtil.removeShopItemsAtLocation(slabLocation);
 					}
 
-					ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
+					if (!virtual) ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 
-					p.playSound(this.slabLocation, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation,  slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
 					resetGUI();
 
 				} else if (slot == 8) {
 					// Cancel
 
-					p.playSound(this.slabLocation, slabboSound.getSoundByKey("CANCEL"), 1, 1);
+					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 
 					resetGUI();
 					e.getWhoClicked().closeInventory();
@@ -277,11 +333,11 @@ public class ShopCreationGUI implements Listener {
 
 		if (slot <= 8) return; // User clicked shop GUI
 
-		p.playSound(this.slabLocation, slabboSound.getSoundByKey("NAVIGATION"), 1, 1);
+		p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("NAVIGATION"), 1, 1);
 
 		//p.playSound(this.slabLocation, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
 
-		String shopLocation = ShopManager.locationToString(this.slabLocation);
+		String shopLocation = this.getShopLocationString();
 
 		boolean shopExists = ShopManager.shops.containsKey(shopLocation);
 		Shop shop = ShopManager.shops.get(shopLocation);
@@ -293,7 +349,7 @@ public class ShopCreationGUI implements Listener {
 			p.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.change-item-disallowed"));
 
 
-			p.playSound(this.slabLocation, slabboSound.getSoundByKey("CANCEL"), 1, 1);
+			p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation, slabboSound.getSoundByKey("CANCEL"), 1, 1);
 
 			return;
 		}
@@ -376,7 +432,7 @@ public class ShopCreationGUI implements Listener {
 
 		new BukkitRunnable() {
 			public void run () {
-				e.getPlayer().playSound(slabLocation, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+				e.getPlayer().playSound(slabLocation == null ? e.getPlayer().getLocation() : slabLocation, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				openInventory(e.getPlayer());
 				initializeStage2();
 			}

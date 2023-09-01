@@ -33,11 +33,17 @@ public class PlayerJoinListener implements Listener {
 				if (shop.admin) continue;
 
 				if (shop.stock == 0) {
-					replacementMap.put("location", ShopManager.locationToString(shop.location));
 					replacementMap.put("item", NameUtil.getName(shop.item));
+					replacementMap.put("name", shop.shopName);
 
 
-					player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
+					if (shop.virtual) {
+						player.sendMessage(LocaleManager.replaceKey("general.general.virtual-restock-message", replacementMap));
+					} else {
+						replacementMap.put("location", ShopManager.locationToString(shop.location));
+
+						player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
+					}
 				}
 			}
 		}

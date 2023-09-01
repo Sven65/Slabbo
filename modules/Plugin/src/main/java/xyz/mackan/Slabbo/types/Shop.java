@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.types;
 
 
+import jline.internal.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -76,7 +77,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public int quantity;
 
-	public Location location;
+	public @Nullable Location location;
 
 	public ItemStack item;
 
@@ -98,8 +99,31 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public CommandList commandList = null;
 
+	/**
+	 * Describes if the shop is virtual, i.e. has no physical location
+	 */
+	public boolean virtual = false;
+
+	/**
+	 * The name of the shop. Only set if the shop is virtual.
+	 */
+	public String shopName = "";
+
 	// <editor-fold desc="Shop constructors with double prices">
 
+	public Shop (double buyPrice, double sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation, boolean virtual, String shopName) {
+		this.buyPrice = buyPrice;
+		this.sellPrice = sellPrice;
+		this.quantity = quantity;
+		this.location = location;
+		this.item = item;
+		this.stock = stock;
+		this.ownerId = ownerId;
+		this.admin = admin;
+		this.linkedChestLocation = linkedChestLocation;
+		this.virtual = virtual;
+		this.shopName = shopName;
+	}
 
 	public Shop (double buyPrice, double sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation) {
 		this.buyPrice = buyPrice;
@@ -188,6 +212,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("commandList", commandList);
 		result.put("displayedOwnerName", displayedOwnerName);
 
+		result.put("virtual", virtual);
+		result.put("shopName", shopName);
+
 		return result;
 	}
 
@@ -213,6 +240,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		ShopLimit shopLimit = (ShopLimit) args.get("shopLimit");
 		CommandList commandList = (CommandList) args.get("commandList");
 
+		boolean virtual = (boolean) args.getOrDefault("virtual", false);
+		String shopName = (String) args.getOrDefault("shopName", "");
+
 
 		Shop newShop = new Shop(buyPrice, sellPrice, quantity, location, item, stock, ownerId, admin, linkedChestLocation);
 
@@ -220,6 +250,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		newShop.shopLimit = shopLimit;
 		newShop.commandList = commandList;
 		newShop.displayedOwnerName = displayedOwnerName;
+
+		newShop.virtual = virtual;
+		newShop.shopName = shopName;
 
 		return newShop;
 	}
@@ -243,7 +276,7 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	public String getLocationString () {
-		return ShopManager.locationToString(this.location);
+		return ShopManager.locationToString(this.location, this.shopName);
 	}
 
 	public String getInfoString () {

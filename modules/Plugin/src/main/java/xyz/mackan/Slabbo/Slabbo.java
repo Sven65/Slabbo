@@ -201,6 +201,14 @@ public class Slabbo extends JavaPlugin {
 			return SlabboCommandCompletions.getImportFiles();
 		});
 
+		manager.getCommandCompletions().registerCompletion("virtualShopNames", c -> {
+			return SlabboCommandCompletions.getVirtualShopNames();
+		});
+
+		manager.getCommandCompletions().registerCompletion("virtualAdminShopNames", c -> {
+			return SlabboCommandCompletions.getVirtualAdminShopNames();
+		});
+
 		Conditions.registerConditions(manager);
 
 		manager.getCommandContexts().registerIssuerOnlyContext(SlabboContextResolver.class, SlabboContextResolver.getContextResolver());
