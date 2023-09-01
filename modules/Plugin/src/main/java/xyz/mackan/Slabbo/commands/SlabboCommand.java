@@ -1027,6 +1027,24 @@ public class SlabboCommand extends BaseCommand {
 			gui.openInventory(player);
 		}
 
+		@Subcommand("open virtual")
+		@Description("Open a virtual slabbo shop")
+		@CommandCompletion("@virtualShopNames")
+		@CommandPermission("slabbo.shop.virtual.open")
+		public void openVirtualShopCommand(Player player, String name) {
+			String loweredName = name.toLowerCase();
+
+			if (!ShopManager.shops.containsKey(loweredName)) {
+				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+
+			Shop shop = ShopManager.shops.get(loweredName);
+
+			ShopUserGUI gui = new ShopUserGUI(shop, player);
+			gui.openInventory(player);
+		}
+
 		@Subcommand("create virtual")
 		@Description("Creates a virtual shop")
 		@CommandPermission("slabbo.shop.virtual.create")
