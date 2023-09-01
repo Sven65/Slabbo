@@ -17,6 +17,7 @@ error-message:
     no-sell-commands-in-shop: That shop doesn't have any sell commands.
     invalid-index: That's not a valid index!
     shop-does-not-exist: That shop doesn't exist!
+    named-shop-already-exists: A shop with that name already exists.
   import:
     file-not-found: That file can't be found
     plugin-not-supported: That plugin can't be imported
@@ -92,6 +93,7 @@ general:
     reloading: Reloading
     reloaded: Reloaded
     restock-message: Your shop at {location} is out of {item}
+    virtual-restock-message: Your virtual shop {name} is out of {item}
     stacks: Stacks
     cancel: Cancel
     confirm: Confirm

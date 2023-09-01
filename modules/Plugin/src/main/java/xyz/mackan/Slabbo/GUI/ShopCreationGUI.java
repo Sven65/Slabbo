@@ -61,6 +61,9 @@ public class ShopCreationGUI implements Listener {
 	private boolean isModifying = false;
 	private boolean isAdmin = false;
 
+	private String shopName = "";
+	private boolean virtual = false;
+
 	private boolean allowCents = Slabbo.getInstance().getConfig().getBoolean("allowCents", false);
 
 
@@ -102,6 +105,17 @@ public class ShopCreationGUI implements Listener {
 		initializeItems();
 	}
 
+	public ShopCreationGUI(String shopName, boolean virtual) {
+		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
+
+		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("general.general.new-shop"));
+
+		this.shopName = shopName;
+		this.virtual = virtual;
+
+		initializeItems();
+	}
+
 	public void resetGUI () {
 		inv = null;
 		slabLocation = null;
@@ -135,6 +149,12 @@ public class ShopCreationGUI implements Listener {
 		}
 	}
 
+	private String getShopLocationString() {
+		if (this.virtual) return this.shopName;
+
+		return ShopManager.locationToString(slabLocation);
+	}
+
 	public void initializeStage2 () {
 		boolean disableShops = Slabbo.getInstance().getConfig().getBoolean("disableShops", false);
 
@@ -151,7 +171,7 @@ public class ShopCreationGUI implements Listener {
 			inv.setItem(5, GUIItems.getAmountItem(quantity));
 		}
 
-		inv.setItem(7, GUIItems.getConfirmItem(ShopManager.locationToString(slabLocation)));
+		inv.setItem(7, GUIItems.getConfirmItem(this.getShopLocationString()));
 		inv.setItem(8, GUIItems.getCancelItem());
 	}
 
@@ -164,7 +184,7 @@ public class ShopCreationGUI implements Listener {
 
 		meta.setDisplayName(ChatColor.RED+LocaleManager.getString("gui.items.new-shop.click-item-below"));
 
-		meta.setLore(Arrays.asList(LocaleManager.getString("general.general.new-shop"), ShopManager.locationToString(slabLocation)));
+		meta.setLore(Arrays.asList(LocaleManager.getString("general.general.new-shop"), this.getShopLocationString()));
 
 		item.setItemMeta(meta);
 
@@ -244,8 +264,11 @@ public class ShopCreationGUI implements Listener {
 
 					shop.commandList = commandList;
 
+					shop.virtual = virtual;
+					shop.shopName = shopName;
 
-					ShopManager.put(ShopManager.locationToString(slabLocation), shop);
+					// ShopManager.locationToString(slabLocation)
+					ShopManager.put(this.getShopLocationString(), shop);
 
 					DataUtil.saveShops();
 
@@ -255,7 +278,7 @@ public class ShopCreationGUI implements Listener {
 						ItemUtil.removeShopItemsAtLocation(slabLocation);
 					}
 
-					ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
+					if (!virtual) ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
 
 					p.playSound(this.slabLocation, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
@@ -281,7 +304,7 @@ public class ShopCreationGUI implements Listener {
 
 		//p.playSound(this.slabLocation, SlabboSound.NAVIGATION.sound, SoundCategory.BLOCKS, 1, 1);
 
-		String shopLocation = ShopManager.locationToString(this.slabLocation);
+		String shopLocation = this.getShopLocationString();
 
 		boolean shopExists = ShopManager.shops.containsKey(shopLocation);
 		Shop shop = ShopManager.shops.get(shopLocation);

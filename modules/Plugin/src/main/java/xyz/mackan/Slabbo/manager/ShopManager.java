@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.manager;
 
+import jline.internal.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -105,6 +106,11 @@ public class ShopManager {
 				location.getBlockY(),
 				location.getBlockZ()
 		);
+	}
+
+	public static String locationToString(@Nullable Location location, String shopName) {
+		if (location != null) return ShopManager.locationToString(location);
+		return shopName;
 	}
 
 	public static Location fromString(String locString) {

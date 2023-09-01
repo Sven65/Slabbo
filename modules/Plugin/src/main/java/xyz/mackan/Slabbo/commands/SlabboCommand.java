@@ -16,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
@@ -1023,6 +1024,22 @@ public class SlabboCommand extends BaseCommand {
 			Shop shop = ShopManager.shops.get(locationString);
 
 			ShopUserGUI gui = new ShopUserGUI(shop, player);
+			gui.openInventory(player);
+		}
+
+		@Subcommand("create virtual")
+		@Description("Creates a virtual shop")
+		@CommandPermission("slabbo.shop.virtual.create")
+		public void createVirtualShopCommand(Player player, String shopName) {
+			player.sendMessage("Create virtual shop");
+
+			if (ShopManager.shops.containsKey(shopName.toLowerCase())) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.named-shop-already-exists"));
+				return;
+			}
+
+			ShopCreationGUI gui = new ShopCreationGUI(shopName, true);
+
 			gui.openInventory(player);
 		}
 	}
