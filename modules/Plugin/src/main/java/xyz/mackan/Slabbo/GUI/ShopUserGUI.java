@@ -36,7 +36,7 @@ public class ShopUserGUI implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+ LocaleManager.getString("gui.client"));
+		inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix")+ LocaleManager.getString("gui.client"));
 
 		initializeItems(player);
 	}

@@ -54,7 +54,7 @@ public class ShopAdminGUI implements Listener {
 
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("gui.owner-title"));
+		inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix")+LocaleManager.getString("gui.owner-title"));
 
 		initializeItems(humanEntity);
 	}

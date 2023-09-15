@@ -84,6 +84,7 @@ success-message:
 
 general:
   currency-format: "${amount}"
+  shop-prefix: "[Slabbo] "
   chestlink:
     chest-name: "Chest [{location}]"
     crouch-to-link: Please crouch and punch the chest you want to link.

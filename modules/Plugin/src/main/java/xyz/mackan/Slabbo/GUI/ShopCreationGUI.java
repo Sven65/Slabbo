@@ -72,7 +72,7 @@ public class ShopCreationGUI implements Listener {
 		isModifying = true;
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+ LocaleManager.getString("gui.editing-shop"));
+		inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix")+ LocaleManager.getString("gui.editing-shop"));
 
 		this.slabLocation = slabLocation;
 
@@ -102,7 +102,7 @@ public class ShopCreationGUI implements Listener {
 	public ShopCreationGUI (Location slabLocation) {
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("general.general.new-shop"));
+		inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix")+LocaleManager.getString("general.general.new-shop"));
 
 		this.slabLocation = slabLocation;
 
@@ -112,7 +112,7 @@ public class ShopCreationGUI implements Listener {
 	public ShopCreationGUI(String shopName, boolean virtual) {
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+LocaleManager.getString("general.general.new-shop"));
+		inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix")+LocaleManager.getString("general.general.new-shop"));
 
 		this.shopName = shopName;
 		this.virtual = virtual;
@@ -124,7 +124,7 @@ public class ShopCreationGUI implements Listener {
 		isModifying = true;
 		Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
 
-		inv = Bukkit.createInventory(null, 9, "[Slabbo] "+ LocaleManager.getString("gui.editing-shop"));
+		inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix")+ LocaleManager.getString("gui.editing-shop"));
 
 		this.virtual = virtual;
 
