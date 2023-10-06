@@ -224,7 +224,7 @@ public class GUIItems {
 		ItemStack item = itemAPI.getCommandBlock();
 		ItemMeta meta = item.getItemMeta();
 
-		meta.setDisplayName(ChatColor.GOLD+"Slabbo "+LocaleManager.getString("general.general.shop"));
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.getString("general.user-info-item-name"));
 
 		double buyPerItem = 0;
 		double sellPerItem = 0;
