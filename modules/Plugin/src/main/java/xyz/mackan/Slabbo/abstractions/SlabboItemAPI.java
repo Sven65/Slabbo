@@ -20,4 +20,24 @@ public interface SlabboItemAPI {
 	ItemStack getOakSign ();
 
 	ItemStack getDefaultSlab ();
+
+	ItemStack getHopperMinecart();
+
+	ItemStack getMinecart();
+
+	ItemStack getChest();
+
+	ItemStack getEnderChest();
+
+	ItemStack getBarrier();
+
+	ItemStack getNetherStar();
+
+	ItemStack getGoldIngot();
+
+	ItemStack getIronIngot();
+
+	ItemStack getPaper();
+
+	ItemStack getNameTag();
 }

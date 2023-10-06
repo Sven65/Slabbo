@@ -84,7 +84,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getCancelItem () {
-		ItemStack item = new ItemStack(Material.BARRIER, 1);
+		ItemStack item = itemAPI.getBarrier();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.RED + LocaleManager.getString("general.general.cancel"));
@@ -95,7 +95,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getConfirmItem (String locationString) {
-		ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
+		ItemStack item = itemAPI.getNetherStar();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GREEN+LocaleManager.getString("general.general.confirm"));
@@ -108,7 +108,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getUserBuyItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
-		ItemStack item = new ItemStack(Material.GOLD_INGOT, 1);
+		ItemStack item = itemAPI.getGoldIngot();
 		ItemMeta meta = item.getItemMeta();
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
@@ -152,7 +152,7 @@ public class GUIItems {
 	}
 
 	public static ItemStack getUserSellItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
-		ItemStack item = new ItemStack(Material.IRON_INGOT, 1);
+		ItemStack item = itemAPI.getIronIngot();
 		ItemMeta meta = item.getItemMeta();
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
@@ -199,7 +199,7 @@ public class GUIItems {
 	public static ItemStack getUserFundsItem (double funds) {
 		NumberFormat formatter = new DecimalFormat("#0.00");
 
-		ItemStack item = new ItemStack(Material.PAPER, 1);
+		ItemStack item = itemAPI.getPaper();
 		ItemMeta meta = item.getItemMeta();
 
 		// TODO: Think over whether we need to show what's essentially "current funds" twice
@@ -333,7 +333,7 @@ public class GUIItems {
 			sellerNote = LocaleManager.getString("general.general.default-shop-note");
 		}
 
-		ItemStack item = new ItemStack(Material.NAME_TAG, 1);
+		ItemStack item = itemAPI.getNameTag();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GREEN+LocaleManager.getString("gui.items.user.sellers-note"));

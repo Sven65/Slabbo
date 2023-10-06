@@ -95,3 +95,31 @@ defaults:
     buyPrice: 0
     sellPrice: 0
     quantity: 0
+
+
+########################
+#  Custom Model Items  #
+########################
+
+# Please note that these only work in 1.14+
+
+items:
+  customModelData:
+      redStainedPane: 0
+      greenStainedPane: 0
+      yellowStainedPane: 0
+      limeStainedPane: 0
+      commandBlock: 0
+      chestMinecart: 0
+      comparator: 0
+      oakSign: 0
+      hopperMinecart: 0
+      minecart: 0
+      chest: 0
+      enderChest: 0
+      barrier: 0
+      netherStar: 0
+      goldIngot: 0
+      ironIngot: 0
+      paper: 0
+      nametag: 0

@@ -50,7 +50,7 @@ public class AdminGUIItems {
 	}
 
 	public static ItemStack getWithdrawItem (String itemName, int stock, boolean isAdmin) {
-		ItemStack item = new ItemStack(Material.HOPPER_MINECART, 1);
+		ItemStack item = itemAPI.getHopperMinecart();
 		ItemMeta meta = item.getItemMeta();
 
 		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
@@ -83,7 +83,7 @@ public class AdminGUIItems {
 	}
 
 	public static ItemStack getAmountItem (int amount) {
-		ItemStack item = new ItemStack(Material.MINECART, 1);
+		ItemStack item = itemAPI.getMinecart();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD + LocaleManager.getString("gui.items.admin.changerate-item"));
@@ -122,7 +122,7 @@ public class AdminGUIItems {
 	}
 
 	public static ItemStack getLinkChestItem () {
-		ItemStack item = new ItemStack(Material.CHEST, 1);
+		ItemStack item = itemAPI.getChest();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+LocaleManager.getString("gui.items.admin.link-chest"));
@@ -137,7 +137,7 @@ public class AdminGUIItems {
 	}
 
 	public static ItemStack getUnlinkChestItem () {
-		ItemStack item = new ItemStack(Material.ENDER_CHEST, 1);
+		ItemStack item = itemAPI.getEnderChest();
 		ItemMeta meta = item.getItemMeta();
 
 		meta.setDisplayName(ChatColor.GOLD+LocaleManager.getString("general.chestlink.cancel-chest-link"));
