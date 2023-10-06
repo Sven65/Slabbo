@@ -113,3 +113,13 @@ items:
       chestMinecart: 0
       comparator: 0
       oakSign: 0
+      hopperMinecart: 0
+      minecart: 0
+      chest: 0
+      enderChest: 0
+      barrier: 0
+      netherStar: 0
+      goldIngot: 0
+      ironIngot: 0
+      paper: 0
+      nametag: 0

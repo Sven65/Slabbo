@@ -48,4 +48,24 @@ public class SlabboItemAPI_v1_19_R3 implements SlabboItemAPI {
 	}
 
 	public ItemStack getDefaultSlab () { return new ItemStack(Material.STONE_SLAB, 1); }
+
+	public ItemStack getHopperMinecart() { return this.addCustomModelData(new ItemStack(Material.HOPPER_MINECART, 1), "hopperMinecart"); }
+
+	public ItemStack getMinecart() { return this.addCustomModelData(new ItemStack(Material.MINECART, 1), "minecart"); }
+
+	public ItemStack getChest() { return this.addCustomModelData(new ItemStack(Material.CHEST, 1), "chest"); }
+
+	public ItemStack getEnderChest() { return this.addCustomModelData(new ItemStack(Material.ENDER_CHEST, 1), "enderChest"); }
+
+	public ItemStack getBarrier() { return this.addCustomModelData(new ItemStack(Material.BARRIER, 1), "barrier"); }
+
+	public ItemStack getNetherStar() { return this.addCustomModelData(new ItemStack(Material.NETHER_STAR, 1), "netherStar"); }
+
+	public ItemStack getGoldIngot() { return this.addCustomModelData(new ItemStack(Material.GOLD_INGOT, 1), "goldIngot"); }
+
+	public ItemStack getIronIngot() { return this.addCustomModelData(new ItemStack(Material.IRON_INGOT, 1), "ironIngot"); }
+
+	public ItemStack getPaper() { return this.addCustomModelData(new ItemStack(Material.PAPER, 1), "paper"); }
+
+	public ItemStack getNameTag() { return this.addCustomModelData(new ItemStack(Material.NAME_TAG, 1), "nametag"); }
 }
