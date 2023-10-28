@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.manager;
 
 import jdk.vm.ci.meta.Local;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,6 +58,15 @@ public class LocaleManager {
 	}
 
 	/**
+	 * Replaces color code chars with the actual colors they should be
+	 * @param message The message to replace colors in
+	 * @return The message with colors
+	 */
+	public static String replaceColors(String message) {
+		return ChatColor.translateAlternateColorCodes('&', message);
+	}
+
+	/**
 	 * Gets a string from the translation map by key
 	 * @param key The key to get
 	 * @return String
@@ -66,7 +76,7 @@ public class LocaleManager {
 
 		if (value == null || value.equals("")) return "Translation key "+key+" not found!";
 
-		return value;
+		return replaceColors(value);
 	}
 
 	/**
@@ -85,7 +95,7 @@ public class LocaleManager {
 			replaceString = replaceString.replaceAll("\\{" + key + "\\}", Matcher.quoteReplacement(value));
 		}
 
-		return replaceString;
+		return replaceColors(replaceString);
 	}
 
 	/**
@@ -102,7 +112,7 @@ public class LocaleManager {
 			replaceString = replaceString.replaceAll("\\{"+key+"\\}", value);
 		}
 
-		return replaceString;
+		return replaceColors(replaceString);
 	}
 
 	/**

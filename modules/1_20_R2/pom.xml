@@ -13,7 +13,7 @@
     <parent>
         <groupId>xyz.mackan</groupId>
         <artifactId>Slabbo-parent</artifactId>
-        <version>1.0.47</version>
+        <version>1.0.48</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
