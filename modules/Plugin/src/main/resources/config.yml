@@ -59,6 +59,15 @@ allowCents: false
 currencyFormat: Vault
 
 ########################
+#     Messages         #
+########################
+
+# Whether or not to send the message that a shop is out of stock
+sendRestockMessages: true
+# Whether or not to send the message that a virtual shop is out of stock
+sendVirtualRestockMessages: true
+
+########################
 #     Chest links      #
 ########################
 

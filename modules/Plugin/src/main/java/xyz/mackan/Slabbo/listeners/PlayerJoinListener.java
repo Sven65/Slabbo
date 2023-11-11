@@ -38,11 +38,16 @@ public class PlayerJoinListener implements Listener {
 
 
 					if (shop.virtual) {
-						player.sendMessage(LocaleManager.replaceKey("general.general.virtual-restock-message", replacementMap));
+						if (Slabbo.getInstance().getConfig().getBoolean("sendVirtualRestockMessages", true)) {
+							player.sendMessage(LocaleManager.replaceKey("general.general.virtual-restock-message", replacementMap));
+						}
 					} else {
-						replacementMap.put("location", ShopManager.locationToString(shop.location));
+						if (Slabbo.getInstance().getConfig().getBoolean("sendRestockMessages", true)) {
 
-						player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
+							replacementMap.put("location", ShopManager.locationToString(shop.location));
+
+							player.sendMessage(LocaleManager.replaceKey("general.general.restock-message", replacementMap));
+						}
 					}
 				}
 			}
