@@ -17,6 +17,7 @@ import com.sk89q.worldguard.protection.regions.RegionContainer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;

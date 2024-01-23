@@ -55,6 +55,8 @@ public class Slabbo extends JavaPlugin {
 
 	@Override
 	public void onLoad () {
+		setupPluginSupport();
+
 		if (PluginSupport.isPluginEnabled("WorldGuard")) {
 			WorldguardSupport.registerFlags();
 		}
@@ -69,7 +71,6 @@ public class Slabbo extends JavaPlugin {
 		}
 
 		loadAPI();
-		setupPluginSupport();
 
 		new File(getDataPath()).mkdirs();
 
@@ -86,10 +87,9 @@ public class Slabbo extends JavaPlugin {
 		setupCommands();
 		setupListeners();
 
-
 		checkUpdates();
 
-		getLogger().info("Slabbo enabled.");
+		getLogger().info("Slabbo fully enabled.");
 
 		ShopManager.loadShops();
 
