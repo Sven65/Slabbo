@@ -35,7 +35,12 @@ public class PluginSupport {
 	}
 
 	public static void checkPlugin(String pluginName) {
+		Slabbo.log.info(String.format("Checking for plugin %s", pluginName));
+
 		if (getServer().getPluginManager().getPlugin(pluginName) == null) return;
+
+		Slabbo.log.info(String.format("Plugin %s found. Enabling support.", pluginName));
+
 		pluginStatus.put(pluginName, true);
 	}
 

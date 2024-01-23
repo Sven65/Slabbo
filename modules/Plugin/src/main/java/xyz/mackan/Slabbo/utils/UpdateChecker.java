@@ -20,7 +20,7 @@ public class UpdateChecker {
 					consumer.accept(scanner.next());
 				}
 			} catch (IOException exception) {
-				Slabbo.getInstance().getLogger().info("Cannot look for updates: " + exception.getMessage());
+				Slabbo.log.info("Cannot look for updates: " + exception.getMessage());
 			}
 		});
 	}
