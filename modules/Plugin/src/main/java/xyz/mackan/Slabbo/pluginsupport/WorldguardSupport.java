@@ -82,6 +82,12 @@ public class WorldguardSupport {
 		ArrayList<Shop> shopsInRegion = new ArrayList<>();
 
 		for(Shop shop : ShopManager.shops.values()) {
+			/**
+			 * Todo: This might be a dumb way to handle virtual shops,
+			 * 		 but since they're NEVER going to be in a WG region, it's probably fine.
+			 */
+			if (shop.location == null) continue;
+
 			if (region.contains(shop.location.getBlockX(), shop.location.getBlockY(), shop.location.getBlockZ())) {
 				shopsInRegion.add(shop);
 			}
