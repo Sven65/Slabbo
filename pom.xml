@@ -7,7 +7,7 @@
 
     <groupId>xyz.mackan</groupId>
     <artifactId>Slabbo-parent</artifactId>
-    <version>1.0.52</version>
+    <version>1.0.53</version>
     <packaging>pom</packaging>
     <name>Slabbo</name>
 
