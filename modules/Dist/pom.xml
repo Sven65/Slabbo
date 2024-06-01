@@ -12,7 +12,7 @@
     <parent>
         <groupId>xyz.mackan</groupId>
         <artifactId>Slabbo-parent</artifactId>
-        <version>1.0.53</version>
+        <version>1.0.54</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -23,7 +23,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -82,6 +82,12 @@
         <dependency>
             <groupId>xyz.mackan</groupId>
             <artifactId>Slabbo-plugin</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xyz.mackan</groupId>
+            <artifactId>Slabbo-1_20_R4</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
 

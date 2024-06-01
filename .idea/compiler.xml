@@ -19,6 +19,7 @@
         <module name="Slabbo-1_8_R3" />
         <module name="Slabbo-plugin" />
         <module name="Slabbo-1_18_R2" />
+        <module name="Slabbo-1_20_R4" />
         <module name="Slabbo-1_20_R3" />
         <module name="Slabbo-1_20_R2" />
         <module name="Slabbo-1_20_R1" />
@@ -61,6 +62,8 @@
       <module name="Slabbo-1_20_R2" target="17" />
       <module name="Slabbo-1_20_R2 (1)" target="1.5" />
       <module name="Slabbo-1_20_R3" target="17" />
+      <module name="Slabbo-1_20_R3 (1)" target="1.5" />
+      <module name="Slabbo-1_20_R4" target="19" />
       <module name="Slabbo-1_8_R1" target="1.8" />
       <module name="Slabbo-1_8_R2" target="1.8" />
       <module name="Slabbo-1_8_R3" target="1.8" />
