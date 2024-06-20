@@ -6,6 +6,7 @@ import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.UnsafeValues;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -20,6 +21,7 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.BukkitVersion;
+import xyz.mackan.Slabbo.types.MinecraftVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -113,7 +115,11 @@ public class Slabbo extends JavaPlugin {
 		ISlabboSound slabboSound = null;
 
 		String packageName = Slabbo.class.getPackage().getName();
-		String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
+		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+
+		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
+
+		String internalsName = nmsVersion.bukkitVersion.getVersion();
 		try {
 			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_v" + internalsName).newInstance();
 			itemApi = (SlabboItemAPI) Class.forName(packageName + ".abstractions.SlabboItemAPI_v" + internalsName).newInstance();

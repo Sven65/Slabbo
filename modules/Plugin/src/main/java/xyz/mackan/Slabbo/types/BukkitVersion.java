@@ -46,6 +46,11 @@ public enum BukkitVersion {
 		return BukkitVersion.valueOf("v"+internalsName);
 	}
 
+	public String getVersion() {
+		return this.toString().replace("v", "");
+	}
+
+
 	public boolean isAfter (BukkitVersion version) {
 		int currentIndex = getVersionIndex();
 		int pIndex = version.getVersionIndex();
