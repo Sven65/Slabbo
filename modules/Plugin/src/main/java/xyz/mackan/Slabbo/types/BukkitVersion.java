@@ -41,7 +41,11 @@ public enum BukkitVersion {
 	}
 
 	public static BukkitVersion getCurrentVersion () {
-		String internalsName = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3].substring(1);
+		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
+
+		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
+
+		String internalsName = nmsVersion.bukkitVersion.getVersion();
 
 		return BukkitVersion.valueOf("v"+internalsName);
 	}
