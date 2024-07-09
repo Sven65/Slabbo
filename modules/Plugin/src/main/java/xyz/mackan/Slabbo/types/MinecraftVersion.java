@@ -73,7 +73,8 @@ public enum MinecraftVersion {
     v1_20_4(BukkitVersion.v1_20_R3),
     v1_20_5(BukkitVersion.v1_20_R3),
 
-    v1_20_6(BukkitVersion.v1_20_R4);
+    v1_20_6(BukkitVersion.v1_20_R4),
+    v1_21(BukkitVersion.v1_20_R4);
 
     public final BukkitVersion bukkitVersion;
 
