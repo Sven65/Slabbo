@@ -7,7 +7,7 @@
 
     <groupId>xyz.mackan</groupId>
     <artifactId>Slabbo-parent</artifactId>
-    <version>1.0.57</version>
+    <version>1.0.58</version>
     <packaging>pom</packaging>
     <name>Slabbo</name>
 
@@ -51,6 +51,7 @@
         <module>modules/1_20_R2</module>
         <module>modules/1_20_R3</module>
         <module>modules/1_20_R4</module>
+        <module>modules/1_21_R1</module>
         <module>modules/Dist</module>
     </modules>
 

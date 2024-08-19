@@ -34,6 +34,7 @@ public class PlayerInteractListener implements Listener {
 
 	Material creationItem = Material.getMaterial(Slabbo.getInstance().getConfig().getString("shopCreationItem", "STICK"));
 
+
 	public ShopAction getRightClickAction (ItemStack itemInHand, Block clickedBlock, Player player) {
 		boolean holdingCreationItem = itemInHand != null && itemInHand.getType() == creationItem;
 

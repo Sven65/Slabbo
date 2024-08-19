@@ -191,7 +191,7 @@ public interface SlabboAPI {
 	boolean isUpsideDownStair (Block block);
 
 	/**
-	 * Gets if the interaction was done with the off hand
+	 * Gets if the interaction was done with a right click
 	 * @param e
 	 * @return
 	 */

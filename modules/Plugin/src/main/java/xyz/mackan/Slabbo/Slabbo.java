@@ -120,6 +120,7 @@ public class Slabbo extends JavaPlugin {
 		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
 
 		String internalsName = nmsVersion.bukkitVersion.getVersion();
+
 		try {
 			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_v" + internalsName).newInstance();
 			itemApi = (SlabboItemAPI) Class.forName(packageName + ".abstractions.SlabboItemAPI_v" + internalsName).newInstance();

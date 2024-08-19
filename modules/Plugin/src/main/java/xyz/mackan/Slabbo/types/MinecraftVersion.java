@@ -74,7 +74,8 @@ public enum MinecraftVersion {
     v1_20_5(BukkitVersion.v1_20_R3),
 
     v1_20_6(BukkitVersion.v1_20_R4),
-    v1_21(BukkitVersion.v1_20_R4);
+    v1_21(BukkitVersion.v1_20_R4),
+    v1_21_1(BukkitVersion.v1_21_R1);
 
     public final BukkitVersion bukkitVersion;
 
@@ -85,6 +86,6 @@ public enum MinecraftVersion {
     public static MinecraftVersion from(String version) {
         String formattedVersion = String.format("v%s", version.toLowerCase().replace("-r0.1-snapshot", "").replace('.', '_'));
 
-        return MinecraftVersion.valueOf(formattedVersion);
+        return valueOf(formattedVersion);
     }
 }
