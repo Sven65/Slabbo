@@ -117,9 +117,18 @@ public class Slabbo extends JavaPlugin {
 		String packageName = Slabbo.class.getPackage().getName();
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
+		Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
+		Bukkit.getLogger().info(String.format("Package name is %s", packageName));
+
+
 		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
 
+		Bukkit.getLogger().info(String.format("NMS Version is %s", nmsVersion.toString()));
+
 		String internalsName = nmsVersion.bukkitVersion.getVersion();
+
+		Bukkit.getLogger().info(String.format("Internals name is %s", nmsVersion));
+
 
 		try {
 			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_v" + internalsName).newInstance();
@@ -169,6 +178,8 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new PlayerFishEventListener(), this);
 
 		BukkitVersion version = BukkitVersion.getCurrentVersion();
+
+		Slabbo.log.info(String.format("BukkitVersion is %s", version));
 
 		if (version.isSameOrLater(BukkitVersion.v1_8_R3)) {
 			// 1.8.8
