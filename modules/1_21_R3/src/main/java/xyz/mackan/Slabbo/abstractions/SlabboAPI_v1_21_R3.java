@@ -15,11 +15,15 @@ import org.bukkit.craftbukkit.v1_21_R3.inventory.CraftItemStack;
 
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Transformation;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.AttributeKey;
 import xyz.mackan.Slabbo.types.MetaKey;
+import xyz.mackan.Slabbo.types.Metadata;
 import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -176,7 +180,9 @@ public class SlabboAPI_v1_21_R3 implements SlabboAPI {
 	}
 
 	public boolean isSlabboItem (Item item) {
-		return getNoPickup(item) && getNoDespawn(item);
+		boolean isDisplaySlabboItem = item.getMetadata(Metadata.IS_SLABBO_DISPLAY_ITEM.getKey()).getFirst().asBoolean();
+		Slabbo.log.info(String.format("Is slabbo item api? %s", isDisplaySlabboItem));
+		return isDisplaySlabboItem || (getNoPickup(item) && getNoDespawn(item));
 	}
 
 	public boolean isSlabboItem (ItemStack itemStack) { return getNoPickup(itemStack) && getNoDespawn(itemStack); }
@@ -201,5 +207,23 @@ public class SlabboAPI_v1_21_R3 implements SlabboAPI {
 
 	public boolean isBarrier (Block block) {
 		return block.getType() == Material.BARRIER;
+	}
+
+	@Override
+	public void displayShopItem(ItemStack itemStack, Location location) {
+		if (location == null) return;
+		Location dropLocation = location.clone();
+
+		dropLocation.add(0, 0.5, 0);
+
+		ItemDisplay itemDisplay = dropLocation.getWorld().spawn(dropLocation, ItemDisplay.class);
+
+		itemDisplay.setItemStack(itemStack);
+		itemDisplay.setMetadata(Metadata.IS_SLABBO_DISPLAY_ITEM.getKey(), Metadata.IS_SLABBO_DISPLAY_ITEM.getValue());
+
+		Transformation transform = itemDisplay.getTransformation();
+		transform.getScale().set(0.2);
+
+		itemDisplay.setTransformation(transform);
 	}
 }

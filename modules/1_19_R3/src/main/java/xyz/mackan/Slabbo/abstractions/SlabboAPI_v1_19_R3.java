@@ -15,11 +15,13 @@ import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.types.AttributeKey;
 import xyz.mackan.Slabbo.types.MetaKey;
+import xyz.mackan.Slabbo.types.Metadata;
 import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -204,4 +206,16 @@ public class SlabboAPI_v1_19_R3 implements SlabboAPI {
 	public boolean isBarrier (Block block) {
 		return block.getType() == Material.BARRIER;
 	}
+
+	@Override
+	public void displayShopItem(ItemStack itemStack, Location location) {
+		if (location == null) return;
+		Location dropLocation = location.clone();
+
+		ItemDisplay itemDisplay = dropLocation.getWorld().spawn(location, ItemDisplay.class);
+
+		itemDisplay.setItemStack(itemStack);
+		itemDisplay.setMetadata("IS_SLABBO_DISPLAY", Metadata.IS_SLABBO_DISPLAY_ITEM.getValue());
+	}
+
 }

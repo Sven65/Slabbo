@@ -203,4 +203,6 @@ public interface SlabboAPI {
 	 * @return
 	 */
 	boolean isBarrier (Block block);
+
+	default void displayShopItem (ItemStack itemStack, Location location) {}
 }

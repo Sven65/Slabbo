@@ -62,6 +62,7 @@ public class ItemUtil {
 
 	public static void dropShopItem (Location location, ItemStack item, int quantity) {
 		if (location == null) return;
+
 		Location dropLocation = location.clone();
 
 		dropLocation.add(0.5, getSlabYOffset(location), 0.5);
@@ -101,6 +102,12 @@ public class ItemUtil {
 
 			clonedItem.setItemMeta(meta);
 		}
+
+		if (Slabbo.useDisplayItems) {
+			api.displayShopItem(clonedItem, dropLocation);
+			return;
+		}
+
 
 		Item itemEnt = location.getWorld().dropItem(dropLocation, clonedItem);
 

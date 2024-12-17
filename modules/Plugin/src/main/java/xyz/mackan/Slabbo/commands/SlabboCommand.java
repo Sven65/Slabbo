@@ -14,6 +14,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
@@ -29,6 +31,7 @@ import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.importers.ImportResult;
 import xyz.mackan.Slabbo.importers.UShopImporter;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
+import xyz.mackan.Slabbo.types.Metadata;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
 import xyz.mackan.Slabbo.utils.DataUtil;
@@ -115,6 +118,23 @@ public class SlabboCommand extends BaseCommand {
 	@CatchUnknown
 	public static void onCommand(CommandSender sender, CommandHelp help) {
 		help.showHelp();
+	}
+
+	@Subcommand("showent")
+	@Description("debug Slabbo show ent")
+	@CommandPermission("slabbo.reload")
+	public void showEnt (Player player) {
+		double range = 10;
+		Collection<Entity> nearbyEntities = player.getWorld().getNearbyEntities(player.getLocation(), range, range, range);
+
+		List<String> rows = nearbyEntities
+			.stream()
+			.map(entity -> String.format("[%d] [%s] | XYZ: %s, isSlabboItem: %s / %s", entity.getEntityId(), entity.getType(), entity.getLocation().toString(), entity.getMetadata(Metadata.IS_SLABBO_DISPLAY_ITEM.getKey()).getFirst().asBoolean(), entity))
+			.collect(Collectors.toList());
+
+		for (String line : rows) {
+			Slabbo.log.info(line);
+		}
 	}
 
 	@Subcommand("reload")

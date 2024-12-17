@@ -15,12 +15,14 @@ import org.bukkit.craftbukkit.v1_21_R2.inventory.CraftItemStack;
 
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.types.AttributeKey;
 import xyz.mackan.Slabbo.types.MetaKey;
+import xyz.mackan.Slabbo.types.Metadata;
 import xyz.mackan.Slabbo.types.SlabType;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;

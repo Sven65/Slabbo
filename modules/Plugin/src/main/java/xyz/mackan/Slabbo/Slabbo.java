@@ -54,6 +54,7 @@ public class Slabbo extends JavaPlugin {
 	public static boolean hasUpdate = false;
 	private static boolean isEnabled = false;
 
+	public static boolean useDisplayItems = false;
 
 	@Override
 	public void onLoad () {
@@ -190,6 +191,11 @@ public class Slabbo extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
 		} else {
 			getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
+		}
+
+		if (version.isSameOrLater(BukkitVersion.v1_19_R3)) {
+			// 1.19.4
+			useDisplayItems = true;
 		}
 
 		if (PluginSupport.isPluginEnabled("ClearLag")) {
