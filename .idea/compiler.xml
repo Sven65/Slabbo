@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Slabbo-1_17_R1" />
         <module name="Slabbo-1_19_R3" />
+        <module name="Slabbo-1_21_R4" />
         <module name="Slabbo-1_21_R2" />
         <module name="Slabbo-1_21_R1" />
         <module name="Slabbo-1_15_R1" />

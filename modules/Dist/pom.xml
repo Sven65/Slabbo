@@ -87,6 +87,12 @@
 
         <dependency>
             <groupId>xyz.mackan</groupId>
+            <artifactId>Slabbo-1_21_R4</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>xyz.mackan</groupId>
             <artifactId>Slabbo-1_21_R3</artifactId>
             <version>${project.parent.version}</version>
         </dependency>

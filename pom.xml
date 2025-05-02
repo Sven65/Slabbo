@@ -54,6 +54,7 @@
         <module>modules/1_21_R1</module>
         <module>modules/1_21_R2</module>
         <module>modules/1_21_R3</module>
+        <module>modules/1_21_R4</module>
         <module>modules/Dist</module>
     </modules>
 
