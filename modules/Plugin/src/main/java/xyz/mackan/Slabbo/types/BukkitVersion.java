@@ -31,7 +31,8 @@ public enum BukkitVersion {
 	v1_21_R1,
 	v1_21_R2,
 	v1_21_R3,
-	v1_21_R4;
+	v1_21_R4,
+	v1_21_R5;
 
 	public int getVersionIndex () {
 		int i = 0;
