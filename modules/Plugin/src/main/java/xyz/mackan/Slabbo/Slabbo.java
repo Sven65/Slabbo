@@ -117,17 +117,19 @@ public class Slabbo extends JavaPlugin {
 		String packageName = Slabbo.class.getPackage().getName();
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
-		Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
-		Bukkit.getLogger().info(String.format("Package name is %s", packageName));
+		// TODO: Move this to debug in config
+		//  Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
+		//  Bukkit.getLogger().info(String.format("Package name is %s", packageName));
 
 
 		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
 
-		Bukkit.getLogger().info(String.format("NMS Version is %s", nmsVersion.toString()));
-
 		String internalsName = nmsVersion.bukkitVersion.getVersion();
 
-		Bukkit.getLogger().info(String.format("Internals name is %s", nmsVersion));
+
+		// TODO: Move this to debug in config
+		//  Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
+		//  Bukkit.getLogger().info(String.format("Internals name is %s", nmsVersion));
 
 
 		try {

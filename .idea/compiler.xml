@@ -49,6 +49,7 @@
       <module name="Slabbo" target="1.5" />
       <module name="Slabbo-1_20_R2 (1)" target="1.5" />
       <module name="Slabbo-1_20_R3 (1)" target="1.5" />
+      <module name="Slabbo-1_21_R6" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
