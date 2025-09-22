@@ -15,6 +15,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
+import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.InventoryUtil;
@@ -198,7 +199,7 @@ public class ShopUserGUI implements Listener {
 	}
 
 	// Player selling to a shop
-	public void handleSell (HumanEntity humanEntity) {
+	public void handleSell(HumanEntity humanEntity) {
 		OfflinePlayer shopOwner = Bukkit.getOfflinePlayer(shop.ownerId);
 
 		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
@@ -213,9 +214,10 @@ public class ShopUserGUI implements Listener {
 
 		int itemCount = 0;
 
-		ItemStack[] itemStacks = pInv.getContents();
-		ItemStack offhandStack = pInv.getItemInOffHand();
+		// Use abstract API for storage contents (works for 1.8+)
+		ItemStack[] itemStacks = slabboAPI.getStorageContents(pInv);
 
+		// Count items in main inventory
 		for (ItemStack inventoryItem : itemStacks) {
 			if (inventoryItem == null || inventoryItem.getType() == Material.AIR) continue;
 			ItemStack clonedItem = inventoryItem.clone();
@@ -225,10 +227,18 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
+		// Use abstract API for offhand; returns null in 1.8
+		ItemStack offhandStack = slabboAPI.getItemInOffHand(pInv);
+		if (offhandStack != null && offhandStack.getType() != Material.AIR) {
+			ItemStack offhandClone = offhandStack.clone();
+			offhandClone.setAmount(1);
+			if (offhandClone.equals(shop.item)) {
+				itemCount += offhandStack.getAmount();
+			}
+		}
+
 		if (itemCount < shop.quantity || itemCount <= 0) {
-			// TODO: Make this configurable
-			// I.E, If selling quantities that aren't the full of what the shop wants
-			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.not-enough-items"));
+			humanEntity.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.shop-errors.not-enough-items"));
 			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
@@ -237,7 +247,7 @@ public class ShopUserGUI implements Listener {
 
 		if (isLimitedShop) {
 			if (itemCount > shop.shopLimit.sellStockLeft) {
-				humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.sell-limit-reached"));
+				humanEntity.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.shop-errors.sell-limit-reached"));
 				((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 				return;
 			}
@@ -246,7 +256,7 @@ public class ShopUserGUI implements Listener {
 		double totalCost = shop.sellPrice;
 
 		if (shopFunds < totalCost) {
-			humanEntity.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.shop-errors.not-enough-shop-funds"));
+			humanEntity.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.shop-errors.not-enough-shop-funds"));
 			((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
@@ -263,38 +273,43 @@ public class ShopUserGUI implements Listener {
 
 		DataUtil.saveShops();
 
-
 		shopItemClone.setAmount(itemCount);
 
 		ItemStack itemInShop = shop.item.clone();
 		itemInShop.setAmount(1);
 
-		ItemStack offhandClone = offhandStack.clone();
-		offhandClone.setAmount(1);
-
-		if (itemInShop.equals(offhandClone)) {
-			offhandClone.setAmount(offhandStack.getAmount() - shop.quantity);
-
-			pInv.setItemInOffHand(offhandClone);
+		// Remove items from offhand first if needed
+		offhandStack = slabboAPI.getItemInOffHand(pInv);
+		if (offhandStack != null && offhandStack.getType() != Material.AIR) {
+			ItemStack offhandClone = offhandStack.clone();
+			offhandClone.setAmount(1);
+			if (itemInShop.equals(offhandClone)) {
+				int newAmount = offhandStack.getAmount() - shop.quantity;
+				if (newAmount > 0) {
+					offhandStack.setAmount(newAmount);
+					pInv.setItemInOffHand(offhandStack);
+				} else {
+					pInv.setItemInOffHand(null);
+				}
+			} else {
+				pInv.removeItem(shopItemClone);
+			}
 		} else {
-			// This removes the item from player inv
 			pInv.removeItem(shopItemClone);
 		}
 
-		Slabbo.getEconomy().depositPlayer((OfflinePlayer)humanEntity, totalCost);
+		Slabbo.getEconomy().depositPlayer((OfflinePlayer) humanEntity, totalCost);
 
-		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
-
+		HashMap<String, Object> replacementMap = new HashMap<>();
 		replacementMap.put("count", itemCount);
-		replacementMap.put("item", "'"+NameUtil.getName(shop.item)+"'");
+		replacementMap.put("item", "'" + NameUtil.getName(shop.item) + "'");
 		replacementMap.put("cost", LocaleManager.getCurrencyString(totalCost));
 		replacementMap.put("user", humanEntity.getName());
 
 		String userMessage = LocaleManager.replaceKey("success-message.client.sell-success", replacementMap);
 		String ownerMessage = LocaleManager.replaceKey("success-message.owner.sell-success", replacementMap);
 
-		humanEntity.sendMessage(ChatColor.GREEN+userMessage);
-
+		humanEntity.sendMessage(ChatColor.GREEN + userMessage);
 		((Player) humanEntity).playSound(shop.location, slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
 		if (shop.commandList != null) {
@@ -306,7 +321,7 @@ public class ShopUserGUI implements Listener {
 			Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);
 
 			if (shopOwner.isOnline()) {
-				shopOwner.getPlayer().sendMessage(ChatColor.GREEN+ownerMessage);
+				shopOwner.getPlayer().sendMessage(ChatColor.GREEN + ownerMessage);
 			}
 		}
 
@@ -326,9 +341,10 @@ public class ShopUserGUI implements Listener {
 			}
 		}
 
-		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer)humanEntity)));
-
+		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer) humanEntity)));
 	}
+
+
 
 	@EventHandler
 	public void onInventoryClick (final InventoryClickEvent e) {

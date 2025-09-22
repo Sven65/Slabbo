@@ -41,6 +41,14 @@ public interface SlabboAPI {
 	ItemStack getInteractionItemInOffHand (PlayerInteractEvent e);
 
 	/**
+	 * Returns the "main" inventory contents (excludes offhand/armor/crafting)
+	 * @param inv PlayerInventory
+	 * @return Array of ItemStacks in storage slots
+	 */
+	ItemStack[] getStorageContents(PlayerInventory inv);
+
+
+	/**
 	 * Gets the item in the players offhand
 	 * @param inv
 	 * @return The ItemStack the user's holding in their offhand

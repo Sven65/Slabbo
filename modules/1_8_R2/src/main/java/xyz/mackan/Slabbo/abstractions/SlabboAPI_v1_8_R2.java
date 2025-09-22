@@ -49,6 +49,10 @@ public class SlabboAPI_v1_8_R2 implements SlabboAPI {
 		return null;
 	}
 
+	public ItemStack[] getStorageContents(org.bukkit.inventory.PlayerInventory inv) {
+		return inv.getContents();
+	}
+
 	public ItemStack getItemInOffHand (org.bukkit.inventory.PlayerInventory inv) { return null; }
 
 	public boolean isSlab (Block block) {
