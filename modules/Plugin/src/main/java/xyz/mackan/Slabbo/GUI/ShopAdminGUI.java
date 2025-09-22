@@ -189,11 +189,11 @@ public class ShopAdminGUI implements Listener {
 
 		player.playSound(this.getSoundLocation(shop, player.getLocation()), slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
-		
-
 		shopItemClone.setAmount(tempTransferRate);
 
 		pInv.removeItem(shopItemClone);
+
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 
 		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
@@ -241,7 +241,8 @@ public class ShopAdminGUI implements Listener {
 
 		player.playSound(this.getSoundLocation(shop, player.getLocation()), slabboSound.getSoundByKey("BUY_SELL_SUCCESS"), 1, 1);
 
-		
+		Slabbo.getInstance().getShopManager().updateShop(shop);
+
 
 		inv.setItem(0, AdminGUIItems.getDepositItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 		inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));

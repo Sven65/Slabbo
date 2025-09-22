@@ -76,4 +76,8 @@ public interface DataStore {
      * @return true if the DataStore requires in-memory caching of all shops, false otherwise
      */
     boolean requiresCache();
+
+    default String getStorageType() {
+        return this.getClass().getSimpleName();
+    }
 }

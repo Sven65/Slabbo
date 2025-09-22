@@ -146,6 +146,8 @@ public class ShopUserGUI implements Listener {
 			shop.shopLimit.buyStockLeft -= totalBought;
 		}
 
+		Slabbo.getInstance().getShopManager().updateShop(shop);
+
 		//int actualCost = totalBought * shop.buyPrice;
 		double actualCost = shop.buyPrice;
 
@@ -265,6 +267,7 @@ public class ShopUserGUI implements Listener {
 		if (isLimitedShop) {
 			shop.shopLimit.sellStockLeft -= itemCount;
 		}
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 
 		shopItemClone.setAmount(itemCount);
 

@@ -340,4 +340,13 @@ public class ShopManager {
 			setMigrationInProgress(false);
 		}
 	}
+
+	public String getStorageType() {
+		if (this.dataStore != null) {
+			return this.dataStore.getStorageType();
+		}
+		// Fallback to runtime class name
+		return this.getClass().getSimpleName();
+	}
+
 }

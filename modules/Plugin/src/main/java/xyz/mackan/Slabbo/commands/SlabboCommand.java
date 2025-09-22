@@ -154,6 +154,7 @@ public class SlabboCommand extends BaseCommand {
 		sender.sendMessage("Slabbo Version: " + version);
 		sender.sendMessage("Slabbo Total Shops: " + totalShops);
 		sender.sendMessage("Slabbo Economy Provider: " + economyProvider);
+		sender.sendMessage("Slabbo Storage Backend: " + Slabbo.getInstance().getShopManager().getStorageType());
 
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 	}

@@ -114,4 +114,9 @@ public class FileStore implements DataStore {
     public boolean requiresCache() {
         return true;
     }
+
+    @Override
+    public String getStorageType() {
+        return "file";
+    }
 }

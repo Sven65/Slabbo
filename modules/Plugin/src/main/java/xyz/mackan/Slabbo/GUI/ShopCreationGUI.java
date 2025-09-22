@@ -37,10 +37,6 @@ public class ShopCreationGUI implements Listener {
 	private ChatWaitingType waitingType;
 	private UUID waitingPlayerId;
 
-
-
-
-
 	private double defaultBuyPrice = Slabbo.getInstance().getConfig().getDouble("defaults.buyPrice", 0);
 	private double defaultSellPrice = Slabbo.getInstance().getConfig().getDouble("defaults.sellPrice", 0);
 	private int defaultQuantity = Slabbo.getInstance().getConfig().getInt("defaults.quantity", 0);
@@ -308,6 +304,8 @@ public class ShopCreationGUI implements Listener {
 					}
 
 					if (!virtual) ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
+
+					Slabbo.getInstance().getShopManager().updateShop(shop);
 
 					p.playSound(this.slabLocation == null ? p.getLocation() : this.slabLocation,  slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 

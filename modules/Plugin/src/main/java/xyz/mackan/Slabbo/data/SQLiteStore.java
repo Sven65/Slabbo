@@ -1,5 +1,6 @@
 package xyz.mackan.Slabbo.data;
 
+import org.bukkit.Bukkit;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.List;
@@ -161,7 +162,12 @@ public class SQLiteStore implements DataStore {
 
     @Override
     public void addShop(Shop shop) {
+        java.util.logging.Logger logger =  Bukkit.getLogger();
+        String id = shop.getLocationString();
+        logger.info("[Slabbo][SQLiteStore] addShop id=" + id);
+
         try (Connection conn = getConnection();
+
              PreparedStatement ps = conn.prepareStatement(
                      "INSERT OR REPLACE INTO shops (id, owner, admin, virtual, shop_name, location, price_buy, price_sell, quantity, stock, note, linked_chest, displayed_owner, item_data, shop_limit, command_list) " +
                              "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
@@ -308,5 +314,10 @@ public class SQLiteStore implements DataStore {
     @Override
     public boolean requiresCache() {
         return false;
+    }
+
+    @Override
+    public String getStorageType() {
+        return "sqlite";
     }
 }
