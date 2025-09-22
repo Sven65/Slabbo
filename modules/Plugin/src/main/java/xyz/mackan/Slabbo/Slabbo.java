@@ -181,7 +181,6 @@ public class Slabbo extends JavaPlugin {
 
 		BukkitVersion version = BukkitVersion.getCurrentVersion();
 
-		Slabbo.log.info(String.format("BukkitVersion is %s", version));
 
 		if (version.isSameOrLater(BukkitVersion.v1_8_R3)) {
 			// 1.8.8

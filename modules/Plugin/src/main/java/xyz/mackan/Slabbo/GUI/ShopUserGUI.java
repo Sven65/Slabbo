@@ -24,6 +24,7 @@ import xyz.mackan.Slabbo.utils.NameUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ShopUserGUI implements Listener {
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
@@ -199,6 +200,7 @@ public class ShopUserGUI implements Listener {
 	}
 
 	// Player selling to a shop
+	// @TODO: Refactor (because this is massive.)
 	public void handleSell(HumanEntity humanEntity) {
 		OfflinePlayer shopOwner = Bukkit.getOfflinePlayer(shop.ownerId);
 
@@ -214,7 +216,6 @@ public class ShopUserGUI implements Listener {
 
 		int itemCount = 0;
 
-		// Use abstract API for storage contents (works for 1.8+)
 		ItemStack[] itemStacks = slabboAPI.getStorageContents(pInv);
 
 		// Count items in main inventory
@@ -229,6 +230,7 @@ public class ShopUserGUI implements Listener {
 
 		// Use abstract API for offhand; returns null in 1.8
 		ItemStack offhandStack = slabboAPI.getItemInOffHand(pInv);
+
 		if (offhandStack != null && offhandStack.getType() != Material.AIR) {
 			ItemStack offhandClone = offhandStack.clone();
 			offhandClone.setAmount(1);
@@ -278,25 +280,47 @@ public class ShopUserGUI implements Listener {
 		ItemStack itemInShop = shop.item.clone();
 		itemInShop.setAmount(1);
 
-		// Remove items from offhand first if needed
+		// ===== Fixed removal logic =====
+		int remainingToRemove = itemCount;
+
+		// Remove from offhand first
 		offhandStack = slabboAPI.getItemInOffHand(pInv);
-		if (offhandStack != null && offhandStack.getType() != Material.AIR) {
-			ItemStack offhandClone = offhandStack.clone();
-			offhandClone.setAmount(1);
-			if (itemInShop.equals(offhandClone)) {
-				int newAmount = offhandStack.getAmount() - shop.quantity;
-				if (newAmount > 0) {
-					offhandStack.setAmount(newAmount);
-					pInv.setItemInOffHand(offhandStack);
-				} else {
+		if (offhandStack != null && offhandStack.getType() != Material.AIR && offhandStack.isSimilar(shop.item)) {
+			int offhandAmount = offhandStack.getAmount();
+			if (offhandAmount >= remainingToRemove) {
+				offhandStack.setAmount(offhandAmount - remainingToRemove);
+				if (offhandStack.getAmount() <= 0) {
 					pInv.setItemInOffHand(null);
+				} else {
+					pInv.setItemInOffHand(offhandStack);
 				}
+				remainingToRemove = 0;
 			} else {
-				pInv.removeItem(shopItemClone);
+				pInv.setItemInOffHand(null);
+				remainingToRemove -= offhandAmount;
 			}
-		} else {
-			pInv.removeItem(shopItemClone);
 		}
+
+		// Remove remaining items from inventory
+		if (remainingToRemove > 0) {
+			ItemStack[] contents = pInv.getContents();
+			for (int i = 0; i < contents.length && remainingToRemove > 0; i++) {
+				ItemStack stack = contents[i];
+				if (stack != null && stack.isSimilar(shop.item)) {
+					int stackAmount = stack.getAmount();
+					if (stackAmount > remainingToRemove) {
+						stack.setAmount(stackAmount - remainingToRemove);
+						contents[i] = stack;
+						remainingToRemove = 0;
+					} else {
+						contents[i] = null;
+						remainingToRemove -= stackAmount;
+					}
+				}
+			}
+			pInv.setContents(contents);
+		}
+		// ===== End fixed removal logic =====
 
 		Slabbo.getEconomy().depositPlayer((OfflinePlayer) humanEntity, totalCost);
 
@@ -343,6 +367,7 @@ public class ShopUserGUI implements Listener {
 
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer) humanEntity)));
 	}
+
 
 
 
