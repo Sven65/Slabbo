@@ -8,8 +8,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
-import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;
@@ -26,18 +26,18 @@ public class SlabboContextResolver {
 		this.shop = shop;
 	}
 
-	public static Shop getLookingAtShop (Player player) {
+	public static Shop getLookingAtShop(Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
 		String locationString = ShopManager.locationToString(lookingAt.getLocation());
 
-		if (ShopManager.shops.containsKey(locationString)) {
-			return ShopManager.shops.get(locationString);
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(locationString);
+		if (shop != null) {
+			return shop;
 		}
 
 		return null;
 	}
-
 
 	public static IssuerOnlyContextResolver<SlabboContextResolver, BukkitCommandExecutionContext> getContextResolver () {
 		return (c) -> {
@@ -46,9 +46,7 @@ public class SlabboContextResolver {
 			Shop shop = getLookingAtShop(player);
 
 			if (shop == null) {
-				//player.sendMessage(ChatColor.RED+ LocaleManager.getString("error-message.general.not-a-shop"));
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
-
 				throw new ConditionFailedException(LocaleManager.getString("error-message.general.not-a-shop"));
 			}
 

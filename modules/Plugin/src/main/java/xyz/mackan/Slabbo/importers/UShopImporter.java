@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class UShopImporter {
-	public static ImportResult importUShops (File file) {
+	public static ImportResult importUShops(File file) {
 		List<String> skippedShops = new ArrayList<String>();
 		List<Shop> shops = new ArrayList<Shop>();
 
@@ -34,7 +34,8 @@ public class UShopImporter {
 		}
 
 		for (String key : uShopConfig.getKeys(false)) {
-			if (ShopManager.shops.containsKey(key)) {
+			// Use the ShopManager API instead of direct map access
+			if (Slabbo.getInstance().getShopManager().getShop(key) != null) {
 				skippedShops.add(key);
 				continue;
 			}

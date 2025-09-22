@@ -12,7 +12,6 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.Misc;
 
 public class InventoryClickListener implements Listener {
@@ -38,7 +37,7 @@ public class InventoryClickListener implements Listener {
 
 		Block chestBlock = inventoryLocation.getBlock();
 
-		if (!ChestLinkManager.isChestLinked(chestBlock)) return;
+		if (!Slabbo.getInstance().getChestLinkManager().isChestLinked(chestBlock)) return;
 
 		boolean isTopInventory = false;
 		ItemStack item = null;
@@ -60,7 +59,7 @@ public class InventoryClickListener implements Listener {
 
 		if (!isTopInventory) return;
 
-		Shop shop = ChestLinkManager.getShopByChestLocation(chestBlock.getLocation());
+		Shop shop = Slabbo.getInstance().getChestLinkManager().getShopByChestLocation(chestBlock.getLocation());
 
 		ItemStack clonedItem = item.clone();
 		ItemStack clonedShopItem = shop.item.clone();
@@ -75,7 +74,7 @@ public class InventoryClickListener implements Listener {
 
 		shop.stock += item.getAmount();
 
-		ShopManager.put(shop.getLocationString(), shop);
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 
 		e.setCurrentItem(null);
 
@@ -89,7 +88,6 @@ public class InventoryClickListener implements Listener {
 			isWaitingForSave = true;
 			taskId = Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Slabbo.getInstance(), new Runnable() {
 				public void run () {
-					DataUtil.saveShops();
 					Bukkit.getServer().getScheduler().cancelTask(taskId);
 					isWaitingForSave = false;
 				}
@@ -109,7 +107,7 @@ public class InventoryClickListener implements Listener {
 
 		Block chestBlock = invLocation.getBlock();
 
-		if (!ChestLinkManager.isChestLinked(chestBlock)) return;
+		if (!Slabbo.getInstance().getChestLinkManager().isChestLinked(chestBlock)) return;
 
 		DragType type = e.getType();
 

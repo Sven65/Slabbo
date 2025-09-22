@@ -2,10 +2,10 @@ package xyz.mackan.Slabbo.commands;
 
 import co.aikar.commands.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
@@ -17,13 +17,14 @@ import java.util.Set;
 public class Conditions {
 	static ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
 
-	public static Shop getLookingAtShop (Player player) {
+	public static Shop getLookingAtShop(Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
 		String locationString = ShopManager.locationToString(lookingAt.getLocation());
 
-		if (ShopManager.shops.containsKey(locationString)) {
-			return ShopManager.shops.get(locationString);
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(locationString);
+		if (shop != null) {
+			return shop;
 		}
 
 		player.playSound(player.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
@@ -38,7 +39,7 @@ public class Conditions {
 	public static Block getLookingAtLinkedChest (Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-		if (ChestLinkManager.isChestLinked(lookingAt)) {
+		if (Slabbo.getInstance().getChestLinkManager().isChestLinked(lookingAt)) {
 			return lookingAt;
 		}
 
@@ -109,7 +110,7 @@ public class Conditions {
 
 			Block lookingAt = getLookingAtLinkedChest(player);
 
-			Shop shop = ChestLinkManager.getShopByChestLocation(lookingAt.getLocation());
+			Shop shop = Slabbo.getInstance().getChestLinkManager().getShopByChestLocation(lookingAt.getLocation());
 
 			if (!isShopOwner(shop, player)) {
 				if (!player.hasPermission(permissionNode)) {

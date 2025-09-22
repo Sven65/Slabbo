@@ -21,17 +21,17 @@ public class SlabboCommandCompletions {
 	}
 
 	public static List<String> getVirtualShopNames() {
-		return Arrays.stream(ShopManager.shops.values().toArray())
-				.filter(shop -> ((Shop)shop).virtual)
-				.map(shop -> ((Shop) shop).shopName)
+		return Slabbo.getInstance().getShopManager().getAllShops().values().stream()
+				.filter(shop -> shop.virtual)
+				.map(shop -> shop.shopName)
 				.collect(Collectors.toList());
 	}
 
 	public static List<String> getVirtualAdminShopNames() {
-		return Arrays.stream(ShopManager.shops.values().toArray())
-				.filter(shop -> ((Shop)shop).virtual)
-				.filter(shop -> ((Shop) shop).admin)
-				.map(shop -> ((Shop) shop).shopName)
+		return Slabbo.getInstance().getShopManager().getAllShops().values().stream()
+				.filter(shop -> shop.virtual)
+				.filter(shop -> shop.admin)
+				.map(shop -> shop.shopName)
 				.collect(Collectors.toList());
 	}
 }

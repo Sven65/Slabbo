@@ -12,12 +12,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
-import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 
 import java.util.UUID;
@@ -44,11 +42,9 @@ public class ShopDeletionGUI  implements Listener {
 
 		if (!shop.virtual) ItemUtil.removeShopItemsAtLocation(shop.location);
 
-		ShopManager.removeShop(shop);
+		Slabbo.getInstance().getShopManager().removeShop(shop);
 
 		((Player) humanEntity).playSound(shop.location == null ? humanEntity.getLocation() : shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
-
-		DataUtil.saveShops();
 
 		humanEntity.closeInventory();
 	}

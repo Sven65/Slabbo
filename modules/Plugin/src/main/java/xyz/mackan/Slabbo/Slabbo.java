@@ -1,13 +1,9 @@
 // TODO: Docs
 package xyz.mackan.Slabbo;
 
-import co.aikar.commands.BukkitCommandIssuer;
-import co.aikar.commands.ConditionFailedException;
 import co.aikar.commands.PaperCommandManager;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.UnsafeValues;
-import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -17,21 +13,23 @@ import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.commands.*;
+import xyz.mackan.Slabbo.data.DataStore;
+import xyz.mackan.Slabbo.data.FileStore;
+import xyz.mackan.Slabbo.data.SQLiteStore;
 import xyz.mackan.Slabbo.listeners.*;
+import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.MinecraftVersion;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
-import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,6 +51,10 @@ public class Slabbo extends JavaPlugin {
 
 	public static boolean hasUpdate = false;
 	private static boolean isEnabled = false;
+
+	private ShopManager shopManager;
+	private ChestLinkManager chestLinkManager;
+
 
 
 	@Override
@@ -76,7 +78,6 @@ public class Slabbo extends JavaPlugin {
 
 		new File(getDataPath()).mkdirs();
 
-
 		this.saveDefaultConfig();
 
 		saveResource("lang.yml", false);
@@ -86,6 +87,20 @@ public class Slabbo extends JavaPlugin {
 
 		LocaleManager.loadFile(this, "lang.yml");
 
+
+		String engine = getConfig().getString("storageEngine", "file").toLowerCase();
+		DataStore dataStore = engine.equals("sqlite") ? new SQLiteStore() :
+				engine.equals("file") ? new FileStore() : null;
+
+		if (dataStore == null) {
+			getLogger().severe("Invalid storageEngine: " + engine + ". Use 'file' or 'sqlite'. Disabling plugin.");
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
+		shopManager = new ShopManager(dataStore);
+		chestLinkManager = new ChestLinkManager(shopManager);
+
 		setupCommands();
 		setupListeners();
 
@@ -93,17 +108,16 @@ public class Slabbo extends JavaPlugin {
 
 		getLogger().info("Slabbo fully enabled.");
 
-		ShopManager.loadShops();
+		shopManager.loadShops();
 
 		isEnabled = true;
 	}
 
 	@Override
 	public void onDisable () {
-
 		if (isEnabled) {
 			log.info("Saving shops before disabling Slabbo");
-			DataUtil.saveShopsOnMainThread();
+			shopManager.saveShopsOnMainThread();
 		}
 
 		log.info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
@@ -261,4 +275,12 @@ public class Slabbo extends JavaPlugin {
 	}
 
 	public static Slabbo getInstance() { return instance; }
+
+	public ShopManager getShopManager() {
+		return shopManager;
+	}
+
+	public ChestLinkManager getChestLinkManager() {
+		return chestLinkManager;
+	}
 }

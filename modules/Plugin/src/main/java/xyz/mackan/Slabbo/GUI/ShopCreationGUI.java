@@ -1,6 +1,5 @@
 package xyz.mackan.Slabbo.GUI;
 
-import jline.internal.Nullable;
 import org.bukkit.*;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -21,7 +20,6 @@ import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.ChatWaitingType;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.manager.ShopManager;
 
@@ -301,9 +299,7 @@ public class ShopCreationGUI implements Listener {
 					shop.virtual = virtual;
 					shop.shopName = shopName;
 
-					ShopManager.put(this.getShopLocationString(), shop);
-
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(shop);
 
 					e.getWhoClicked().closeInventory();
 
@@ -339,9 +335,8 @@ public class ShopCreationGUI implements Listener {
 
 		String shopLocation = this.getShopLocationString();
 
-		boolean shopExists = ShopManager.shops.containsKey(shopLocation);
-		Shop shop = ShopManager.shops.get(shopLocation);
-
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(shopLocation);
+		boolean shopExists = shop != null;
 
 		if (shopExists && shop.stock > 0) {
 			// Not allowed to change the item

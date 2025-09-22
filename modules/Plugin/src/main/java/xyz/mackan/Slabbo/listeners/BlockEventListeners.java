@@ -19,24 +19,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class BlockEventListeners implements Listener {
-	public boolean isLookingAtShop (Player player) {
+	public boolean isLookingAtShop(Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
 		if (!Misc.isValidShopBlock(lookingAt)) return false;
 
 		String locationString = ShopManager.locationToString(lookingAt.getLocation());
 
-		if (ShopManager.shops.containsKey(locationString)) return true;
-
-		return false;
+		return Slabbo.getInstance().getShopManager().getShop(locationString) != null;
 	}
 
-	public boolean isLookingAtLinkedChest (Player player) {
+	public boolean isLookingAtLinkedChest(Player player) {
 		Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
-		if (!ChestLinkManager.isChestLinked(lookingAt)) return false;
-
-		return true;
+		return Slabbo.getInstance().getChestLinkManager().isChestLinked(lookingAt);
 	}
 
 	@EventHandler
@@ -70,14 +66,14 @@ public class BlockEventListeners implements Listener {
 
 			String locationString = ShopManager.locationToString(block.getLocation());
 
-			if (!ShopManager.shops.containsKey(locationString)) {
+			if (Slabbo.getInstance().getShopManager().getShop(locationString) == null) {
 				continue;
 			} else {
 				it.remove();
 			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
-				if (!ChestLinkManager.isChestLinked(block)) continue;
+				if (!Slabbo.getInstance().getChestLinkManager().isChestLinked(block)) continue;
 			}
 
 			it.remove();
@@ -89,14 +85,14 @@ public class BlockEventListeners implements Listener {
 		for (Block block : event.getBlocks()){
 			String locationString = ShopManager.locationToString(block.getLocation());
 
-			if (!ShopManager.shops.containsKey(locationString)) {
+			if (Slabbo.getInstance().getShopManager().getShop(locationString) == null) {
 				continue;
 			} else {
 				event.setCancelled(true);
 			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
-				if (!ChestLinkManager.isChestLinked(block)) continue;
+				if (!Slabbo.getInstance().getChestLinkManager().isChestLinked(block)) continue;
 			}
 
 			event.setCancelled(true);
@@ -108,14 +104,14 @@ public class BlockEventListeners implements Listener {
 		for (Block block : event.getBlocks()){
 			String locationString = ShopManager.locationToString(block.getLocation());
 
-			if (!ShopManager.shops.containsKey(locationString)) {
+			if (Slabbo.getInstance().getShopManager().getShop(locationString) == null) {
 				continue;
 			} else {
 				event.setCancelled(true);
 			}
 
 			if (Slabbo.getInstance().getConfig().getBoolean("chestlinks.enabled")) {
-				if (!ChestLinkManager.isChestLinked(block)) continue;
+				if (!Slabbo.getInstance().getChestLinkManager().isChestLinked(block)) continue;
 			}
 
 			event.setCancelled(true);

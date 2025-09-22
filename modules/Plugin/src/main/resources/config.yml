@@ -4,6 +4,12 @@
 #       General        #
 ########################
 
+# Which storage engine to use for shops.
+# Options:
+#   file   - Stores all shops in a YAML file (default)
+#   sqlite - Stores all shops in an SQLite database (recommended for servers with many shops or high player counts)
+storageEngine: file
+
 # How the hovering items should be displayed
 # Accepts the following values:
 # - Quantity (The amount the shop sells)

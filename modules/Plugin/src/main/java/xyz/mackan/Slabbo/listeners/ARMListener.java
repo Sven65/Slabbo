@@ -4,7 +4,7 @@ import net.alex9849.arm.adapters.WGRegion;
 import net.alex9849.arm.events.RestoreRegionEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import xyz.mackan.Slabbo.manager.ShopManager;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.pluginsupport.ARMSupport;
 import xyz.mackan.Slabbo.types.Shop;
 
@@ -21,7 +21,7 @@ public class ARMListener implements Listener {
 
 
         for (Shop shop : shops) {
-            ShopManager.removeShop(shop);
+            Slabbo.getInstance().getShopManager().removeShop(shop);
         }
     }
 }
