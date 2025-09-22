@@ -1314,35 +1314,38 @@ public class SlabboCommand extends BaseCommand {
 			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.only-console", "target", target));
 			return;
 		}
-		if (!target.equalsIgnoreCase("sqlite") && !target.equalsIgnoreCase("file")) {
+
+		target = (target == null) ? "" : target.toLowerCase();
+		if (!target.equals("sqlite") && !target.equals("file")) {
 			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.invalid-target", "target", target));
 			return;
 		}
-		String configEngine = Slabbo.getInstance().getConfig().getString("storageEngine", "file").toLowerCase();
-		if (!configEngine.equals(target.toLowerCase())) {
-			HashMap<String, Object> map = new HashMap<>();
-			map.put("current", configEngine);
-			map.put("target", target.toLowerCase());
-			sender.sendMessage(ChatColor.RED + LocaleManager.replaceKey("migrate.config-mismatch", map));
-			return;
-		}
-		String currentType = Slabbo.getInstance().getConfig().getString("storage.type", "file").toLowerCase();
-		if (currentType.equals(target.toLowerCase())) {
-			sender.sendMessage(ChatColor.YELLOW + LocaleManager.replaceSingleKey("migrate.already-using", "target", target));
-			return;
-		}
+
 		ShopManager shopManager = Slabbo.getInstance().getShopManager();
-		if (shopManager.isMigrationInProgress()) {
-			sender.sendMessage(ChatColor.YELLOW + LocaleManager.getString("migrate.in-progress"));
-			return;
-		}
-		boolean success = shopManager.migrateStorage(target.toLowerCase());
-		if (success) {
-			Slabbo.getInstance().getConfig().set("storage.type", target.toLowerCase());
-			Slabbo.getInstance().saveConfig();
-			sender.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("migrate.success", "target", target));
-		} else {
-			sender.sendMessage(ChatColor.RED + LocaleManager.getString("migrate.failed"));
+
+		// Call the migration and act based on the result. The migration method is authoritative
+		ShopManager.MigrationResult result = shopManager.migrateStorage(target);
+
+		switch (result) {
+			case SUCCESS:
+				// Update config only after a successful migration
+				Slabbo.getInstance().getConfig().set("storage.type", target);
+				Slabbo.getInstance().saveConfig();
+				sender.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("migrate.success", "target", target));
+				break;
+			case IN_PROGRESS:
+				sender.sendMessage(ChatColor.YELLOW + LocaleManager.getString("migrate.in-progress"));
+				break;
+			case ALREADY_ON_TARGET:
+				sender.sendMessage(ChatColor.YELLOW + LocaleManager.replaceSingleKey("migrate.already-using", "target", target));
+				break;
+			case INVALID_TARGET:
+				sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.invalid-target", "target", target));
+				break;
+			case FAILED:
+			default:
+				sender.sendMessage(ChatColor.RED + LocaleManager.getString("migrate.failed"));
+				break;
 		}
 	}
 }

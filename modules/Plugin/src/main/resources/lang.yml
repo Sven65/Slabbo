@@ -182,7 +182,7 @@ gui:
 
     new-shop:
       click-item-below: Click item below
-  migrate:
+migrate:
     only-console: This command can only be run from the console.
     invalid-target: Invalid target. Use 'sqlite' or 'file'.
     already-using: Already using {target} storage.

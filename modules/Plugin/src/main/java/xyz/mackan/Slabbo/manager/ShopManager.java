@@ -10,6 +10,7 @@ import xyz.mackan.Slabbo.data.SQLiteStore;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.*;
+import java.util.logging.Level;
 
 /**
  * Manages all shop operations and delegates persistence to a DataStore backend.
@@ -261,59 +262,80 @@ public class ShopManager {
 	}
 
 	/**
-	 * Migrates shops between storage backends. Returns true if successful.
-	 * This is a stub; actual migration logic should be implemented.
+	 * Result codes for migrateStorage to provide richer diagnostics.
 	 */
-	public boolean migrateStorage(String target) {
-		if (isMigrationInProgress()) return false;
+	public enum MigrationResult {
+		SUCCESS,
+		IN_PROGRESS,
+		ALREADY_ON_TARGET,
+		INVALID_TARGET,
+		FAILED
+	}
+
+	/**
+	 * Migrates shops between storage backends. Returns a MigrationResult for diagnostics.
+	 */
+	public MigrationResult migrateStorage(String target) {
+		java.util.logging.Logger logger = Slabbo.getInstance().getLogger();
+		if (isMigrationInProgress()) {
+			logger.warning("[Slabbo] Migration requested but another migration is already in progress.");
+			return MigrationResult.IN_PROGRESS;
+		}
 		setMigrationInProgress(true);
 		try {
-			String currentType = (dataStore instanceof xyz.mackan.Slabbo.data.SQLiteStore) ? "sqlite" : "file";
-			if (currentType.equalsIgnoreCase(target)) {
-				return false; // Already using target
+			// Determine the actual active store implementation (source of truth for migration)
+			String actualStore = (dataStore instanceof SQLiteStore) ? "sqlite" : "file";
+			// Read config for visibility; warn if it disagrees with the active store
+			String configType = Slabbo.getInstance().getConfig().getString("storage.type", actualStore).toLowerCase();
+			if (!actualStore.equals(configType)) {
+				logger.warning("Config 'storage.type' (" + configType + ") does not match active DataStore (" + actualStore + "). Proceeding based on active store.");
+			}
+			// If the active store already equals the requested target, nothing to migrate
+			if (actualStore.equalsIgnoreCase(target)) {
+				logger.info("Already using target storage: " + target + " - aborting migration.");
+				return MigrationResult.ALREADY_ON_TARGET;
 			}
 			Map<String, Shop> allShops = dataStore.loadShops();
 			if (allShops == null) allShops = new HashMap<>();
-			xyz.mackan.Slabbo.data.DataStore newStore;
+			DataStore newStore;
 			if (target.equalsIgnoreCase("sqlite")) {
-				newStore = new xyz.mackan.Slabbo.data.SQLiteStore();
+				newStore = new SQLiteStore();
 			} else if (target.equalsIgnoreCase("file")) {
-				newStore = new xyz.mackan.Slabbo.data.FileStore();
+				newStore = new FileStore();
 			} else {
-				return false; // Invalid target
+				logger.severe("Invalid migration target provided: " + target);
+				return MigrationResult.INVALID_TARGET; // Invalid target
 			}
 			int total = allShops.size();
 			int count = 0;
-			int lastPercent = 0;
-			final int progressStep = Math.max(1, total / 10); // Log every 10% or at least every shop if few shops
-			java.util.logging.Logger logger = Slabbo.getInstance().getLogger();
-			logger.info("[Slabbo] Migrating " + total + " shops to " + target + "...");
+			int lastPercent = -1;
+			final int progressStep = total > 0 ? Math.max(1, total / 10) : 1; // Log every 10% or at least every shop if few shops
+			logger.info("Migrating " + total + " shops to " + target + "...");
 			for (Map.Entry<String, Shop> entry : allShops.entrySet()) {
 				count++;
 				try {
 					newStore.addShop(entry.getValue());
 				} catch (Exception e) {
-					logger.warning("[Slabbo] Failed to migrate shop: " + entry.getKey());
+					logger.log(Level.SEVERE, "[Slabbo] Failed to migrate shop: " + entry.getKey(), e);
 				}
-				if (count % progressStep == 0 || count == total) {
-					int percent = (int) (((double) count / total) * 100);
+				if (total > 0 && (count % progressStep == 0 || count == total)) {
+					int percent = (int) (((double) count / (double) total) * 100);
 					if (percent != lastPercent) {
-						logger.info("[Slabbo] Migration progress: " + count + "/" + total + " (" + percent + "%)");
+						logger.info("Migration progress: " + count + "/" + total + " (" + percent + "%)");
 						lastPercent = percent;
 					}
 				}
 			}
-			logger.info("[Slabbo] Migration complete.");
+			logger.info("Migration complete.");
 			try { dataStore.close(); } catch (Exception ignored) {}
 			java.lang.reflect.Field field = ShopManager.class.getDeclaredField("dataStore");
 			field.setAccessible(true);
 			field.set(this, newStore);
 			loadShops();
-			return true;
+			return MigrationResult.SUCCESS;
 		} catch (Exception e) {
-			xyz.mackan.Slabbo.Slabbo.getInstance().getLogger().severe("[Slabbo] Migration failed: " + e.getMessage());
-			e.printStackTrace();
-			return false;
+			Slabbo.getInstance().getLogger().log(Level.SEVERE, "Migration failed:", e);
+			return MigrationResult.FAILED;
 		} finally {
 			setMigrationInProgress(false);
 		}
