@@ -1,6 +1,7 @@
 package xyz.mackan.Slabbo.data;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import xyz.mackan.Slabbo.Slabbo;
@@ -16,16 +17,30 @@ public class FileStore implements DataStore {
     @Nullable
     public Map<String, Shop> loadShops() {
         try {
-            File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
+            Bukkit.getLogger().info("Loading shops from file...");
 
+            File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
             YamlConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
-            Object shops = configFile.getConfigurationSection("shops").getValues(false);
+            ConfigurationSection shopsSection = configFile.getConfigurationSection("shops");
+            if (shopsSection == null) {
+                return new HashMap<>(); // Return an empty map if the section is missing
+            }
 
-            HashMap<String, Shop> shopData = (HashMap<String, Shop>) shops;
+            Map<String, Object> shops = shopsSection.getValues(false);
+            HashMap<String, Shop> shopData = new HashMap<>();
+            for (Map.Entry<String, Object> entry : shops.entrySet()) {
+                if (entry.getValue() instanceof Shop) {
+                    shopData.put(entry.getKey(), (Shop) entry.getValue());
+                }
+            }
+
+
+            Bukkit.getLogger().info("Loaded shops from file...");
 
             return shopData;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -35,11 +50,14 @@ public class FileStore implements DataStore {
         Bukkit.getScheduler().runTaskAsynchronously(Slabbo.getInstance(), new Runnable() {
             @Override
             public void run () {
+                Bukkit.getLogger().info("Saving shops to file...");
+
                 File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
 
                 FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
 
                 configFile.createSection("shops", shops);
+
 
                 try {
                     configFile.save(dataFile);
@@ -77,6 +95,8 @@ public class FileStore implements DataStore {
 
     @Override
     public void saveShopsOnMainThread(Map<String, Shop> shops) {
+        Bukkit.getLogger().info("Saving shops to file on main...");
+
         File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
         FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
         configFile.createSection("shops", shops);

@@ -118,22 +118,17 @@ public class SlabboCommand extends BaseCommand {
 		player.sendMessage(LocaleManager.getString("general.general.reloading") + " Slabbo");
 
 		Slabbo.getInstance().reloadConfig();
-
 		ItemUtil.removeShopItems(player.getWorld());
-
 		Slabbo.getInstance().getChestLinkManager().clearLinks();
-
 		Slabbo.getInstance().getShopManager().reloadShops();
 
 		for (Map.Entry<String, Shop> shopEntry : Slabbo.getInstance().getShopManager().getAllShops().entrySet()) {
 			Shop shop = shopEntry.getValue();
-
 			if (shop.location == null) {
 				Location shopLocation = ShopManager.fromString(shopEntry.getKey());
 				shop.location = shopLocation;
 				shouldSave = true;
 			}
-
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
 		}
 
@@ -152,9 +147,13 @@ public class SlabboCommand extends BaseCommand {
 	public void onInfo (Player sender) {
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 
-		sender.sendMessage("Version: "+ Slabbo.getInstance().getDescription().getVersion());
-		sender.sendMessage("Total Shops: "+Slabbo.getInstance().getShopManager().getAllShops().size());
-		sender.sendMessage("Economy Provider: "+Slabbo.getEconomy().getName());
+		String version = Slabbo.getInstance().getDescription().getVersion();
+		int totalShops = Slabbo.getInstance().getShopManager().getAllShops().size();
+		String economyProvider = Slabbo.getEconomy().getName();
+
+		sender.sendMessage("Slabbo Version: " + version);
+		sender.sendMessage("Slabbo Total Shops: " + totalShops);
+		sender.sendMessage("Slabbo Economy Provider: " + economyProvider);
 
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 	}
@@ -1303,6 +1302,47 @@ public class SlabboCommand extends BaseCommand {
 
 			ShopDeletionGUI gui = new ShopDeletionGUI(shop);
 			gui.openInventory(player);
+		}
+	}
+
+	@Subcommand("migrate")
+	@Description("Migrates shops between sqlite and file storage")
+	@CommandPermission("slabbo.migrate")
+	@CommandCompletion("sqlite|file")
+	public void onMigrate(CommandSender sender, String target) {
+		if (!(sender instanceof org.bukkit.command.ConsoleCommandSender)) {
+			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.only-console", "target", target));
+			return;
+		}
+		if (!target.equalsIgnoreCase("sqlite") && !target.equalsIgnoreCase("file")) {
+			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.invalid-target", "target", target));
+			return;
+		}
+		String configEngine = Slabbo.getInstance().getConfig().getString("storageEngine", "file").toLowerCase();
+		if (!configEngine.equals(target.toLowerCase())) {
+			HashMap<String, Object> map = new HashMap<>();
+			map.put("current", configEngine);
+			map.put("target", target.toLowerCase());
+			sender.sendMessage(ChatColor.RED + LocaleManager.replaceKey("migrate.config-mismatch", map));
+			return;
+		}
+		String currentType = Slabbo.getInstance().getConfig().getString("storage.type", "file").toLowerCase();
+		if (currentType.equals(target.toLowerCase())) {
+			sender.sendMessage(ChatColor.YELLOW + LocaleManager.replaceSingleKey("migrate.already-using", "target", target));
+			return;
+		}
+		ShopManager shopManager = Slabbo.getInstance().getShopManager();
+		if (shopManager.isMigrationInProgress()) {
+			sender.sendMessage(ChatColor.YELLOW + LocaleManager.getString("migrate.in-progress"));
+			return;
+		}
+		boolean success = shopManager.migrateStorage(target.toLowerCase());
+		if (success) {
+			Slabbo.getInstance().getConfig().set("storage.type", target.toLowerCase());
+			Slabbo.getInstance().saveConfig();
+			sender.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("migrate.success", "target", target));
+		} else {
+			sender.sendMessage(ChatColor.RED + LocaleManager.getString("migrate.failed"));
 		}
 	}
 }

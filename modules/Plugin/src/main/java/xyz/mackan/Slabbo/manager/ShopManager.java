@@ -3,7 +3,10 @@ package xyz.mackan.Slabbo.manager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.data.DataStore;
+import xyz.mackan.Slabbo.data.FileStore;
+import xyz.mackan.Slabbo.data.SQLiteStore;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.*;
@@ -17,6 +20,7 @@ public class ShopManager {
 	private Map<String, Shop> shops; // Only used if caching
 	private Map<UUID, List<Shop>> shopsByOwnerId; // Only used if caching
 	private List<String> limitedShops; // Only used if caching
+	private boolean migrationInProgress = false;
 
 	/**
 	 * Constructs a ShopManager with the given DataStore backend.
@@ -246,5 +250,72 @@ public class ShopManager {
 	 */
 	public void close() {
 		dataStore.close();
+	}
+
+	public synchronized boolean isMigrationInProgress() {
+		return migrationInProgress;
+	}
+
+	public synchronized void setMigrationInProgress(boolean inProgress) {
+		this.migrationInProgress = inProgress;
+	}
+
+	/**
+	 * Migrates shops between storage backends. Returns true if successful.
+	 * This is a stub; actual migration logic should be implemented.
+	 */
+	public boolean migrateStorage(String target) {
+		if (isMigrationInProgress()) return false;
+		setMigrationInProgress(true);
+		try {
+			String currentType = (dataStore instanceof xyz.mackan.Slabbo.data.SQLiteStore) ? "sqlite" : "file";
+			if (currentType.equalsIgnoreCase(target)) {
+				return false; // Already using target
+			}
+			Map<String, Shop> allShops = dataStore.loadShops();
+			if (allShops == null) allShops = new HashMap<>();
+			xyz.mackan.Slabbo.data.DataStore newStore;
+			if (target.equalsIgnoreCase("sqlite")) {
+				newStore = new xyz.mackan.Slabbo.data.SQLiteStore();
+			} else if (target.equalsIgnoreCase("file")) {
+				newStore = new xyz.mackan.Slabbo.data.FileStore();
+			} else {
+				return false; // Invalid target
+			}
+			int total = allShops.size();
+			int count = 0;
+			int lastPercent = 0;
+			final int progressStep = Math.max(1, total / 10); // Log every 10% or at least every shop if few shops
+			java.util.logging.Logger logger = Slabbo.getInstance().getLogger();
+			logger.info("[Slabbo] Migrating " + total + " shops to " + target + "...");
+			for (Map.Entry<String, Shop> entry : allShops.entrySet()) {
+				count++;
+				try {
+					newStore.addShop(entry.getValue());
+				} catch (Exception e) {
+					logger.warning("[Slabbo] Failed to migrate shop: " + entry.getKey());
+				}
+				if (count % progressStep == 0 || count == total) {
+					int percent = (int) (((double) count / total) * 100);
+					if (percent != lastPercent) {
+						logger.info("[Slabbo] Migration progress: " + count + "/" + total + " (" + percent + "%)");
+						lastPercent = percent;
+					}
+				}
+			}
+			logger.info("[Slabbo] Migration complete.");
+			try { dataStore.close(); } catch (Exception ignored) {}
+			java.lang.reflect.Field field = ShopManager.class.getDeclaredField("dataStore");
+			field.setAccessible(true);
+			field.set(this, newStore);
+			loadShops();
+			return true;
+		} catch (Exception e) {
+			xyz.mackan.Slabbo.Slabbo.getInstance().getLogger().severe("[Slabbo] Migration failed: " + e.getMessage());
+			e.printStackTrace();
+			return false;
+		} finally {
+			setMigrationInProgress(false);
+		}
 	}
 }

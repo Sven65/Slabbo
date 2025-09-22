@@ -53,12 +53,13 @@ public class SQLiteStore implements DataStore {
         yaml.set("data", obj);
         StringWriter writer = new StringWriter();
         try {
-            yaml.save(writer);
+            writer.write(yaml.saveToString());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return writer.toString();
     }
+
 
     private <T> T deserializeYaml(String yamlString, Class<T> clazz) {
         if (yamlString == null) return null;
