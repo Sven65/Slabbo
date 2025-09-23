@@ -123,6 +123,54 @@ Destroying: Right click existing shop with stick
 - `/slabbo admin set virtual owner_name <shopName> [name]`
 - `/slabbo admin set virtual time <shopName> <time>`
 
+## SQLite Support
+
+Slabbo supports using SQLite as a storage engine for shop data. SQLite is a lightweight, file-based database that does not require a separate server.
+
+### Enabling SQLite
+
+To use SQLite, set the `storageEngine` option in your configuration file (usually `config.yml`) to `sqlite`:
+
+```yaml
+storageEngine: sqlite
+```
+
+### Migrating Existing Data to SQLite
+
+If you are currently using another storage engine (such as YAML or MySQL), you can migrate your data to SQLite using the following workflow:
+
+1. **Run the Migration Command**
+
+   In your server console, execute:
+
+   ```
+   /slabbo migrate sqlite
+   ```
+
+   This command will export your current shop data and import it into a new SQLite database file (typically `slabbo.db` in your plugin data folder).
+
+2. **Update the Configuration**
+
+   Open your `config.yml` and change the `storageEngine` value to `sqlite`:
+
+   ```yaml
+   storageEngine: sqlite
+   ```
+
+3. **Restart the Server**
+
+   Restart your Minecraft server to apply the changes and start using SQLite as the storage backend.
+
+### Notes
+
+- Always back up your data before performing a migration.
+- After migration, verify that all shop data has been transferred correctly.
+- If you encounter issues, check the server logs for error messages.
+
+**SQLite database file location:**  
+The SQLite database file is created as `slabbo.db` in your plugin's data folder (usually `plugins/Slabbo/slabbo.db`).
+
+
 ## Legal
 
 Slabbo is licensed under the EUPL-1.2-or-later.
@@ -154,3 +202,4 @@ Run
 ```sh
 mvn dependency:get -DrepoUrl=https://oss.sonatype.org/content/repositories/snapshots -DgroupId=net.md-5 -DartifactId=bungeecord-chat -Dversion=<version>-SNAPSHOT
 ```
+

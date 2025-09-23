@@ -40,8 +40,8 @@ public class PlayerInteractListener implements Listener {
 
 		String clickedLocation = ShopManager.locationToString(clickedBlock.getLocation());
 
-		boolean shopExists = ShopManager.shops.containsKey(clickedLocation);
-		Shop shop = ShopManager.shops.get(clickedLocation);
+		boolean shopExists = Slabbo.getInstance().getShopManager().getShop(clickedLocation) != null;
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(clickedLocation);
 
 		boolean isShopOwner = false;
 
@@ -62,7 +62,7 @@ public class PlayerInteractListener implements Listener {
 
 		if (holdingCreationItem && !shopExists && canCreateShop) {
 			int maxShops = PermissionUtil.getLimit(player);
-			int userShops = ShopManager.getOwnerCount(player.getUniqueId());
+			int userShops = Slabbo.getInstance().getShopManager().getOwnerCount(player.getUniqueId());
 
 			if (userShops >= maxShops) {
 				return new ShopAction(ShopAction.ShopActionType.CREATION_LIMIT_HIT, maxShops);
@@ -93,9 +93,9 @@ public class PlayerInteractListener implements Listener {
 	public ShopAction getRestockAction (ItemStack itemInHand, Player player, String clickedLocation) {
 		if (itemInHand == null) return new ShopAction(ShopAction.ShopActionType.NONE);
 
-		boolean shopExists = ShopManager.shops.containsKey(clickedLocation);
+		boolean shopExists = Slabbo.getInstance().getShopManager().getShop(clickedLocation) != null;
 
-		Shop shop = ShopManager.shops.get(clickedLocation);
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(clickedLocation);
 
 		boolean isShopOwner = false;
 
@@ -141,7 +141,7 @@ public class PlayerInteractListener implements Listener {
 				return new ShopAction(ShopAction.ShopActionType.NONE);
 			}
 
-			if (!ChestLinkManager.hasPendingLink(player)) return new ShopAction(ShopAction.ShopActionType.NONE);
+			if (!	Slabbo.getInstance().getChestLinkManager().hasPendingLink(player)) return new ShopAction(ShopAction.ShopActionType.NONE);
 
 			PluginSupport.CanCreateShopResult canCreateShopResult = PluginSupport.canCreateShop(clickedBlock.getLocation(), player);
 
@@ -155,46 +155,41 @@ public class PlayerInteractListener implements Listener {
 
 		if (!Slabbo.getInstance().getConfig().getBoolean("punchRestock.single", true)) return new ShopAction(ShopAction.ShopActionType.NONE);
 
-		ShopAction action = getRestockAction(itemInHand, player, clickedLocation);
-
-		return action;
+        return getRestockAction(itemInHand, player, clickedLocation);
 	}
 
-	public void linkChest (Player player, Block clickedBlock) {
-		String linkingShopLocation = ChestLinkManager.pendingLinks.get(player.getUniqueId());
+	public void linkChest(Player player, Block clickedBlock) {
+		String linkingShopLocation = Slabbo.getInstance().getChestLinkManager().getPendingLink(player);
 		String linkingChestLocation = ShopManager.locationToString(clickedBlock.getLocation());
 
-		boolean isLinked = ChestLinkManager.isChestLinked(clickedBlock);
+		boolean isLinked = Slabbo.getInstance().getChestLinkManager().isChestLinked(clickedBlock);
 
 		if (isLinked) {
 			player.sendMessage(ChatColor.DARK_RED + LocaleManager.getString("error-message.chestlink.already-linked"));
-			ChestLinkManager.pendingLinks.remove(player.getUniqueId());
+			Slabbo.getInstance().getChestLinkManager().removePendingLink(player);
 
 			player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			return;
 		}
 
-		Shop linkingShop = ShopManager.shops.get(linkingShopLocation);
+		Shop linkingShop = Slabbo.getInstance().getShopManager().getShop(linkingShopLocation);
 
 		linkingShop.linkedChestLocation = linkingChestLocation;
 
-		ShopManager.put(linkingShopLocation, linkingShop);
+		Slabbo.getInstance().getShopManager().updateShop(linkingShop);
 
-		ChestLinkManager.pendingLinks.remove(player.getUniqueId());
+		Slabbo.getInstance().getChestLinkManager().removePendingLink(player);
 
-		ChestLinkManager.links.put(linkingChestLocation, linkingShop);
+		Slabbo.getInstance().getChestLinkManager().addLink(linkingChestLocation, linkingShop);
 
-		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
-
+		HashMap<String, Object> replacementMap = new HashMap<>();
 		replacementMap.put("location", linkingShopLocation);
 
-		player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.chestlink.link-success", replacementMap));
+		player.sendMessage(ChatColor.GREEN + LocaleManager.replaceKey("success-message.chestlink.link-success", replacementMap));
 
-		ChestLinkManager.setChestName(clickedBlock, "Slabbo "+LocaleManager.replaceKey("general.chestlink.chest-name", replacementMap));
+		Slabbo.getInstance().getChestLinkManager().setChestName(clickedBlock, "Slabbo " + LocaleManager.replaceKey("general.chestlink.chest-name", replacementMap));
 
 		player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("SUCCESS"), 1, 1);
-
-		DataUtil.saveShops();
 	}
 
 	public void stockShop (Player player, ItemStack itemInHand, Shop shop) {
@@ -204,9 +199,7 @@ public class PlayerInteractListener implements Listener {
 
 		shop.stock += itemInHand.getAmount();
 
-		ShopManager.put(shop.getLocationString(), shop);
-
-		DataUtil.saveShops();
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 	}
 
 	public void bulkStockShop (Player player, ItemStack itemInHand, Shop shop) {
@@ -233,9 +226,7 @@ public class PlayerInteractListener implements Listener {
 
 		shop.stock += itemCount;
 
-		ShopManager.put(shop.getLocationString(), shop);
-
-		DataUtil.saveShops();
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 	}
 
 	public void handleLeftClick (PlayerInteractEvent e) {
@@ -276,8 +267,8 @@ public class PlayerInteractListener implements Listener {
 
 		String clickedLocation = ShopManager.locationToString(clickedBlock.getLocation());
 
-		boolean shopExists = ShopManager.shops.containsKey(clickedLocation);
-		Shop shop = ShopManager.shops.get(clickedLocation);
+		boolean shopExists = Slabbo.getInstance().getShopManager().getShop(clickedLocation) != null;
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(clickedLocation);
 
 		if (!shopExists || shop == null) return;
 
@@ -285,7 +276,7 @@ public class PlayerInteractListener implements Listener {
 	}
 
 	@EventHandler
-	public void onInteract (PlayerInteractEvent e) {
+	public void onInteract(PlayerInteractEvent e) {
 		preventWaterLogging(e);
 
 		ItemStack itemInHand = api.getInteractionItemInHand(e);
@@ -320,43 +311,43 @@ public class PlayerInteractListener implements Listener {
 
 				player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			}
-				break;
+			break;
 			case CREATE: {
 				ShopCreationGUI gui = new ShopCreationGUI(clickedBlock.getLocation());
 				gui.openInventory(e.getPlayer());
 			}
-				break;
+			break;
 			case OPEN_DELETION_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
 				ShopDeletionGUI gui = new ShopDeletionGUI(shop);
 				gui.openInventory(e.getPlayer());
 			}
-				break;
+			break;
 			case OPEN_CLIENT_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
 				if (shop.shouldRestock()) {
 					shop.doLimitRestock();
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(shop);
 				}
 
 				ShopUserGUI gui = new ShopUserGUI(shop, player);
 				gui.openInventory(e.getPlayer());
 			}
-				break;
+			break;
 			case OPEN_ADMIN_GUI: {
 				Shop shop = (Shop) pAction.extra;
 
 				if (shop.shouldRestock()) {
 					shop.doLimitRestock();
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(shop);
 				}
 
 				ShopAdminGUI gui = new ShopAdminGUI(shop, player);
 				gui.openInventory(e.getPlayer());
 			}
-				break;
+			break;
 		}
 	}
 }

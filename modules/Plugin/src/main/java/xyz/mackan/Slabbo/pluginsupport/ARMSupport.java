@@ -1,10 +1,8 @@
 package xyz.mackan.Slabbo.pluginsupport;
 
 
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.alex9849.arm.adapters.WGRegion;
-import net.alex9849.arm.regions.Region;
-import xyz.mackan.Slabbo.manager.ShopManager;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.types.Shop;
 
 import java.util.ArrayList;
@@ -20,7 +18,7 @@ public class ARMSupport {
 
         ArrayList<Shop> shopsInRegion = new ArrayList<>();
 
-        for(Shop shop : ShopManager.shops.values()) {
+        for(Shop shop : Slabbo.getInstance().getShopManager().getAllShops().values()) {
             if (region.contains(shop.location.getBlockX(), shop.location.getBlockY(), shop.location.getBlockZ())) {
                 shopsInRegion.add(shop);
             }

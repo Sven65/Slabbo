@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
@@ -29,7 +30,7 @@ public class LCContextResolver {
         Block lookingAt = player.getTargetBlock((Set<Material>) null, 6);
 
 
-        if (!ChestLinkManager.isChestLinked(lookingAt)) {
+        if (!Slabbo.getInstance().getChestLinkManager().isChestLinked(lookingAt)) {
             return null;
         }
 

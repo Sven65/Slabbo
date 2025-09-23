@@ -15,16 +15,11 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
-import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.InventoryUtil;
 import xyz.mackan.Slabbo.utils.NameUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
 
 public class ShopUserGUI implements Listener {
 	ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
@@ -151,6 +146,8 @@ public class ShopUserGUI implements Listener {
 			shop.shopLimit.buyStockLeft -= totalBought;
 		}
 
+		Slabbo.getInstance().getShopManager().updateShop(shop);
+
 		//int actualCost = totalBought * shop.buyPrice;
 		double actualCost = shop.buyPrice;
 
@@ -180,8 +177,6 @@ public class ShopUserGUI implements Listener {
 				shopOwner.getPlayer().sendMessage(ChatColor.GREEN+ownerMessage);
 			}
 		}
-
-		DataUtil.saveShops();
 
 		if (shop.commandList != null) {
 			replacementMap.put("newStock", shop.stock);
@@ -272,8 +267,7 @@ public class ShopUserGUI implements Listener {
 		if (isLimitedShop) {
 			shop.shopLimit.sellStockLeft -= itemCount;
 		}
-
-		DataUtil.saveShops();
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 
 		shopItemClone.setAmount(itemCount);
 

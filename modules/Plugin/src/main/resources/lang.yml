@@ -182,3 +182,11 @@ gui:
 
     new-shop:
       click-item-below: Click item below
+migrate:
+    only-console: This command can only be run from the console.
+    invalid-target: Invalid target. Use 'sqlite' or 'file'.
+    already-using: Already using {target} storage.
+    in-progress: A migration is already in progress. Please wait.
+    success: Migration to {target} completed successfully.
+    failed: Migration failed or is already running. Check the console for details.
+    config-mismatch: The config 'storageEngine' is set to '{current}', but you tried to migrate to '{target}'. Please update your config.yml first.

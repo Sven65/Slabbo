@@ -5,8 +5,6 @@ import co.aikar.commands.CommandHelp;
 import co.aikar.commands.annotation.*;
 import co.aikar.commands.annotation.Conditions;
 import co.aikar.commands.annotation.Optional;
-import com.sk89q.worldguard.WorldGuard;
-import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -15,28 +13,22 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
 import xyz.mackan.Slabbo.GUI.ShopUserGUI;
 import xyz.mackan.Slabbo.Slabbo;
-import xyz.mackan.Slabbo.abstractions.SlabboAPI;
-import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.importers.ImportResult;
 import xyz.mackan.Slabbo.importers.UShopImporter;
-import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.ShopLimit;
-import xyz.mackan.Slabbo.utils.DataUtil;
 import xyz.mackan.Slabbo.utils.ItemUtil;
 import xyz.mackan.Slabbo.utils.Misc;
 
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -120,40 +112,33 @@ public class SlabboCommand extends BaseCommand {
 	@Subcommand("reload")
 	@Description("Reloads Slabbo")
 	@CommandPermission("slabbo.reload")
-	public void onReload (Player player) {
+	public void onReload(Player player) {
 		boolean shouldSave = false;
 
-		player.sendMessage(LocaleManager.getString("general.general.reloading")+" Slabbo");
+		player.sendMessage(LocaleManager.getString("general.general.reloading") + " Slabbo");
 
 		Slabbo.getInstance().reloadConfig();
-
 		ItemUtil.removeShopItems(player.getWorld());
+		Slabbo.getInstance().getChestLinkManager().clearLinks();
+		Slabbo.getInstance().getShopManager().reloadShops();
 
-		ChestLinkManager.links.clear();
-
-		ShopManager.clearShops();
-
-		ShopManager.loadShops();
-
-		for (Map.Entry<String, Shop> shopEntry : ShopManager.shops.entrySet()) {
+		for (Map.Entry<String, Shop> shopEntry : Slabbo.getInstance().getShopManager().getAllShops().entrySet()) {
 			Shop shop = shopEntry.getValue();
-
 			if (shop.location == null) {
 				Location shopLocation = ShopManager.fromString(shopEntry.getKey());
-
 				shop.location = shopLocation;
-
 				shouldSave = true;
 			}
-
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
 		}
 
 		if (shouldSave) {
-			DataUtil.saveShops();
+			for (Shop shop : Slabbo.getInstance().getShopManager().getAllShops().values()) {
+				Slabbo.getInstance().getShopManager().updateShop(shop);
+			}
 		}
 
-		player.sendMessage("Slabbo "+LocaleManager.getString("general.general.reloaded")+"!");
+		player.sendMessage("Slabbo " + LocaleManager.getString("general.general.reloaded") + "!");
 	}
 
 	@Subcommand("info")
@@ -162,9 +147,14 @@ public class SlabboCommand extends BaseCommand {
 	public void onInfo (Player sender) {
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 
-		sender.sendMessage("Version: "+ Slabbo.getInstance().getDescription().getVersion());
-		sender.sendMessage("Total Shops: "+ShopManager.shops.size());
-		sender.sendMessage("Economy Provider: "+Slabbo.getEconomy().getName());
+		String version = Slabbo.getInstance().getDescription().getVersion();
+		int totalShops = Slabbo.getInstance().getShopManager().getAllShops().size();
+		String economyProvider = Slabbo.getEconomy().getName();
+
+		sender.sendMessage("Slabbo Version: " + version);
+		sender.sendMessage("Slabbo Total Shops: " + totalShops);
+		sender.sendMessage("Slabbo Economy Provider: " + economyProvider);
+		sender.sendMessage("Slabbo Storage Backend: " + Slabbo.getInstance().getShopManager().getStorageType());
 
 		sender.sendMessage("=====[ Slabbo Info ]=====");
 	}
@@ -183,20 +173,21 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Toggles the shop as being an admin shop")
 		@CommandPermission("slabbo.admin.toggle")
 		@Conditions("lookingAtShop")
-		public void onToggleAdmin (Player player, SlabboContextResolver slabboContextResolver) {
+		public void onToggleAdmin(Player player, SlabboContextResolver slabboContextResolver) {
 			Shop lookingAtShop = slabboContextResolver.shop;
 
 			lookingAtShop.admin = !lookingAtShop.admin;
 
 			if (lookingAtShop.admin) {
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.admin-create"));
+				player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.general.admin-create"));
 			} else {
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.admin-destroy"));
+				player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.general.admin-destroy"));
 			}
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
+			// Use the ShopManager's public API instead of direct map access
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
-			DataUtil.saveShops();
+			// Remove DataUtil.saveShops(); - ShopManager handles persistence
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
@@ -205,27 +196,27 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Toggles a virtual shop as being an admin shop")
 		@CommandPermission("slabbo.admin.toggle.virtual")
 		@CommandCompletion("@virtualShopNames")
-		public void onToggleVirtualAdmin (Player player, String name) {
+		public void onToggleVirtualAdmin(Player player, String name) {
 			String loweredName = name.toLowerCase();
 
-			if (!ShopManager.shops.containsKey(loweredName)) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+			// Use the ShopManager instance to get the shop
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+			if (shop == null) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.shop-does-not-exist"));
 				return;
 			}
-
-			Shop shop = ShopManager.shops.get(loweredName);
 
 			shop.admin = !shop.admin;
 
 			if (shop.admin) {
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.admin-create"));
+				player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.general.admin-create"));
 			} else {
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.admin-destroy"));
+				player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.general.admin-destroy"));
 			}
 
-			ShopManager.shops.put(shop.shopName, shop);
-
-			DataUtil.saveShops();
+			// Update the shop using the ShopManager API
+			Slabbo.getInstance().getShopManager().updateShop(shop);
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
@@ -245,7 +236,7 @@ public class SlabboCommand extends BaseCommand {
 			@Description("Toggles the admin shop as having limited stock")
 			@CommandPermission("slabbo.admin.limit.toggle")
 			@Conditions("lookingAtShop|isAdminShop")
-			public void onToggleLimit (Player player, SlabboContextResolver slabboContext) {
+			public void onToggleLimit(Player player, SlabboContextResolver slabboContext) {
 				Shop lookingAtShop = slabboContext.shop;
 
 				ShopLimit limit = lookingAtShop.shopLimit;
@@ -255,19 +246,16 @@ public class SlabboCommand extends BaseCommand {
 				}
 
 				limit.enabled = !limit.enabled;
-
 				lookingAtShop.shopLimit = limit;
 
 				if (limit.enabled) {
 					limit.restock();
-					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.limited-stock.create"));
+					player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.general.limited-stock.create"));
 				} else {
-					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.limited-stock.destroy"));
+					player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.general.limited-stock.destroy"));
 				}
 
-				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
@@ -297,16 +285,12 @@ public class SlabboCommand extends BaseCommand {
 					}
 
 					limit.buyStock = stock;
-
 					limit.restock();
-
 					lookingAtShop.shopLimit = limit;
 
 					player.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-buy-stock", "stock", stock));
 
-					ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
@@ -325,16 +309,12 @@ public class SlabboCommand extends BaseCommand {
 					}
 
 					limit.sellStock = stock;
-
 					limit.restock();
-
 					lookingAtShop.shopLimit = limit;
 
 					player.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-sell-stock", "stock", stock));
 
-					ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
@@ -355,14 +335,11 @@ public class SlabboCommand extends BaseCommand {
 				}
 
 				limit.restockTime = time;
-
 				lookingAtShop.shopLimit = limit;
 
 				player.sendMessage(ChatColor.GREEN+LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-time", "time", time));
 
-				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
@@ -385,12 +362,12 @@ public class SlabboCommand extends BaseCommand {
 			public void onToggleVirtualLimit (Player player, String name) {
 				String loweredName = name.toLowerCase();
 
-				if (!ShopManager.shops.containsKey(loweredName)) {
+				Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+				if (shop == null) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 					return;
 				}
-
-				Shop shop = ShopManager.shops.get(loweredName);
 
 				if (!shop.admin) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
@@ -414,9 +391,7 @@ public class SlabboCommand extends BaseCommand {
 					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.limited-stock.destroy"));
 				}
 
-				ShopManager.shops.put(shop.getLocationString(), shop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(shop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
@@ -438,12 +413,12 @@ public class SlabboCommand extends BaseCommand {
 				public void onSetVirtualBuyStock (Player player, String name, int stock) {
 					String loweredName = name.toLowerCase();
 
-					if (!ShopManager.shops.containsKey(loweredName)) {
+					Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+					if (shop == null) {
 						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 						return;
 					}
-
-					Shop shop = ShopManager.shops.get(loweredName);
 
 					if (!shop.admin) {
 						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
@@ -464,9 +439,7 @@ public class SlabboCommand extends BaseCommand {
 
 					player.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-buy-stock", "stock", stock));
 
-					ShopManager.shops.put(shop.getLocationString(), shop);
-
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(shop);
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
@@ -478,12 +451,12 @@ public class SlabboCommand extends BaseCommand {
 				public void onSetVirtualSellStock (Player player, String name, int stock) {
 					String loweredName = name.toLowerCase();
 
-					if (!ShopManager.shops.containsKey(loweredName)) {
+					Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+					if (shop == null) {
 						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 						return;
 					}
-
-					Shop shop = ShopManager.shops.get(loweredName);
 
 					if (!shop.admin) {
 						player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
@@ -504,9 +477,7 @@ public class SlabboCommand extends BaseCommand {
 
 					player.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-sell-stock", "stock", stock));
 
-					ShopManager.shops.put(shop.getLocationString(), shop);
-
-					DataUtil.saveShops();
+					Slabbo.getInstance().getShopManager().updateShop(shop);
 
 					player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 				}
@@ -520,12 +491,12 @@ public class SlabboCommand extends BaseCommand {
 			public void onSetVirtualTime (Player player, String name, int time) {
 				String loweredName = name.toLowerCase();
 
-				if (!ShopManager.shops.containsKey(loweredName)) {
+				Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+				if (shop == null) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 					return;
 				}
-
-				Shop shop = ShopManager.shops.get(loweredName);
 
 				if (!shop.admin) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
@@ -544,9 +515,7 @@ public class SlabboCommand extends BaseCommand {
 
 				player.sendMessage(ChatColor.GREEN+LocaleManager.replaceSingleKey("success-message.general.limited-stock.set-time", "time", time));
 
-				ShopManager.shops.put(shop.getLocationString(), shop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(shop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
@@ -578,9 +547,7 @@ public class SlabboCommand extends BaseCommand {
 					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.owner-name-set"));
 				}
 
-				ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
@@ -602,12 +569,12 @@ public class SlabboCommand extends BaseCommand {
 			public void onSetVirtualOwnerName (Player player, String name, @Optional String newName) {
 				String loweredName = name.toLowerCase();
 
-				if (!ShopManager.shops.containsKey(loweredName)) {
+				Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+				if (shop == null) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 					return;
 				}
-
-				Shop shop = ShopManager.shops.get(loweredName);
 
 				if (!shop.admin) {
 					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
@@ -624,9 +591,7 @@ public class SlabboCommand extends BaseCommand {
 					player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.owner-name-set"));
 				}
 
-				ShopManager.shops.put(shop.getLocationString(), shop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(shop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
@@ -649,10 +614,10 @@ public class SlabboCommand extends BaseCommand {
 	@CommandPermission("slabbo.importshops")
 	@CommandCompletion("ushops @importFiles")
 	public void onImportShops(Player player, String type, String file) {
-		File importFile = new File(Slabbo.getDataPath()+"/"+file);
+		File importFile = new File(Slabbo.getDataPath() + "/" + file);
 
 		if (!importFile.exists()) {
-			player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.import.file-not-found"));
+			player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.import.file-not-found"));
 			return;
 		}
 
@@ -664,36 +629,36 @@ public class SlabboCommand extends BaseCommand {
 				result = UShopImporter.importUShops(importFile);
 				break;
 			default:
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.import.plugin-not-supported"));
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.import.plugin-not-supported"));
 				return;
 		}
 
 		if (result == null) {
-			player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.import.general-error"));
+			player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.import.general-error"));
 			return;
 		}
 
+		Map<String, Shop> importedShops = new HashMap<>();
 		for (Shop shop : result.shops) {
 			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
-
-			ShopManager.put(shop.getLocationString(), shop);
+			importedShops.put(shop.getLocationString(), shop);
 		}
 
-		DataUtil.saveShops();
+		// Bulk add all shops at once
+		Slabbo.getInstance().getShopManager().addAllShops(importedShops);
 
-		HashMap<String, Object> replacementMap = new HashMap<String, Object>();
-
+		HashMap<String, Object> replacementMap = new HashMap<>();
 		replacementMap.put("count", result.shops.size());
 		replacementMap.put("skipped", result.skippedShops.size());
 
-		player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.import.success", replacementMap));
+		player.sendMessage(ChatColor.GREEN + LocaleManager.replaceKey("success-message.import.success", replacementMap));
 	}
 
 	@Subcommand("save")
 	@Description("Saves slabbo shops")
 	@CommandPermission("slabbo.save")
 	public void onSave (Player player) {
-		DataUtil.saveShops();
+		Slabbo.getInstance().getShopManager().saveShopsOnMainThread();
 
 		player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shops-saved"));
 	}
@@ -730,9 +695,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.modify.buyprice-set", replacementMap));
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-			DataUtil.saveShops();
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
@@ -760,9 +723,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.modify.sellprice-set", replacementMap));
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-			DataUtil.saveShops();
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 
@@ -790,9 +751,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.modify.quantity-set", replacementMap));
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-			DataUtil.saveShops();
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
@@ -810,9 +769,7 @@ public class SlabboCommand extends BaseCommand {
 
 			lookingAtShop.ownerId = newOwnerID;
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-			DataUtil.saveShops();
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
@@ -831,9 +788,7 @@ public class SlabboCommand extends BaseCommand {
 
 			lookingAtShop.stock = newStock;
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-			DataUtil.saveShops();
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 			HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 
@@ -864,9 +819,7 @@ public class SlabboCommand extends BaseCommand {
 
 			player.sendMessage(ChatColor.GREEN+LocaleManager.replaceKey("success-message.modify.note-set", replacementMap));
 
-			ShopManager.shops.put(lookingAtShop.getLocationString(), lookingAtShop);
-
-			DataUtil.saveShops();
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
@@ -896,7 +849,7 @@ public class SlabboCommand extends BaseCommand {
 
 			Location playerLocation = player.getLocation();
 
-			List<String> rows = ShopManager.shops.values()
+			List<String> rows = Slabbo.getInstance().getShopManager().getAllShops().values()
 					.stream()
 					.filter(shop -> playerLocation.distance(shop.location) <= radius)
 					.map(shop -> shop.getInfoString())
@@ -924,7 +877,7 @@ public class SlabboCommand extends BaseCommand {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
-			List<String> rows = ShopManager.shops.values()
+			List<String> rows = Slabbo.getInstance().getShopManager().getAllShops().values()
 					.stream()
 					.map(shop -> shop.getInfoString())
 					.collect(Collectors.toList());
@@ -944,58 +897,53 @@ public class SlabboCommand extends BaseCommand {
 		@Subcommand("mine radius")
 		@Description("Lists all the Slabbo shops you own in a radius")
 		@CommandPermission("slabbo.list.self")
-		public void onListMineRadius (Player player, double radius, @Optional String page) {
-			int listPage = 1;
-
-			if (page == null || page.equals("")) {
-				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
-			}
-
-			Location playerLocation = player.getLocation();
-
-			List<String> rows = ShopManager.shops.values()
-					.stream()
-					.filter(shop -> playerLocation.distance(shop.location) <= radius && shop.ownerId.equals(player.getUniqueId()))
-					.map(shop -> shop.getInfoString())
-					.collect(Collectors.toList());
-
-			if (rows.size() <= 0) {
-				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
-				return;
-			}
-
-			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
-
-			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list all mine radius "+radius));
-
-			player.spigot().sendMessage(component);
-		}
-
-		@Subcommand("mine")
-		@Description("Lists all the Slabbo shops you own")
-		@CommandPermission("slabbo.list.self")
-		public void onListMine (Player player, @Optional String page) {
+		public void onListMineRadius(Player player, double radius, @Optional String page) {
 			int listPage = 1;
 
 			if (page != null && !page.equals("")) {
 				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
 			}
 
-			List<String> rows = ShopManager.shops.values()
+			Location playerLocation = player.getLocation();
+
+			List<String> rows = Slabbo.getInstance().getShopManager().getShopsByOwner(player.getUniqueId())
 					.stream()
-					.filter(shop -> shop.ownerId.equals(player.getUniqueId()))
-					.map(shop -> shop.getInfoString())
+					.filter(shop -> playerLocation.distance(shop.location) <= radius)
+					.map(Shop::getInfoString)
 					.collect(Collectors.toList());
 
-			if (rows.size() <= 0) {
-				player.sendMessage(net.md_5.bungee.api.ChatColor.RED+LocaleManager.getString("error-message.general.no-shops-found"));
+			if (rows.isEmpty()) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.no-shops-found"));
 				return;
 			}
 
 			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
+			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list all mine radius " + radius));
+			player.spigot().sendMessage(component);
+		}
 
+		@Subcommand("mine")
+		@Description("Lists all the Slabbo shops you own")
+		@CommandPermission("slabbo.list.self")
+		public void onListMine(Player player, @Optional String page) {
+			int listPage = 1;
+
+			if (page != null && !page.equals("")) {
+				try { listPage = Integer.parseInt(page); } catch (Exception e) {}
+			}
+
+			List<String> rows = Slabbo.getInstance().getShopManager().getShopsByOwner(player.getUniqueId())
+					.stream()
+					.map(Shop::getInfoString)
+					.collect(Collectors.toList());
+
+			if (rows.isEmpty()) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.no-shops-found"));
+				return;
+			}
+
+			TextComponent component = new TextComponent("=== [Slabbo Shops] === ");
 			component.addExtra(getListComponent(player, rows, listPage, "/slabbo list mine"));
-
 			player.spigot().sendMessage(component);
 		}
 	}
@@ -1039,9 +987,7 @@ public class SlabboCommand extends BaseCommand {
 
 				lookingAtShop.commandList.buyCommands.add(command);
 
-				ShopManager.updateShop(lookingAtShop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 			}
 
 			@Subcommand("sell")
@@ -1059,9 +1005,7 @@ public class SlabboCommand extends BaseCommand {
 
 				lookingAtShop.commandList.sellCommands.add(command);
 
-				ShopManager.updateShop(lookingAtShop);
-
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 			}
 		}
 
@@ -1102,8 +1046,7 @@ public class SlabboCommand extends BaseCommand {
 
 				lookingAtShop.commandList.buyCommands.remove(newIndex);
 
-				ShopManager.updateShop(lookingAtShop);
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.removed-command"));
 			}
@@ -1135,8 +1078,7 @@ public class SlabboCommand extends BaseCommand {
 
 				lookingAtShop.commandList.sellCommands.remove(newIndex);
 
-				ShopManager.updateShop(lookingAtShop);
-				DataUtil.saveShops();
+				Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
 
 				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.general.shop-commands.removed-command"));
 			}
@@ -1238,19 +1180,18 @@ public class SlabboCommand extends BaseCommand {
 	@Description("Unlinks the chest you're looking at.")
 	@CommandPermission("slabbo.unlink.self")
 	@Conditions("lookingAtLinkedChest|canExecuteOnLinkedChest:othersPerm=slabbo.unlink.others")
-	public void SlabboUnlinkCommand (Player player, LCContextResolver lcCtx) {
+	public void SlabboUnlinkCommand(Player player, LCContextResolver lcCtx) {
 		Block lookingAtBlock = lcCtx.lookingAtBlock;
 
-		Shop shop = ChestLinkManager.getShopByChestLocation(lookingAtBlock.getLocation());
+		Shop shop = Slabbo.getInstance().getChestLinkManager().getShopByChestLocation(lookingAtBlock.getLocation());
 
-		ChestLinkManager.removeShopLink(shop);
+		Slabbo.getInstance().getChestLinkManager().removeShopLink(shop);
 		shop.linkedChestLocation = null;
 
-		ShopManager.put(shop.getLocationString(), shop);
+		Slabbo.getInstance().getShopManager().updateShop(shop);
 
-		DataUtil.saveShops();
 
-		player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.chestlink.linking-removed"));
+		player.sendMessage(ChatColor.GREEN + LocaleManager.getString("success-message.chestlink.linking-removed"));
 	}
 
 	@Subcommand("shop")
@@ -1276,12 +1217,12 @@ public class SlabboCommand extends BaseCommand {
 					z
 			);
 
-			if (!ShopManager.shops.containsKey(locationString)) {
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(locationString);
+
+			if (shop == null) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 				return;
 			}
-
-			Shop shop = ShopManager.shops.get(locationString);
 
 			ShopUserGUI gui = new ShopUserGUI(shop, player);
 			gui.openInventory(player);
@@ -1294,12 +1235,12 @@ public class SlabboCommand extends BaseCommand {
 		public void openVirtualShopCommand(Player player, String name) {
 			String loweredName = name.toLowerCase();
 
-			if (!ShopManager.shops.containsKey(loweredName)) {
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+			if (shop == null) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 				return;
 			}
-
-			Shop shop = ShopManager.shops.get(loweredName);
 
 			ShopUserGUI gui = new ShopUserGUI(shop, player);
 			gui.openInventory(player);
@@ -1309,13 +1250,12 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Creates a virtual shop")
 		@CommandPermission("slabbo.shop.virtual.create")
 		public void createVirtualShopCommand(Player player, String shopName) {
-			if (ShopManager.shops.containsKey(shopName.toLowerCase())) {
+			if (Slabbo.getInstance().getShopManager().getShop(shopName.toLowerCase()) != null) {
 				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.named-shop-already-exists"));
 				return;
 			}
 
 			ShopCreationGUI gui = new ShopCreationGUI(shopName, true);
-
 			gui.openInventory(player);
 		}
 
@@ -1326,12 +1266,12 @@ public class SlabboCommand extends BaseCommand {
 		public void editVirtualShopCommand(Player player, String name) {
 			String loweredName = name.toLowerCase();
 
-			if (!ShopManager.shops.containsKey(loweredName)) {
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+			if (shop == null) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 				return;
 			}
-
-			Shop shop = ShopManager.shops.get(loweredName);
 
 			if (!shop.ownerId.equals(player.getUniqueId())) {
 				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-shop-owner"));
@@ -1349,12 +1289,12 @@ public class SlabboCommand extends BaseCommand {
 		public void deleteVirtualShopCommand(Player player, String name) {
 			String loweredName = name.toLowerCase();
 
-			if (!ShopManager.shops.containsKey(loweredName)) {
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+			if (shop == null) {
 				player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
 				return;
 			}
-
-			Shop shop = ShopManager.shops.get(loweredName);
 
 			if (!shop.ownerId.equals(player.getUniqueId())) {
 				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-shop-owner"));
@@ -1363,6 +1303,50 @@ public class SlabboCommand extends BaseCommand {
 
 			ShopDeletionGUI gui = new ShopDeletionGUI(shop);
 			gui.openInventory(player);
+		}
+	}
+
+	@Subcommand("migrate")
+	@Description("Migrates shops between sqlite and file storage")
+	@CommandPermission("slabbo.migrate")
+	@CommandCompletion("sqlite|file")
+	public void onMigrate(CommandSender sender, String target) {
+		if (!(sender instanceof org.bukkit.command.ConsoleCommandSender)) {
+			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.only-console", "target", target));
+			return;
+		}
+
+		target = (target == null) ? "" : target.toLowerCase();
+		if (!target.equals("sqlite") && !target.equals("file")) {
+			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.invalid-target", "target", target));
+			return;
+		}
+
+		ShopManager shopManager = Slabbo.getInstance().getShopManager();
+
+		// Call the migration and act based on the result. The migration method is authoritative
+		ShopManager.MigrationResult result = shopManager.migrateStorage(target);
+
+		switch (result) {
+			case SUCCESS:
+				// Update config only after a successful migration
+				Slabbo.getInstance().getConfig().set("storage.type", target);
+				Slabbo.getInstance().saveConfig();
+				sender.sendMessage(ChatColor.GREEN + LocaleManager.replaceSingleKey("migrate.success", "target", target));
+				break;
+			case IN_PROGRESS:
+				sender.sendMessage(ChatColor.YELLOW + LocaleManager.getString("migrate.in-progress"));
+				break;
+			case ALREADY_ON_TARGET:
+				sender.sendMessage(ChatColor.YELLOW + LocaleManager.replaceSingleKey("migrate.already-using", "target", target));
+				break;
+			case INVALID_TARGET:
+				sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.invalid-target", "target", target));
+				break;
+			case FAILED:
+			default:
+				sender.sendMessage(ChatColor.RED + LocaleManager.getString("migrate.failed"));
+				break;
 		}
 	}
 }
