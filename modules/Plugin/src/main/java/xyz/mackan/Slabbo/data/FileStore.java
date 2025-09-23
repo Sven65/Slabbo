@@ -95,7 +95,6 @@ public class FileStore implements DataStore {
 
     @Override
     public void saveShopsOnMainThread(Map<String, Shop> shops) {
-        Bukkit.getLogger().info("Saving shops to file on main...");
 
         File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
         FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);

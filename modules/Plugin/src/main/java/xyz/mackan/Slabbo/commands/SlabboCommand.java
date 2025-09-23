@@ -13,6 +13,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
@@ -835,9 +836,9 @@ public class SlabboCommand extends BaseCommand {
 			lookingAtShop.itemDisplayNameToggle = !lookingAtShop.itemDisplayNameToggle;
 
 			if (lookingAtShop.itemDisplayNameToggle) {
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-enabled"));
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-enabled"));
 			} else {
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-disabled"));
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-disabled"));
 			}
 
 			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
@@ -852,17 +853,22 @@ public class SlabboCommand extends BaseCommand {
 		@Description("Modifies the item display name of the shop")
 		@CommandPermission("slabbo.modify.self.itemdisplay.name")
 		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.itemdisplay")
-		public void onModifyItemDisplayName(Player player, SlabboContextResolver slabboContextResolver, String name) {
+		public void onModifyItemDisplayName(Player player, SlabboContextResolver slabboContextResolver, @Optional String name) {
 			Shop lookingAtShop = slabboContextResolver.shop;
 
-			if (name.equals("")) {
-				lookingAtShop.customItemDisplayName = null;
+			if (name == null || name.equals("")) {
+				ItemMeta meta = lookingAtShop.item != null ? lookingAtShop.item.getItemMeta() : null;
+				if (meta != null && meta.hasDisplayName()) {
+					lookingAtShop.customItemDisplayName = meta.getDisplayName();
+				} else {
+					lookingAtShop.customItemDisplayName = null;
+				}
 
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-name-removed"));
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-name-removed"));
 			} else {
 				lookingAtShop.customItemDisplayName = name;
 
-				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-name-set"));
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-name-set"));
 			}
 
 			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
