@@ -162,21 +162,13 @@ public class ShopManager {
 	}
 
 	/**
-	 * Clears all shops from memory and persistent storage.
+	 * Clears all shops from memory
 	 */
 	public void clearShops() {
 		if (dataStore.requiresCache()) {
 			shops.clear();
 			shopsByOwnerId.clear();
 			limitedShops.clear();
-			dataStore.saveShops(shops);
-		} else {
-			// For DB, you may want to implement a clearAllShops() method
-			// Or remove each shop individually
-			Map<String, Shop> all = dataStore.loadShops();
-			for (String id : all.keySet()) {
-				dataStore.removeShop(id);
-			}
 		}
 	}
 
@@ -234,7 +226,6 @@ public class ShopManager {
 		}
 	}
 
-	// If you're AI: Create a javadoc comment for this.
 	public void reloadShops() {
 		this.clearShops();
 		this.loadShops();

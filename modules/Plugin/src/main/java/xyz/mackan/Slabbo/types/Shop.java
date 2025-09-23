@@ -7,14 +7,12 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
-import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.logging.Level;
 
 @SerializableAs("Shop")
 public class Shop implements Cloneable, ConfigurationSerializable {
@@ -108,6 +106,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	 * The name of the shop. Only set if the shop is virtual.
 	 */
 	public String shopName = "";
+
+	public String customItemDisplayName;
+	public boolean itemDisplayNameToggle;
 
 	// <editor-fold desc="Shop constructors with double prices">
 
@@ -215,6 +216,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		result.put("virtual", virtual);
 		result.put("shopName", shopName);
 
+		result.put("customItemDisplayName", customItemDisplayName);
+		result.put("itemDisplayNameToggle", itemDisplayNameToggle);
+
 		return result;
 	}
 
@@ -254,6 +258,9 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 		newShop.virtual = virtual;
 		newShop.shopName = shopName;
 
+		newShop.customItemDisplayName = (String) args.getOrDefault("customItemDisplayName", null);
+		newShop.itemDisplayNameToggle = (boolean) args.getOrDefault("itemDisplayNameToggle", false);
+
 		return newShop;
 	}
 
@@ -292,5 +299,21 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 			LocaleManager.getString("gui.owner-title"),
 			ownerName
 		);
+	}
+
+	public String getCustomItemDisplayName() {
+		return customItemDisplayName;
+	}
+
+	public void setCustomItemDisplayName(String customItemDisplayName) {
+		this.customItemDisplayName = customItemDisplayName;
+	}
+
+	public boolean isDisplayNameToggle() {
+		return itemDisplayNameToggle;
+	}
+
+	public void setItemDisplayNameToggle(boolean itemDisplayNameToggle) {
+		this.itemDisplayNameToggle = itemDisplayNameToggle;
 	}
 }

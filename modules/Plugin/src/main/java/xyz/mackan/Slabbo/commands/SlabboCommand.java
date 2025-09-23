@@ -13,6 +13,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
 import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
 import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
@@ -129,7 +130,7 @@ public class SlabboCommand extends BaseCommand {
 				shop.location = shopLocation;
 				shouldSave = true;
 			}
-			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
+			ItemUtil.dropShopItem(shop.location, shop);
 		}
 
 		if (shouldSave) {
@@ -824,6 +825,59 @@ public class SlabboCommand extends BaseCommand {
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
 
+
+		@Subcommand("itemdisplay toggle")
+		@Description("Toggles the custom item display name of the shop")
+		@CommandPermission("slabbo.modify.self.itemdisplay.toggle")
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.itemdisplay")
+		public void onModifyItemDisplayToggle(Player player, SlabboContextResolver slabboContextResolver) {
+			Shop lookingAtShop = slabboContextResolver.shop;
+
+			lookingAtShop.itemDisplayNameToggle = !lookingAtShop.itemDisplayNameToggle;
+
+			if (lookingAtShop.itemDisplayNameToggle) {
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-enabled"));
+			} else {
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-disabled"));
+			}
+
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
+
+			ItemUtil.removeShopItemsAtLocation(lookingAtShop.location);
+			ItemUtil.dropShopItem(lookingAtShop.location, lookingAtShop);
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+		}
+
+		@Subcommand("itemdisplay name")
+		@Description("Modifies the item display name of the shop")
+		@CommandPermission("slabbo.modify.self.itemdisplay.name")
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.itemdisplay")
+		public void onModifyItemDisplayName(Player player, SlabboContextResolver slabboContextResolver, @Optional String name) {
+			Shop lookingAtShop = slabboContextResolver.shop;
+
+			if (name == null || name.equals("")) {
+				ItemMeta meta = lookingAtShop.item != null ? lookingAtShop.item.getItemMeta() : null;
+				if (meta != null && meta.hasDisplayName()) {
+					lookingAtShop.customItemDisplayName = meta.getDisplayName();
+				} else {
+					lookingAtShop.customItemDisplayName = null;
+				}
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-name-removed"));
+			} else {
+				lookingAtShop.customItemDisplayName = name;
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success.modify.item-display-name-set"));
+			}
+
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
+
+			ItemUtil.removeShopItemsAtLocation(lookingAtShop.location);
+			ItemUtil.dropShopItem(lookingAtShop.location, lookingAtShop);
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+		}
 
 	}
 

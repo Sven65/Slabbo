@@ -13,6 +13,7 @@ import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
+import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.types.SlabType;
 
 import java.util.*;
@@ -59,6 +60,61 @@ public class ItemUtil {
 		api.setNoMerge(item, 1);
 		api.setShopLocation(item, location);
 	}
+
+
+	// In ItemUtil.java
+	public static void dropShopItem(Location location, Shop shop) {
+		if (location == null) return;
+		Location dropLocation = location.clone();
+		dropLocation.add(0.5, getSlabYOffset(location), 0.5);
+
+		ItemStack clonedItem = shop.item.clone();
+		ItemMeta meta = clonedItem.getItemMeta();
+
+		String displayType = Slabbo.getInstance().getConfig().getString("itemdisplay", "quantity");
+
+		if (clonedItem.getType() == Material.AIR) return;
+
+		int quantity = shop.quantity;
+		if (displayType.equalsIgnoreCase("quantity")) {
+			if (quantity < 1) quantity = 1;
+			if (quantity > 64) quantity = 64;
+			clonedItem.setAmount(quantity);
+		} else if (displayType.equalsIgnoreCase("single")) {
+			clonedItem.setAmount(1);
+		} else if (displayType.equalsIgnoreCase("none")) {
+			return;
+		} else {
+			clonedItem.setAmount(64);
+		}
+
+		if (clonedItem.hasItemMeta() && meta != null) {
+			// Use custom display name if enabled
+			if (shop.itemDisplayNameToggle && shop.customItemDisplayName != null && !shop.customItemDisplayName.isEmpty()) {
+				meta.setDisplayName(shop.customItemDisplayName);
+			} else {
+				meta.setDisplayName("Slabbo Item " + ShopManager.locationToString(location));
+			}
+			clonedItem.setItemMeta(meta);
+		}
+
+		Item itemEnt = location.getWorld().dropItem(dropLocation, clonedItem);
+
+		if (shop.itemDisplayNameToggle && shop.customItemDisplayName != null && !shop.customItemDisplayName.isEmpty()) {
+			itemEnt.setCustomName(shop.customItemDisplayName);
+		}
+
+		itemEnt.setCustomNameVisible(shop.itemDisplayNameToggle);
+
+		setEntityToShopItem(itemEnt, location);
+		api.setGravity(itemEnt, false);
+		itemEnt.setVelocity(itemEnt.getVelocity().zero());
+		if (PluginSupport.isPluginEnabled("Magic")) {
+			itemEnt.setPickupDelay(Integer.MAX_VALUE);
+		}
+		itemEnt.teleport(dropLocation);
+	}
+
 
 	public static void dropShopItem (Location location, ItemStack item, int quantity) {
 		if (location == null) return;

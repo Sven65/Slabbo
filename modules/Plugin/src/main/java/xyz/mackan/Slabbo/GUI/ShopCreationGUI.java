@@ -319,6 +319,11 @@ public class ShopCreationGUI implements Listener {
 					shop.virtual = virtual;
 					shop.shopName = shopName;
 
+					ItemMeta meta = shopItem.getItemMeta();
+					if (meta != null && meta.hasDisplayName()) {
+						shop.customItemDisplayName = meta.getDisplayName();
+					}
+
 					Slabbo.getInstance().getShopManager().updateShop(shop);
 
 					e.getWhoClicked().closeInventory();
@@ -328,6 +333,8 @@ public class ShopCreationGUI implements Listener {
 					}
 
 					if (!virtual) ItemUtil.dropShopItem(slabLocation, shopItem, quantity);
+
+
 
 					Slabbo.getInstance().getShopManager().updateShop(shop);
 
