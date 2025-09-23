@@ -179,38 +179,27 @@ If you are currently using another storage engine (such as YAML or MySQL), you c
 The SQLite database file is created as `slabbo.db` in your plugin's data folder (usually `plugins/Slabbo/slabbo.db`).
 
 
-## Suggested Prices and Quantities
+## Suggested Prices and allowCents
 
-Slabbo ships with a `suggested.yml` file containing default suggested prices and quantities for common items. This file is copied to your plugin data folder on first run. You can edit or add to this file as needed—only items listed in `suggested.yml` will have suggestions.
+Slabbo provides suggested buy/sell prices and quantities for items when creating shops. These are defined in `modules/Plugin/src/main/resources/suggested.yml`.
 
-- **How it works:**
-  - If `usePriceSuggestions` in `config.yml` is set to `true`, Slabbo will use suggestions from `suggested.yml` when creating shops.
-  - To override a suggestion, edit the value for that item in `suggested.yml`.
-  - To add a new suggestion, add a new item entry using the Bukkit Material name.
-  - If you remove an item from `suggested.yml`, no suggestion will be provided for that item.
+- **allowCents config option:**
+  - The `allowCents` option in `config.yml` controls whether decimals are allowed for prices.
+  - If `allowCents` is set to `false`, all suggested buy/sell prices will be rounded to the nearest integer automatically, even if the values in `suggested.yml` contain decimals.
+  - If `allowCents` is `true`, decimals in suggested prices will be used as defined.
 
-- **Example `suggested.yml`:**
-  ```yaml
-  DIAMOND:
-    buy: 100.0
-    sell: 50.0
-    quantity: 1
-  IRON_INGOT:
-    buy: 10.0
-    sell: 5.0
-    quantity: 1
-  OAK_LOG:
-    buy: 2.0
-    sell: 1.0
-    quantity: 16
-  ```
+You can override or add suggestions in `suggested.yml`. Item names must match the Bukkit Material enum names.
 
-- **How to use:**
-  1. Make sure `usePriceSuggestions` is set to `true` in your `config.yml` (default).
-  2. Edit `suggested.yml` in your plugin data folder to customize or add suggestions.
-  3. Reload or restart the server to apply changes.
+Example entry:
 
-This system is scalable and does not require you to keep track of every item in Minecraft. Only add or override suggestions for items you care about.
+```yaml
+DIAMOND:
+  buy: 100.0
+  sell: 50.5
+  quantity: 1
+```
+
+See the comments in `suggested.yml` for more details.
 
 ## Legal
 

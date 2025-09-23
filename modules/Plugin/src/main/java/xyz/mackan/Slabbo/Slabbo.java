@@ -20,7 +20,7 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
-import xyz.mackan.Slabbo.suggested.SuggestedValuesManager;
+import xyz.mackan.Slabbo.manager.SuggestedValuesManager;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.MinecraftVersion;
 import xyz.mackan.Slabbo.types.Shop;

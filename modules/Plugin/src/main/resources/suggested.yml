@@ -6,6 +6,9 @@
 #
 # NOTE: Shops support decimals for buy/sell price, but quantity must be a full number (no decimals).
 #
+# IMPORTANT: The allowCents option in config.yml controls whether decimals are allowed for prices.
+# If allowCents is false, all suggested buy/sell prices will be rounded to the nearest integer automatically.
+#
 # To override a suggestion, simply edit the value for that item. To add a new suggestion, add a new item entry.
 #
 # Item names must match the Bukkit Material enum names (see: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html)
