@@ -20,6 +20,7 @@ import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
+import xyz.mackan.Slabbo.suggested.SuggestedValuesManager;
 import xyz.mackan.Slabbo.types.BukkitVersion;
 import xyz.mackan.Slabbo.types.MinecraftVersion;
 import xyz.mackan.Slabbo.types.Shop;
@@ -54,6 +55,7 @@ public class Slabbo extends JavaPlugin {
 
 	private ShopManager shopManager;
 	private ChestLinkManager chestLinkManager;
+	private SuggestedValuesManager suggestedValuesManager;
 
 
 
@@ -80,13 +82,16 @@ public class Slabbo extends JavaPlugin {
 
 		this.saveDefaultConfig();
 
-		saveResource("lang.yml", false);
-		saveResource("acf_lang.yml", false);
+		saveResourceIfNotExists("suggested.yml");
+		saveResourceIfNotExists("lang.yml");
+		saveResourceIfNotExists("acf_lang.yml");
 
 		instance = this;
 
 		LocaleManager.loadFile(this, "lang.yml");
 
+		// Initialize suggested values manager
+		suggestedValuesManager = new SuggestedValuesManager(this.getDataFolder());
 
 		String engine = getConfig().getString("storageEngine", "file").toLowerCase();
 		DataStore dataStore = engine.equals("sqlite") ? new SQLiteStore() :
@@ -266,6 +271,13 @@ public class Slabbo extends JavaPlugin {
 		return econ != null;
 	}
 
+	private void saveResourceIfNotExists(String resourceName) {
+		File file = new File(getDataFolder(), resourceName);
+		if (!file.exists()) {
+			saveResource(resourceName, false);
+		}
+	}
+
 	public static String getDataPath () {
 		return dataPath;
 	}
@@ -282,5 +294,9 @@ public class Slabbo extends JavaPlugin {
 
 	public ChestLinkManager getChestLinkManager() {
 		return chestLinkManager;
+	}
+
+	public SuggestedValuesManager getSuggestedValuesManager() {
+		return suggestedValuesManager;
 	}
 }
