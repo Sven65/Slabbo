@@ -18,7 +18,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
-import xyz.mackan.Slabbo.suggested.SuggestedValuesManager;
+import xyz.mackan.Slabbo.manager.SuggestedValuesManager;
 import xyz.mackan.Slabbo.types.ChatWaitingType;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ItemUtil;
