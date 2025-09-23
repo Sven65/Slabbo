@@ -307,7 +307,11 @@ public class PlayerInteractListener implements Listener {
 				HashMap<String, Object> replacementMap = new HashMap<String, Object>();
 				replacementMap.put("limit", limit);
 
-				player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit", replacementMap));
+				if (limit == 0) {
+					player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("You have reached the shop creation limit (0). To create shops, your permissions must be set to allow more shops. Please contact a server admin to grant you the appropriate permission (e.g., slabbo.limit.{n}).", replacementMap));
+				} else {
+					player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit", replacementMap));
+				}
 
 				player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			}
