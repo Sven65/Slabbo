@@ -179,6 +179,34 @@ If you are currently using another storage engine (such as YAML or MySQL), you c
 The SQLite database file is created as `slabbo.db` in your plugin's data folder (usually `plugins/Slabbo/slabbo.db`).
 
 
+## Suggested Prices and Quantities
+
+Slabbo provides default suggested prices and quantities for common items, which are built into the plugin. Server operators can override these defaults by creating a `suggested.yml` file in the plugin's data folder.
+
+- **How it works:**
+  - The plugin uses internal defaults for suggested buy price, sell price, and quantity for common items.
+  - If a `suggested.yml` file exists, any values in that file will override the plugin's defaults for the specified items.
+  - You only need to add items you want to override; you do not need to maintain a full list.
+
+- **Example `suggested.yml`:**
+  ```yaml
+  DIAMOND:
+    buy: 120.0
+    sell: 60.0
+    quantity: 1
+  IRON_INGOT:
+    buy: 12.0
+    sell: 6.0
+    quantity: 1
+  ```
+
+- **How to use:**
+  1. Start the server to use the built-in defaults.
+  2. To override, create or edit `suggested.yml` in the plugin's data folder and add only the items you want to change.
+  3. Reload or restart the server to apply changes.
+
+This system is scalable and does not require you to keep track of every item in Minecraft. Only add overrides for items you care about.
+
 ## Legal
 
 Slabbo is licensed under the EUPL-1.2-or-later.
@@ -210,4 +238,3 @@ Run
 ```sh
 mvn dependency:get -DrepoUrl=https://oss.sonatype.org/content/repositories/snapshots -DgroupId=net.md-5 -DartifactId=bungeecord-chat -Dversion=<version>-SNAPSHOT
 ```
-
