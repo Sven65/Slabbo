@@ -308,7 +308,7 @@ public class PlayerInteractListener implements Listener {
 				replacementMap.put("limit", limit);
 
 				if (limit == 0) {
-					player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("You have reached the shop creation limit (0). To create shops, your permissions must be set to allow more shops. Please contact a server admin to grant you the appropriate permission (e.g., slabbo.limit.{n}).", replacementMap));
+					player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit-no-permission", replacementMap));
 				} else {
 					player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit", replacementMap));
 				}
