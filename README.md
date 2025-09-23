@@ -1,5 +1,13 @@
 # Slabbo
 
+![Spiget Download Size](https://img.shields.io/spiget/download-size/81368)
+![Spiget Downloads](https://img.shields.io/spiget/downloads/81368)
+![Spiget Version](https://img.shields.io/spiget/version/81368)
+![Spiget Stars](https://img.shields.io/spiget/stars/81368)
+![Spiget Rating](https://img.shields.io/spiget/rating/81368)
+![Spiget Tested Server Versions](https://img.shields.io/spiget/tested-versions/81368)
+![Discord](https://img.shields.io/discord/732260527048491119)
+
 <p align="center">
     <a href="https://www.spigotmc.org/resources/slabbo-1-8-x-1-18-x.81368/">
         <img src="https://pluginbadges.glitch.me/api/v1/dl/Slabbo-limegreen-svg?spigot=81368&style=for-the-badge" />
