@@ -37,7 +37,9 @@ public class SQLiteStore implements DataStore {
                 "displayed_owner TEXT, " +
                 "item_data TEXT, " +
                 "shop_limit TEXT, " +
-                "command_list TEXT " +
+                "command_list TEXT, " +
+                "custom_item_display_name TEXT, " +
+                "item_display_name_toggle INTEGER " +
                 ")"
             );
         } catch (SQLException e) {
@@ -106,6 +108,7 @@ public class SQLiteStore implements DataStore {
 
                 org.bukkit.Location location = deserializeYaml(locationData, org.bukkit.Location.class);
                 org.bukkit.inventory.ItemStack item = deserializeYaml(itemData, org.bukkit.inventory.ItemStack.class);
+
                 xyz.mackan.Slabbo.types.ShopLimit shopLimit = deserializeYaml(shopLimitData, xyz.mackan.Slabbo.types.ShopLimit.class);
                 xyz.mackan.Slabbo.types.Shop.CommandList commandList = deserializeYaml(commandListData, xyz.mackan.Slabbo.types.Shop.CommandList.class);
 
@@ -115,11 +118,15 @@ public class SQLiteStore implements DataStore {
                 shop.shopLimit = shopLimit;
                 shop.commandList = commandList;
 
+                shop.customItemDisplayName = rs.getString("custom_item_display_name");
+                shop.itemDisplayNameToggle = rs.getInt("item_display_name_toggle") == 1;
+
                 shops.put(id, shop);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return shops;
     }
 
@@ -129,8 +136,8 @@ public class SQLiteStore implements DataStore {
             conn.setAutoCommit(false);
             stmt.executeUpdate("DELETE FROM shops");
             try (PreparedStatement ps = conn.prepareStatement(
-                    "INSERT INTO shops (id, owner, admin, virtual, shop_name, location, price_buy, price_sell, quantity, stock, note, linked_chest, displayed_owner, item_data, shop_limit, command_list) " +
-                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                    "INSERT INTO shops (id, owner, admin, virtual, shop_name, location, price_buy, price_sell, quantity, stock, note, linked_chest, displayed_owner, item_data, shop_limit, command_list, custom_item_display_name, item_display_name_toggle) " +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
             ) {
                 for (Map.Entry<String, Shop> entry : shops.entrySet()) {
                     Shop shop = entry.getValue();
@@ -150,6 +157,8 @@ public class SQLiteStore implements DataStore {
                     ps.setString(14, serializeYaml(shop.item));
                     ps.setString(15, serializeYaml(shop.shopLimit));
                     ps.setString(16, serializeYaml(shop.commandList));
+                    ps.setString(17, shop.customItemDisplayName);
+                    ps.setInt(18, shop.itemDisplayNameToggle ? 1 : 0);
                     ps.addBatch();
                 }
                 ps.executeBatch();
@@ -162,15 +171,11 @@ public class SQLiteStore implements DataStore {
 
     @Override
     public void addShop(Shop shop) {
-        java.util.logging.Logger logger =  Bukkit.getLogger();
-        String id = shop.getLocationString();
-        logger.info("[Slabbo][SQLiteStore] addShop id=" + id);
-
         try (Connection conn = getConnection();
 
              PreparedStatement ps = conn.prepareStatement(
-                     "INSERT OR REPLACE INTO shops (id, owner, admin, virtual, shop_name, location, price_buy, price_sell, quantity, stock, note, linked_chest, displayed_owner, item_data, shop_limit, command_list) " +
-                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+                     "INSERT OR REPLACE INTO shops (id, owner, admin, virtual, shop_name, location, price_buy, price_sell, quantity, stock, note, linked_chest, displayed_owner, item_data, shop_limit, command_list, custom_item_display_name, item_display_name_toggle) " +
+                             "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
         ) {
             ps.setString(1, shop.getLocationString());
             ps.setString(2, shop.ownerId != null ? shop.ownerId.toString() : null);
@@ -188,6 +193,8 @@ public class SQLiteStore implements DataStore {
             ps.setString(14, serializeYaml(shop.item));
             ps.setString(15, serializeYaml(shop.shopLimit));
             ps.setString(16, serializeYaml(shop.commandList));
+            ps.setString(17, shop.customItemDisplayName);
+            ps.setInt(18, shop.itemDisplayNameToggle ? 1 : 0);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -246,6 +253,10 @@ public class SQLiteStore implements DataStore {
                     shop.shopLimit = shopLimit;
                     shop.commandList = commandList;
 
+                    // New fields
+                    shop.customItemDisplayName = rs.getString("custom_item_display_name");
+                    shop.itemDisplayNameToggle = rs.getInt("item_display_name_toggle") == 1;
+
                     return shop;
                 }
             }
@@ -291,6 +302,9 @@ public class SQLiteStore implements DataStore {
                     shop.displayedOwnerName = displayedOwner;
                     shop.shopLimit = shopLimit;
                     shop.commandList = commandList;
+
+                    shop.customItemDisplayName = rs.getString("custom_item_display_name");
+                    shop.itemDisplayNameToggle = rs.getInt("item_display_name_toggle") == 1;
 
                     result.add(shop);
                 }

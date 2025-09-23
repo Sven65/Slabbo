@@ -129,7 +129,7 @@ public class SlabboCommand extends BaseCommand {
 				shop.location = shopLocation;
 				shouldSave = true;
 			}
-			ItemUtil.dropShopItem(shop.location, shop.item, shop.quantity);
+			ItemUtil.dropShopItem(shop.location, shop);
 		}
 
 		if (shouldSave) {
@@ -824,6 +824,54 @@ public class SlabboCommand extends BaseCommand {
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
 
+
+		@Subcommand("itemdisplay toggle")
+		@Description("Toggles the custom item display name of the shop")
+		@CommandPermission("slabbo.modify.self.itemdisplay.toggle")
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.itemdisplay")
+		public void onModifyItemDisplayToggle(Player player, SlabboContextResolver slabboContextResolver) {
+			Shop lookingAtShop = slabboContextResolver.shop;
+
+			lookingAtShop.itemDisplayNameToggle = !lookingAtShop.itemDisplayNameToggle;
+
+			if (lookingAtShop.itemDisplayNameToggle) {
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-enabled"));
+			} else {
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-disabled"));
+			}
+
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
+
+			ItemUtil.removeShopItemsAtLocation(lookingAtShop.location);
+			ItemUtil.dropShopItem(lookingAtShop.location, lookingAtShop);
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+		}
+
+		@Subcommand("itemdisplay name")
+		@Description("Modifies the item display name of the shop")
+		@CommandPermission("slabbo.modify.self.itemdisplay.name")
+		@Conditions("lookingAtShop|canExecuteOnShop:othersPerm=slabbo.modify.others.itemdisplay")
+		public void onModifyItemDisplayName(Player player, SlabboContextResolver slabboContextResolver, String name) {
+			Shop lookingAtShop = slabboContextResolver.shop;
+
+			if (name.equals("")) {
+				lookingAtShop.customItemDisplayName = null;
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-name-removed"));
+			} else {
+				lookingAtShop.customItemDisplayName = name;
+
+				player.sendMessage(ChatColor.GREEN+LocaleManager.getString("success-message.modify.item-display-name-set"));
+			}
+
+			Slabbo.getInstance().getShopManager().updateShop(lookingAtShop);
+
+			ItemUtil.removeShopItemsAtLocation(lookingAtShop.location);
+			ItemUtil.dropShopItem(lookingAtShop.location, lookingAtShop);
+
+			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+		}
 
 	}
 
