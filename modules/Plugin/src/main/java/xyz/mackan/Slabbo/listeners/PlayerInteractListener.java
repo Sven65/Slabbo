@@ -309,6 +309,10 @@ public class PlayerInteractListener implements Listener {
 
 				player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit", replacementMap));
 
+				if (limit == 0) {
+					player.sendMessage(ChatColor.RED + LocaleManager.replaceKey("error-message.general.limit-hit-no-permission", replacementMap));
+				}
+
 				player.playSound(clickedBlock.getLocation(), slabboSound.getSoundByKey("BLOCKED"), 1, 1);
 			}
 			break;

@@ -6,6 +6,7 @@ error-message:
     already-linked: That chest's already linked to a shop.
   general:
     limit-hit: You've created all the shops you can! ({limit})
+    limit-hit-no-permission: To create shops, your permissions must be set to allow more shops. Please contact a server admin to grant you the appropriate permission (e.g., slabbo.limit.{n}).
     not-a-shop: That's not a shop.
     not-a-linked-chest: That's not a linked chest.
     not-shop-owner: That's not your shop.
