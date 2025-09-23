@@ -181,31 +181,36 @@ The SQLite database file is created as `slabbo.db` in your plugin's data folder 
 
 ## Suggested Prices and Quantities
 
-Slabbo provides default suggested prices and quantities for common items, which are built into the plugin. Server operators can override these defaults by creating a `suggested.yml` file in the plugin's data folder.
+Slabbo ships with a `suggested.yml` file containing default suggested prices and quantities for common items. This file is copied to your plugin data folder on first run. You can edit or add to this file as needed—only items listed in `suggested.yml` will have suggestions.
 
 - **How it works:**
-  - The plugin uses internal defaults for suggested buy price, sell price, and quantity for common items.
-  - If a `suggested.yml` file exists, any values in that file will override the plugin's defaults for the specified items.
-  - You only need to add items you want to override; you do not need to maintain a full list.
+  - If `usePriceSuggestions` in `config.yml` is set to `true`, Slabbo will use suggestions from `suggested.yml` when creating shops.
+  - To override a suggestion, edit the value for that item in `suggested.yml`.
+  - To add a new suggestion, add a new item entry using the Bukkit Material name.
+  - If you remove an item from `suggested.yml`, no suggestion will be provided for that item.
 
 - **Example `suggested.yml`:**
   ```yaml
   DIAMOND:
-    buy: 120.0
-    sell: 60.0
+    buy: 100.0
+    sell: 50.0
     quantity: 1
   IRON_INGOT:
-    buy: 12.0
-    sell: 6.0
+    buy: 10.0
+    sell: 5.0
     quantity: 1
+  OAK_LOG:
+    buy: 2.0
+    sell: 1.0
+    quantity: 16
   ```
 
 - **How to use:**
-  1. Start the server to use the built-in defaults.
-  2. To override, create or edit `suggested.yml` in the plugin's data folder and add only the items you want to change.
+  1. Make sure `usePriceSuggestions` is set to `true` in your `config.yml` (default).
+  2. Edit `suggested.yml` in your plugin data folder to customize or add suggestions.
   3. Reload or restart the server to apply changes.
 
-This system is scalable and does not require you to keep track of every item in Minecraft. Only add overrides for items you care about.
+This system is scalable and does not require you to keep track of every item in Minecraft. Only add or override suggestions for items you care about.
 
 ## Legal
 

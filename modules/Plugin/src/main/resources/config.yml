@@ -64,6 +64,9 @@ allowCents: false
 # If set to "Vault", the formatting from vault (and your economy plugin) will be used.
 currencyFormat: Vault
 
+# If Slabbo should use price/quantity suggestions from suggested.yml when creating shops
+usePriceSuggestions: true
+
 ########################
 #     Messages         #
 ########################

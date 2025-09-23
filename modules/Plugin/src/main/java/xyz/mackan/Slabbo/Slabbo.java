@@ -82,8 +82,9 @@ public class Slabbo extends JavaPlugin {
 
 		this.saveDefaultConfig();
 
-		saveResource("lang.yml", false);
-		saveResource("acf_lang.yml", false);
+		saveResourceIfNotExists("suggested.yml");
+		saveResourceIfNotExists("lang.yml");
+		saveResourceIfNotExists("acf_lang.yml");
 
 		instance = this;
 
@@ -268,6 +269,13 @@ public class Slabbo extends JavaPlugin {
 		}
 		econ = rsp.getProvider();
 		return econ != null;
+	}
+
+	private void saveResourceIfNotExists(String resourceName) {
+		File file = new File(getDataFolder(), resourceName);
+		if (!file.exists()) {
+			saveResource(resourceName, false);
+		}
 	}
 
 	public static String getDataPath () {

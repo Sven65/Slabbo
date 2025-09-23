@@ -18,6 +18,7 @@ import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
+import xyz.mackan.Slabbo.suggested.SuggestedValuesManager;
 import xyz.mackan.Slabbo.types.ChatWaitingType;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.ItemUtil;
@@ -100,6 +101,7 @@ public class ShopCreationGUI implements Listener {
 
 		this.slabLocation = slabLocation;
 
+
 		initializeItems();
 	}
 
@@ -110,6 +112,7 @@ public class ShopCreationGUI implements Listener {
 
 		this.shopName = shopName;
 		this.virtual = virtual;
+
 
 		initializeItems();
 	}
@@ -188,8 +191,29 @@ public class ShopCreationGUI implements Listener {
 
 		clearShopInv();
 
-
 		inv.setItem(0, shopItem);
+
+		// Suggestion logic: only for new shop creation, not modification
+		if (!isModifying && shopItem != null) {
+			boolean useSuggestions = Slabbo.getInstance().getConfig().getBoolean("usePriceSuggestions", true);
+			if (useSuggestions) {
+				Material mat = shopItem.getType();
+				SuggestedValuesManager.SuggestedValue suggestion = Slabbo.getInstance().getSuggestedValuesManager().getSuggestion(mat);
+				if (suggestion != null) {
+					buyPrice = suggestion.buy;
+					sellPrice = suggestion.sell;
+					quantity = suggestion.quantity;
+				} else {
+					buyPrice = 0;
+					sellPrice = 0;
+					quantity = 0;
+				}
+			} else {
+				buyPrice = 0;
+				sellPrice = 0;
+				quantity = 0;
+			}
+		}
 
 		if (!disableShops) {
 			inv.setItem(1, GUIItems.getSellersNoteItem(sellersNote));
