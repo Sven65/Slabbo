@@ -269,3 +269,7 @@ permissions:
   slabbo.list.self:
     default: op
     description: Lets a user list all their shops
+
+  slabbo.importshops:
+    default: op
+    description: Allows importing shops from other plugins (e.g., UShops compatibility)
