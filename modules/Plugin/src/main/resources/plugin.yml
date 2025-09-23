@@ -65,6 +65,12 @@ permissions:
   slabbo.modify.self.note:
     default: op
     description: Lets you modify the sellers note of shops with a command
+  slabbo.modify.self.itemdisplay:
+    default: op
+    description: Lets you toggle custom item display name for your shops
+  slabbo.modify.self.itemdisplayname:
+    default: op
+    description: Lets you set the custom item display name for your shops
 
   slabbo.modify.self.*:
     default: op
@@ -74,6 +80,8 @@ permissions:
       slabbo.modify.self.sellprice: true
       slabbo.modify.self.quantity: true
       slabbo.modify.self.note: true
+      slabbo.modify.self.itemdisplay: true
+      slabbo.modify.self.itemdisplayname: true
 
   # ============================================================================== #
 
@@ -100,6 +108,19 @@ permissions:
     description: Lets you modify the sellers note of other peoples shops
     slabbo.modify.self.note: true
 
+  slabbo.modify.others.itemdisplay:
+    default: op
+    description: Lets you toggle custom item display name for others' shops
+    children:
+      slabbo.modify.self.itemdisplay: true
+
+  slabbo.modify.others.itemdisplayname:
+    default: op
+    description: Lets you set the custom item display name for others' shops
+    children:
+      slabbo.modify.self.itemdisplayname: true
+
+
   slabbo.modify.others.*:
     default: op
     description: Gives you access to use all the modification commands for other peoples shops
@@ -108,6 +129,8 @@ permissions:
       slabbo.modify.others.sellprice: true
       slabbo.modify.others.quantity: true
       slabbo.modify.others.note: true
+      slabbo.modify.others.itemdisplay: true
+      slabbo.modify.others.itemdisplayname: true
 
 
   # ============================================================================== #
