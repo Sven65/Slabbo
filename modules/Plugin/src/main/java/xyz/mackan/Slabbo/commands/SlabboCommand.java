@@ -113,13 +113,17 @@ public class SlabboCommand extends BaseCommand {
 	@Subcommand("reload")
 	@Description("Reloads Slabbo")
 	@CommandPermission("slabbo.reload")
-	public void onReload(Player player) {
+	public void onReload(CommandSender sender) {
 		boolean shouldSave = false;
 
-		player.sendMessage(LocaleManager.getString("general.general.reloading") + " Slabbo");
+		sender.sendMessage(LocaleManager.getString("general.general.reloading") + " Slabbo");
 
 		Slabbo.getInstance().reloadConfig();
-		ItemUtil.removeShopItems(player.getWorld());
+
+		for (World world : Bukkit.getWorlds()) {
+			ItemUtil.removeShopItems(world);
+		}
+
 		Slabbo.getInstance().getChestLinkManager().clearLinks();
 		Slabbo.getInstance().getShopManager().reloadShops();
 
@@ -139,7 +143,7 @@ public class SlabboCommand extends BaseCommand {
 			}
 		}
 
-		player.sendMessage("Slabbo " + LocaleManager.getString("general.general.reloaded") + "!");
+		sender.sendMessage("Slabbo " + LocaleManager.getString("general.general.reloaded") + "!");
 	}
 
 	@Subcommand("info")
