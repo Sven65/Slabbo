@@ -14,10 +14,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
-import xyz.mackan.Slabbo.GUI.ShopAdminGUI;
-import xyz.mackan.Slabbo.GUI.ShopCreationGUI;
-import xyz.mackan.Slabbo.GUI.ShopDeletionGUI;
-import xyz.mackan.Slabbo.GUI.ShopUserGUI;
+import xyz.mackan.Slabbo.GUI.*;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
@@ -348,6 +345,15 @@ public class SlabboCommand extends BaseCommand {
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 			}
+
+			@Subcommand("gui")
+			@Description("Opens a GUI to modify limited stock for admin shops")
+			@CommandPermission("slabbo.admin.limit.gui")
+			@Conditions("lookingAtShop|isAdminShop")
+			public void onLimitGui(Player player, SlabboContextResolver slabboContext) {
+				Shop shop = slabboContext.shop;
+				new LimitAdminGUI(shop, player).openInventory(player);
+			}
 		}
 
 		@Subcommand("limit virtual")
@@ -523,6 +529,29 @@ public class SlabboCommand extends BaseCommand {
 				Slabbo.getInstance().getShopManager().updateShop(shop);
 
 				player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+			}
+
+			@Subcommand("gui")
+			@Description("Opens a GUI to modify limited stock for admin shops")
+			@CommandPermission("slabbo.admin.limit.virtual.gui")
+			@CommandCompletion("@virtualAdminShopNames")
+			@Conditions("isAdminShop")
+			public void onLimitGui(Player player, String name) {
+				String loweredName = name.toLowerCase();
+
+				Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+				if (shop == null) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.shop-does-not-exist"));
+					return;
+				}
+
+				if (!shop.admin) {
+					player.sendMessage(ChatColor.RED+LocaleManager.getString("error-message.general.not-admin-shop"));
+					return;
+				}
+
+				new LimitAdminGUI(shop, player).openInventory(player);
 			}
 		}
 

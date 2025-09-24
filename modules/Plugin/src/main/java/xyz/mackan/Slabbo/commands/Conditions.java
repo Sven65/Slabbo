@@ -59,6 +59,8 @@ public class Conditions {
 		return shop.ownerId.equals(player.getUniqueId());
 	}
 
+	public static boolean isAdminShop(Shop shop) { return shop.admin; }
+
 	public static void registerConditions (PaperCommandManager manager) {
 		manager.getCommandConditions().addCondition("lookingAtShop", context -> {
 			BukkitCommandIssuer issuer = context.getIssuer();

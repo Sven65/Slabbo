@@ -49,6 +49,10 @@ public class SlabboItemAPI_v1_16_R3 implements SlabboItemAPI {
 
 	public ItemStack getDefaultSlab () { return new ItemStack(Material.STONE_SLAB, 1); }
 
+	public ItemStack getClock() {
+		return this.addCustomModelData(new ItemStack(Material.CLOCK, 1), "clock");
+	}
+
 	public ItemStack getHopperMinecart() { return this.addCustomModelData(new ItemStack(Material.HOPPER_MINECART, 1), "hopperMinecart"); }
 
 	public ItemStack getMinecart() { return this.addCustomModelData(new ItemStack(Material.MINECART, 1), "minecart"); }
