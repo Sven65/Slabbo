@@ -68,4 +68,8 @@ public class SlabboItemAPI_v1_16_R1 implements SlabboItemAPI {
 	public ItemStack getPaper() { return this.addCustomModelData(new ItemStack(Material.PAPER, 1), "paper"); }
 
 	public ItemStack getNameTag() { return this.addCustomModelData(new ItemStack(Material.NAME_TAG, 1), "nametag"); }
+
+	public ItemStack getClock() {
+		return this.addCustomModelData(new ItemStack(Material.CLOCK, 1), "clock");
+	}
 }

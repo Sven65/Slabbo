@@ -40,4 +40,6 @@ public interface SlabboItemAPI {
 	ItemStack getPaper();
 
 	ItemStack getNameTag();
+
+	ItemStack getClock();
 }

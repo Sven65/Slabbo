@@ -347,4 +347,52 @@ public class GUIItems {
 
 		return item;
 	}
+
+	/**
+	 * Returns a styled item for editing the buy stock in the limit admin GUI.
+	 */
+	public static ItemStack getBuyStockItem(int buyStock) {
+		ItemStack item = itemAPI.getGreenStainedGlassPane();
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.GREEN + LocaleManager.getString("gui.limit-gui.buy-stock"));
+		HashMap<String, Object> replacementMap = new HashMap<>();
+		replacementMap.put("count", buyStock);
+		String stockString = LocaleManager.replaceKey("gui.limit-gui.stock-value", replacementMap);
+		String clickToSet = LocaleManager.getString("general.general.click-to-set");
+		meta.setLore(Arrays.asList("§r"+stockString, clickToSet));
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	/**
+	 * Returns a styled item for editing the sell stock in the limit admin GUI.
+	 */
+	public static ItemStack getSellStockItem(int sellStock) {
+		ItemStack item = itemAPI.getRedStainedGlassPane();
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.RED + LocaleManager.getString("gui.limit-gui.sell-stock"));
+		HashMap<String, Object> replacementMap = new HashMap<>();
+		replacementMap.put("count", sellStock);
+		String stockString = LocaleManager.replaceKey("gui.limit-gui.stock-value", replacementMap);
+		String clickToSet = LocaleManager.getString("general.general.click-to-set");
+		meta.setLore(Arrays.asList("§r"+stockString, clickToSet));
+		item.setItemMeta(meta);
+		return item;
+	}
+
+	/**
+	 * Returns a styled item for editing the restock time in the limit admin GUI.
+	 */
+	public static ItemStack getRestockTimeItem(int restockTime) {
+		ItemStack item = itemAPI.getClock();
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(ChatColor.YELLOW + LocaleManager.getString("gui.limit-gui.restock-time"));
+		HashMap<String, Object> replacementMap = new HashMap<>();
+		replacementMap.put("seconds", restockTime);
+		String timeString = LocaleManager.replaceKey("gui.limit-gui.time-value", replacementMap);
+		String clickToSet = LocaleManager.getString("general.general.click-to-set");
+		meta.setLore(Arrays.asList("§r"+timeString, clickToSet));
+		item.setItemMeta(meta);
+		return item;
+	}
 }
