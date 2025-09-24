@@ -11,6 +11,7 @@ import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.Misc;
+import xyz.mackan.Slabbo.utils.NameUtil;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -249,7 +250,7 @@ public class GUIItems {
 
 
 		replacementMap.put("owner", ownerName);
-		replacementMap.put("item", shop.item.getType());
+		replacementMap.put("item", NameUtil.getName(shop.item));
 		replacementMap.put("quantity", shop.quantity);
 
 		replacementMap.put("buyPrice", LocaleManager.getCurrencyString(shop.buyPrice));
