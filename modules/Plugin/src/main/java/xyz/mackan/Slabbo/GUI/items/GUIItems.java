@@ -356,7 +356,7 @@ public class GUIItems {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.GREEN + LocaleManager.getString("gui.limit-gui.buy-stock"));
 		HashMap<String, Object> replacementMap = new HashMap<>();
-		replacementMap.put("count", buyStock);
+		replacementMap.put("stock", buyStock);
 		String stockString = LocaleManager.replaceKey("gui.limit-gui.stock-value", replacementMap);
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		meta.setLore(Arrays.asList("§r"+stockString, clickToSet));
@@ -372,7 +372,7 @@ public class GUIItems {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.RED + LocaleManager.getString("gui.limit-gui.sell-stock"));
 		HashMap<String, Object> replacementMap = new HashMap<>();
-		replacementMap.put("count", sellStock);
+		replacementMap.put("stock", sellStock);
 		String stockString = LocaleManager.replaceKey("gui.limit-gui.stock-value", replacementMap);
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		meta.setLore(Arrays.asList("§r"+stockString, clickToSet));
@@ -388,7 +388,7 @@ public class GUIItems {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatColor.YELLOW + LocaleManager.getString("gui.limit-gui.restock-time"));
 		HashMap<String, Object> replacementMap = new HashMap<>();
-		replacementMap.put("seconds", restockTime);
+		replacementMap.put("restockTime", restockTime);
 		String timeString = LocaleManager.replaceKey("gui.limit-gui.time-value", replacementMap);
 		String clickToSet = LocaleManager.getString("general.general.click-to-set");
 		meta.setLore(Arrays.asList("§r"+timeString, clickToSet));

@@ -197,7 +197,7 @@ public class SQLiteStore implements DataStore {
             ps.setInt(18, shop.itemDisplayNameToggle ? 1 : 0);
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error adding shop at " + shop.getLocationString() + ": " + e.getMessage());
         }
     }
 

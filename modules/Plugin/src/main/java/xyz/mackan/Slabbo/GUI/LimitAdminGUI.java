@@ -11,6 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
 import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.ChatWaitingType;
 import xyz.mackan.Slabbo.types.Shop;
@@ -25,6 +26,9 @@ public class LimitAdminGUI implements Listener {
     private int restockTime;
     private ChatWaitingType waitingType = ChatWaitingType.NONE;
 
+    ISlabboSound slabboSound = Bukkit.getServicesManager().getRegistration(ISlabboSound.class).getProvider();
+
+
     public LimitAdminGUI(Shop shop, Player player) {
         this.shop = shop;
         this.player = player;
@@ -32,7 +36,7 @@ public class LimitAdminGUI implements Listener {
         this.buyStock = (limit != null) ? limit.buyStock : 0;
         this.sellStock = (limit != null) ? limit.sellStock : 0;
         this.restockTime = (limit != null) ? limit.restockTime : 0;
-        this.inv = Bukkit.createInventory(null, 9, ChatColor.DARK_GREEN + LocaleManager.getString("gui.limit-gui-title"));
+        this.inv = Bukkit.createInventory(null, 9, LocaleManager.getString("general.shop-prefix") + LocaleManager.getString("gui.limit-gui.title"));
         Bukkit.getPluginManager().registerEvents(this, Slabbo.getInstance());
         initializeItems();
     }
@@ -42,8 +46,8 @@ public class LimitAdminGUI implements Listener {
         inv.setItem(0, GUIItems.getBuyStockItem(buyStock));
         inv.setItem(1, GUIItems.getSellStockItem(sellStock));
         inv.setItem(2, GUIItems.getRestockTimeItem(restockTime));
-        inv.setItem(6, GUIItems.getConfirmItem(""));
-        inv.setItem(7, GUIItems.getCancelItem());
+        inv.setItem(7, GUIItems.getConfirmItem(shop.getLocationString()));
+        inv.setItem(8, GUIItems.getCancelItem());
     }
 
     public void openInventory(HumanEntity ent) {
@@ -55,27 +59,38 @@ public class LimitAdminGUI implements Listener {
         if (!e.getInventory().equals(inv)) return;
         e.setCancelled(true);
         int slot = e.getRawSlot();
+
         switch (slot) {
             case 0:
                 waitingType = ChatWaitingType.LIMIT_BUY_STOCK;
                 player.closeInventory();
                 player.sendMessage(ChatColor.YELLOW + LocaleManager.getString("gui.limit-gui.enter-buy-stock"));
+                player.playSound(this.shop.location == null ? player.getLocation() : this.shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+
                 break;
             case 1:
                 waitingType = ChatWaitingType.LIMIT_SELL_STOCK;
                 player.closeInventory();
                 player.sendMessage(ChatColor.YELLOW + LocaleManager.getString("gui.limit-gui.enter-sell-stock"));
+                player.playSound(this.shop.location == null ? player.getLocation() : this.shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+
                 break;
             case 2:
                 waitingType = ChatWaitingType.LIMIT_RESTOCK_TIME;
                 player.closeInventory();
                 player.sendMessage(ChatColor.YELLOW + LocaleManager.getString("gui.limit-gui.enter-restock-time"));
-                break;
-            case 6:
-                saveAndClose(e.getWhoClicked());
+                player.playSound(this.shop.location == null ? player.getLocation() : this.shop.location, slabboSound.getSoundByKey("QUESTION"), 1, 1);
+
                 break;
             case 7:
+                saveAndClose(e.getWhoClicked());
+                player.playSound(this.shop.location == null ? player.getLocation() : this.shop.location, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+
+                break;
+            case 8:
                 e.getWhoClicked().closeInventory();
+                player.playSound(this.shop.location == null ? player.getLocation() : this.shop.location, slabboSound.getSoundByKey("CANCEL"), 1, 1);
+
                 break;
         }
     }
@@ -90,7 +105,7 @@ public class LimitAdminGUI implements Listener {
             value = Integer.parseInt(msg);
             if (value < 0) throw new NumberFormatException();
         } catch (NumberFormatException ex) {
-            player.sendMessage(ChatColor.RED + LocaleManager.getString("gui.limit-gui.invalid-number"));
+            player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.invalid-number"));
             reopen();
             waitingType = ChatWaitingType.NONE;
             return;
@@ -107,6 +122,7 @@ public class LimitAdminGUI implements Listener {
                 break;
         }
         waitingType = ChatWaitingType.NONE;
+
         reopen();
     }
 
@@ -114,6 +130,8 @@ public class LimitAdminGUI implements Listener {
         Bukkit.getScheduler().runTask(Slabbo.getInstance(), () -> {
             initializeItems();
             player.openInventory(inv);
+            player.playSound(shop.location == null ? player.getLocation() : shop.location, slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+
         });
     }
 

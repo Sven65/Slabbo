@@ -63,6 +63,7 @@ success-message:
       set-time: Restock time has been set to {time} seconds!
       set-sell-stock: Selling stock has been set to {stock}!
       set-buy-stock: Buying stock has been set to {stock}!
+      updated: Limited stock settings updated successfully!
     shop-commands:
      added-command: The command {command} has been added.
      removed-command: The command {command} has been removed.
@@ -163,6 +164,16 @@ gui:
   owner-title: Owner
   editing-shop: Editing Shop
   client: Client
+  limit-gui:
+    title: Shop Limits
+    enter-buy-stock: "Enter buy stock amount"
+    enter-sell-stock: "Enter sell stock amount"
+    enter-restock-time: "Enter restock time (seconds)"
+    buy-stock: "Buy stock"
+    sell-stock: "Sell stock"
+    stock-value: "Stock: {stock}"
+    restock-time: "Restock time"
+    time-value: "Time: {restockTime}"
   items:
     admin:
       deposit-item: Deposit {item}
@@ -185,7 +196,6 @@ gui:
         buy-stock: "Buying stock: {buyStock}"
         restock-time: "Restock time: {restockTime} seconds"
         next-restock: "Next restock: {time}"
-
     new-shop:
       click-item-below: Click item below
 migrate:
