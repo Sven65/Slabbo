@@ -246,3 +246,20 @@ Run
 ```sh
 mvn dependency:get -DrepoUrl=https://oss.sonatype.org/content/repositories/snapshots -DgroupId=net.md-5 -DartifactId=bungeecord-chat -Dversion=<version>-SNAPSHOT
 ```
+
+## Hopper Extraction and Insertion from Linked Chests
+
+Slabbo allows fine-grained control over hopper interactions with linked chests using two configuration options in `config.yml`:
+
+```yaml
+chestlinks:
+  hoppers:
+    extractionEnabled: true   # Allow hoppers to extract items from linked chests
+    insertionEnabled: true    # Allow hoppers to insert items into linked chests
+```
+
+- Set `extractionEnabled` to `true` to allow hoppers to take items out of linked chests.
+- Set `insertionEnabled` to `true` to allow hoppers to put items into linked chests.
+- You can enable one, both, or neither depending on your server's needs.
+
+**Note:** After changing these options, reload or restart your server for changes to take effect.

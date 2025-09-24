@@ -90,8 +90,11 @@ chestlinks:
 
   # Hopper functionality for linked chest
   hoppers:
-    # If hoppers are enabled to restock shops via linked chests
-    enabled: true
+    # If hoppers are allowed to extract items from linked chests (e.g., take items out)
+    extractionEnabled: true
+
+    # If hoppers are allowed to insert items into linked chests (e.g., put items in for restocking)
+    insertionEnabled: true
 
     # How long Slabbo should wait before saving shops when they've been stocked by a hopper
     # Delay in seconds

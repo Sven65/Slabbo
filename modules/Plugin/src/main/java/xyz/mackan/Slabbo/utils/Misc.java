@@ -83,4 +83,41 @@ public class Misc {
 	public static <T> T getValueOrDefault(T value, T defaultValue) {
 		return value == null ? defaultValue : value;
 	}
+
+	/**
+	 * Returns true if the inventory is a hopper (block, HopperInventory, or minecart hopper).
+	 */
+	public static boolean isHopper(Inventory inventory) {
+		if (inventory == null) return false;
+		// Block hopper
+		InventoryHolder holder = inventory.getHolder();
+		if (holder instanceof BlockState) {
+			Block block = ((BlockState) holder).getBlock();
+			if (block != null && block.getType() == Material.HOPPER) return true;
+		}
+		// HopperInventory (used by block hoppers)
+		if (inventory.getType() == org.bukkit.event.inventory.InventoryType.HOPPER) return true;
+		// Minecart hoppers (if you want to support them)
+		if (holder != null && holder.getClass().getSimpleName().contains("MinecartHopper")) return true;
+		return false;
+	}
+
+	/**
+	 * Returns true if the inventory is a chest (single, double, or trapped chest).
+	 */
+	public static boolean isChest(Inventory inventory) {
+		if (inventory == null) return false;
+		InventoryHolder holder = inventory.getHolder();
+		if (holder instanceof BlockState) {
+			Block block = ((BlockState) holder).getBlock();
+			if (block == null) return false;
+			Material type = block.getType();
+			if (type == Material.CHEST || type == Material.TRAPPED_CHEST) return true;
+		}
+		// DoubleChest inventory
+		if (holder != null && holder.getClass().getSimpleName().equals("DoubleChest")) return true;
+		// DoubleChestInventory type
+		if (inventory.getType() == org.bukkit.event.inventory.InventoryType.CHEST) return true;
+		return false;
+	}
 }
