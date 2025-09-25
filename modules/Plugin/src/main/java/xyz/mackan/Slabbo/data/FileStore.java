@@ -27,19 +27,16 @@ public class FileStore implements DataStore {
                 return new HashMap<>(); // Return an empty map if the section is missing
             }
 
+            Map<String, Object> shops = shopsSection.getValues(false);
             HashMap<String, Shop> shopData = new HashMap<>();
-            for (String key : shopsSection.getKeys(false)) {
-                ConfigurationSection shopSection = shopsSection.getConfigurationSection(key);
-                if (shopSection == null) continue;
-                Shop shop = (Shop) shopSection.getSerializable("shop", Shop.class);
-                if (shop == null) continue;
-                shop.shopTaxRate = shopSection.getString("shopTaxRate", null);
-                shop.shopTaxMode = shopSection.getString("shopTaxMode", null);
-                shopData.put(key, shop);
+            for (Map.Entry<String, Object> entry : shops.entrySet()) {
+                if (entry.getValue() instanceof Shop) {
+                    shopData.put(entry.getKey(), (Shop) entry.getValue());
+                }
             }
 
 
-            Bukkit.getLogger().info("Loaded shops from file...");
+            Bukkit.getLogger().info("Loaded" + shopData.size() + " shops from file...");
 
             return shopData;
         } catch (Exception e) {

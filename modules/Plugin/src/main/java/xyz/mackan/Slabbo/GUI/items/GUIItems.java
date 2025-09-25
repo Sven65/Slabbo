@@ -108,7 +108,7 @@ public class GUIItems {
 		return item;
 	}
 
-	public static ItemStack getUserBuyItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
+isca	public static ItemStack getUserBuyItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
 		ItemStack item = itemAPI.getGoldIngot();
 		ItemMeta meta = item.getItemMeta();
 
