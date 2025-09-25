@@ -110,6 +110,11 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	public String customItemDisplayName;
 	public boolean itemDisplayNameToggle;
 
+	/**
+	 * Per-shop tax rate. If null, use global/region config.
+	 */
+	public String shopTaxRate = null;
+
 	// <editor-fold desc="Shop constructors with double prices">
 
 	public Shop (double buyPrice, double sellPrice, int quantity, Location location, ItemStack item, int stock, UUID ownerId, boolean admin, String linkedChestLocation, boolean virtual, String shopName) {
@@ -315,5 +320,41 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	public void setItemDisplayNameToggle(boolean itemDisplayNameToggle) {
 		this.itemDisplayNameToggle = itemDisplayNameToggle;
+	}
+
+	/**
+	 * Utility to resolve the tax rate for a shop transaction.
+	 * Checks per-shop, region, and global config.
+	 */
+	public static String resolveShopTaxRate(Shop shop, Location location) {
+		if (shop.shopTaxRate != null && !shop.shopTaxRate.isEmpty()) {
+			return shop.shopTaxRate;
+		}
+		// TODO: Integrate WorldGuard region tax lookup here if present
+		// Example: if (WorldGuardSupport.isEnabled()) { ... }
+		// For now, fallback to global config
+		return Slabbo.getInstance().getConfig().getString("shopTax", "0");
+	}
+
+	/**
+	 * Utility to calculate tax amount from rate string ("10" or "10%") and base value.
+	 */
+	public static double calculateTaxAmount(String taxRate, double baseValue) {
+		if (taxRate == null || taxRate.isEmpty()) return 0.0;
+		taxRate = taxRate.trim();
+		if (taxRate.endsWith("%")) {
+			try {
+				double percent = Double.parseDouble(taxRate.replace("%", ""));
+				return baseValue * (percent / 100.0);
+			} catch (NumberFormatException e) {
+				return 0.0;
+			}
+		} else {
+			try {
+				return Double.parseDouble(taxRate);
+			} catch (NumberFormatException e) {
+				return 0.0;
+			}
+		}
 	}
 }

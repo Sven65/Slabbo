@@ -246,3 +246,48 @@ Run
 ```sh
 mvn dependency:get -DrepoUrl=https://oss.sonatype.org/content/repositories/snapshots -DgroupId=net.md-5 -DartifactId=bungeecord-chat -Dversion=<version>-SNAPSHOT
 ```
+
+## Shop Taxes
+
+Slabbo supports configurable shop taxes for transactions. These options allow server owners to control how taxes are applied to shop sales and purchases.
+
+### Configuration Options (in config.yml)
+
+- `enableShopTax`: Enable or disable shop taxes (true/false).
+- `shopTax`: Set the tax as a fixed value (e.g., `10`) or percentage (e.g., `10%`).
+- `shopTaxMode`: Choose who pays the tax: `seller` (deducted from profit) or `buyer` (added to price).
+- `shopTaxLevels`: Support for multiple tax levels (e.g., global, region-based). Region-based taxes can be set via WorldGuard integration.
+- `allowPerShopTax`: Allow shop owners/admins to set custom tax rates for individual shops (true/false).
+
+### Permissions
+
+| Permission Node         | Description                                      |
+|------------------------|--------------------------------------------------|
+| `slabbo.tax.exempt`    | Exempts player/shop from paying taxes            |
+| `slabbo.tax.set`       | Allows setting per-shop tax rates                |
+
+### How Taxes Work
+
+- Taxes can be applied globally, per region (with WorldGuard), or per shop (if enabled).
+- The tax can be a fixed amount or a percentage of the transaction value.
+- The tax can be paid by the seller (deducted from profit) or buyer (added to price), as configured.
+- Tax information is displayed in shop GUIs and transaction messages.
+
+### Example config.yml
+
+```yaml
+enableShopTax: true
+shopTax: "10%" # or "10" for fixed value
+shopTaxMode: seller # or buyer
+shopTaxLevels:
+  global: "10%"
+  region:
+    spawn: "5%"
+    market: "15%"
+allowPerShopTax: true
+```
+
+### Notes
+- Region-based taxes require WorldGuard integration.
+- Per-shop tax rates require the `slabbo.tax.set` permission.
+- Players/shops with `slabbo.tax.exempt` are not charged tax.

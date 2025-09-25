@@ -296,3 +296,11 @@ permissions:
   slabbo.importshops:
     default: op
     description: Allows importing shops from other plugins (e.g., UShops compatibility)
+
+  slabbo.tax.exempt:
+    default: op
+    description: Exempts player/shop from paying taxes
+
+  slabbo.tax.set:
+    default: op
+    description: Allows setting per-shop tax rates

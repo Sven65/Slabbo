@@ -142,3 +142,26 @@ items:
       paper: 0
       nametag: 0
       clock: 0
+
+########################
+#      Shop Taxes      #
+########################
+
+# Enable or disable shop taxes
+enableShopTax: false
+
+# Set the tax as a fixed value (e.g., 10) or percentage (e.g., 10%)
+shopTax: "10%"
+
+# Choose who pays the tax: seller (deducted from profit) or buyer (added to price)
+shopTaxMode: seller
+
+# Support for multiple tax levels (global, region-based)
+shopTaxLevels:
+  global: "10%"
+  region:
+    spawn: "5%"
+    market: "15%"
+
+# Allow shop owners/admins to set custom tax rates for individual shops
+allowPerShopTax: true

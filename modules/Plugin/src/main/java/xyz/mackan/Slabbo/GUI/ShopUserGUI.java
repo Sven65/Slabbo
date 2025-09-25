@@ -316,7 +316,46 @@ public class ShopUserGUI implements Listener {
 		}
 		// ===== End fixed removal logic =====
 
-		Slabbo.getEconomy().depositPlayer((OfflinePlayer) humanEntity, totalCost);
+		// --- SHOP TAX LOGIC START ---
+		boolean taxEnabled = Slabbo.getInstance().getConfig().getBoolean("enableShopTax", false);
+		boolean sellerExempt = shopOwner.isOnline() && shopOwner.getPlayer().hasPermission("slabbo.tax.exempt");
+		boolean buyerExempt = humanEntity.hasPermission("slabbo.tax.exempt");
+		String taxMode = Slabbo.getInstance().getConfig().getString("shopTaxMode", "seller");
+		String taxRate = Shop.resolveShopTaxRate(shop, shop.location);
+
+		// Calculate tax only if enabled and not exempt
+		double taxAmount = 0.0;
+		if (taxEnabled && !sellerExempt && !shop.admin) {
+			taxAmount = Shop.calculateTaxAmount(taxRate, totalCost);
+		}
+
+		if (taxEnabled && taxAmount > 0) {
+			if (taxMode.equalsIgnoreCase("buyer")) {
+				// Buyer pays tax up front (not typical for sell, but supported)
+				Slabbo.getEconomy().depositPlayer((OfflinePlayer) humanEntity, totalCost - taxAmount);
+				if (!shop.admin) {
+					Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);
+				}
+				// Inform seller of tax
+				humanEntity.sendMessage(ChatColor.YELLOW + "Tax deducted: " + LocaleManager.getCurrencyString(taxAmount));
+			} else {
+				// Seller pays tax (deducted from their profit)
+				Slabbo.getEconomy().depositPlayer((OfflinePlayer) humanEntity, totalCost);
+				if (!shop.admin) {
+					Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost + taxAmount);
+					if (taxAmount > 0 && shopOwner.isOnline()) {
+						shopOwner.getPlayer().sendMessage(ChatColor.YELLOW + "Tax applied: " + LocaleManager.getCurrencyString(taxAmount));
+					}
+				}
+			}
+		} else {
+			// No tax or exempt
+			Slabbo.getEconomy().depositPlayer((OfflinePlayer) humanEntity, totalCost);
+			if (!shop.admin) {
+				Slabbo.getEconomy().withdrawPlayer(shopOwner, totalCost);
+			}
+		}
+		// --- SHOP TAX LOGIC END ---
 
 		HashMap<String, Object> replacementMap = new HashMap<>();
 		replacementMap.put("count", itemCount);
