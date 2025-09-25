@@ -255,7 +255,9 @@ Slabbo supports configurable shop taxes for transactions. These options allow se
 - Taxes can be applied globally, per region (with WorldGuard), or per shop (if enabled).
 - The tax can be a fixed amount or a percentage of the transaction value.
 - The tax can be paid by the seller (deducted from profit) or buyer (added to price), as configured.
-- Tax information is displayed in shop GUIs and transaction messages.
+- Use the following commands to manage taxes for virtual shops:
+  - `/slabbo modify tax set <value>`: Set the tax rate for a shop. The value can be a fixed amount (e.g., `10`) or a percentage (e.g., `10%`).
+  - `/slabbo modify tax mode <buyer|seller>`: Set who pays the tax for a shop. Choose `buyer` to add the tax to the price or `seller` to deduct it from the profit.
 
 ### Region-Based Taxes (WorldGuard)
 
