@@ -912,6 +912,59 @@ public class SlabboCommand extends BaseCommand {
 			player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
 		}
 
+		@Subcommand("tax")
+		@Description("Commands for managing shop taxes")
+		public class SlabboModifyTaxCommand extends BaseCommand {
+
+			@Subcommand("set")
+			@Description("Set the tax rate for a shop")
+			@CommandPermission("slabbo.modify.tax.set")
+			@Conditions("lookingAtShop")
+			public void onSetTax(Player player, SlabboContextResolver slabboContextResolver, String taxRate) {
+				Shop shop = slabboContextResolver.shop;
+
+				if (shop == null) {
+					player.sendMessage("Shop not found.");
+					return;
+				}
+
+				if (!taxRate.matches("\\d+%?|\\d+\\.\\d+%?")) {
+					player.sendMessage("Invalid tax rate. Use a number or percentage (e.g., 10 or 10%).");
+					return;
+				}
+
+				shop.shopTaxRate = taxRate;
+
+				Slabbo.getInstance().getShopManager().updateShop(shop);
+
+				player.sendMessage("Tax rate set to " + taxRate + ".");
+			}
+
+			@Subcommand("mode")
+			@Description("Set the tax mode for a shop")
+			@CommandPermission("slabbo.modify.tax.mode")
+			@Conditions("lookingAtShop")
+
+			public void onSetTaxMode(Player player, SlabboContextResolver slabboContextResolver, String mode) {
+				Shop shop = slabboContextResolver.shop;
+
+				if (shop == null) {
+					player.sendMessage("Shop not found.");
+					return;
+				}
+
+				if (!mode.equalsIgnoreCase("seller") && !mode.equalsIgnoreCase("buyer")) {
+					player.sendMessage("Invalid mode. Use 'seller' or 'buyer'.");
+					return;
+				}
+
+				shop.shopTaxMode = mode;
+
+				Slabbo.getInstance().getShopManager().updateShop(shop);
+
+				player.sendMessage("Tax mode set to " + mode + ".");
+			}
+		}
 	}
 
 	@Subcommand("list")
@@ -1434,6 +1487,114 @@ public class SlabboCommand extends BaseCommand {
 			default:
 				sender.sendMessage(ChatColor.RED + LocaleManager.getString("migrate.failed"));
 				break;
+		}
+	}
+
+	@Subcommand("modify virtual")
+	@Description("Modify properties of a virtual shop")
+	@CommandPermission("slabbo.admin.modify.virtual")
+	@CommandCompletion("@virtualShopNames")
+	public void onModifyVirtualShop(Player player, String name, String property, String value) {
+		String loweredName = name.toLowerCase();
+
+		Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+
+		if (shop == null) {
+			player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.shop-does-not-exist"));
+			return;
+		}
+
+		if (!shop.virtual) {
+			player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-virtual-shop"));
+			return;
+		}
+
+		// Fix: Use direct field assignment for tax fields
+		switch (property.toLowerCase()) {
+			case "taxrate":
+				try {
+					shop.shopTaxRate = value;
+					player.sendMessage(ChatColor.GREEN + "Tax rate updated successfully.");
+				} catch (NumberFormatException e) {
+					player.sendMessage(ChatColor.RED + "Invalid tax rate value.");
+				}
+				break;
+			case "taxmode":
+				if (value.equalsIgnoreCase("buyer") || value.equalsIgnoreCase("seller")) {
+					shop.shopTaxMode = value.toLowerCase();
+					player.sendMessage(ChatColor.GREEN + "Tax mode updated successfully.");
+				} else {
+					player.sendMessage(ChatColor.RED + "Invalid tax mode. Use 'buyer' or 'seller'.");
+				}
+				break;
+			default:
+				player.sendMessage(ChatColor.RED + "Unknown property. Use 'taxrate' or 'taxmode'.");
+				break;
+		}
+
+		Slabbo.getInstance().getShopManager().updateShop(shop);
+		player.playSound(player.getLocation(), slabboSound.getSoundByKey("MODIFY_SUCCESS"), 1, 1);
+	}
+
+	@Subcommand("modify virtual tax")
+	@Description("Commands for modifying tax settings for virtual shops")
+	public class ModifyVirtualTaxCommand extends BaseCommand {
+		@Subcommand("set")
+		@Description("Sets the tax rate for a virtual shop")
+		@CommandPermission("slabbo.modify.virtual.tax.set")
+		public void onSetVirtualTax(Player player, String shopName, String value) {
+			String loweredName = shopName.trim().toLowerCase();
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+			if (shop == null) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+			if (!shop.virtual) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-virtual-shop"));
+				return;
+			}
+			value = value.trim();
+			if (value.isEmpty() || !value.matches("\\d+%?|\\d+\\.\\d+%?")) {
+				player.sendMessage(ChatColor.RED + "Invalid tax rate. Use a positive number or percentage (e.g., 10 or 10%).");
+				return;
+			}
+			try {
+				double numericValue = Double.parseDouble(value.replace("%", ""));
+				if (numericValue < 0) {
+					player.sendMessage(ChatColor.RED + "Tax rate cannot be negative.");
+					return;
+				}
+			} catch (NumberFormatException e) {
+				player.sendMessage(ChatColor.RED + "Invalid tax rate format.");
+				return;
+			}
+			shop.shopTaxRate = value;
+			Slabbo.getInstance().getShopManager().updateShop(shop);
+			player.sendMessage(ChatColor.GREEN + "Tax rate for virtual shop '" + shopName + "' set to " + value + ".");
+		}
+
+		@Subcommand("mode")
+		@Description("Sets the tax mode for a virtual shop")
+		@CommandPermission("slabbo.modify.virtual.tax.mode")
+		public void onSetVirtualTaxMode(Player player, String shopName, String mode) {
+			String loweredName = shopName.trim().toLowerCase();
+			Shop shop = Slabbo.getInstance().getShopManager().getShop(loweredName);
+			if (shop == null) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.shop-does-not-exist"));
+				return;
+			}
+			if (!shop.virtual) {
+				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.general.not-virtual-shop"));
+				return;
+			}
+			mode = mode.trim().toLowerCase();
+			if (!mode.equals("seller") && !mode.equals("buyer")) {
+				player.sendMessage(ChatColor.RED + "Invalid mode. Use 'seller' or 'buyer'.");
+				return;
+			}
+			shop.shopTaxMode = mode;
+			Slabbo.getInstance().getShopManager().updateShop(shop);
+			player.sendMessage(ChatColor.GREEN + "Tax mode for virtual shop '" + shopName + "' set to " + mode + ".");
 		}
 	}
 }

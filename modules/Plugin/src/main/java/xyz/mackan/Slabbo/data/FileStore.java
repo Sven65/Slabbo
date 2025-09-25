@@ -27,12 +27,15 @@ public class FileStore implements DataStore {
                 return new HashMap<>(); // Return an empty map if the section is missing
             }
 
-            Map<String, Object> shops = shopsSection.getValues(false);
             HashMap<String, Shop> shopData = new HashMap<>();
-            for (Map.Entry<String, Object> entry : shops.entrySet()) {
-                if (entry.getValue() instanceof Shop) {
-                    shopData.put(entry.getKey(), (Shop) entry.getValue());
-                }
+            for (String key : shopsSection.getKeys(false)) {
+                ConfigurationSection shopSection = shopsSection.getConfigurationSection(key);
+                if (shopSection == null) continue;
+                Shop shop = (Shop) shopSection.getSerializable("shop", Shop.class);
+                if (shop == null) continue;
+                shop.shopTaxRate = shopSection.getString("shopTaxRate", null);
+                shop.shopTaxMode = shopSection.getString("shopTaxMode", null);
+                shopData.put(key, shop);
             }
 
 
@@ -53,12 +56,15 @@ public class FileStore implements DataStore {
                 Bukkit.getLogger().info("Saving shops to file...");
 
                 File dataFile = new File(Slabbo.getDataPath(), "shops.yml");
-
-                FileConfiguration configFile = YamlConfiguration.loadConfiguration(dataFile);
-
-                configFile.createSection("shops", shops);
-
-
+                YamlConfiguration configFile = new YamlConfiguration();
+                ConfigurationSection shopsSection = configFile.createSection("shops");
+                for (Map.Entry<String, Shop> entry : shops.entrySet()) {
+                    Shop shop = entry.getValue();
+                    ConfigurationSection shopSection = shopsSection.createSection(entry.getKey());
+                    shopSection.set("shop", shop);
+                    shopSection.set("shopTaxRate", shop.shopTaxRate);
+                    shopSection.set("shopTaxMode", shop.shopTaxMode);
+                }
                 try {
                     configFile.save(dataFile);
                 } catch (IOException e) {
