@@ -156,12 +156,5 @@ shopTax: "10%"
 # Choose who pays the tax: seller (deducted from profit) or buyer (added to price)
 shopTaxMode: seller
 
-# Support for multiple tax levels (global, region-based)
-shopTaxLevels:
-  global: "10%"
-  region:
-    spawn: "5%"
-    market: "15%"
-
 # Allow shop owners/admins to set custom tax rates for individual shops
 allowPerShopTax: true

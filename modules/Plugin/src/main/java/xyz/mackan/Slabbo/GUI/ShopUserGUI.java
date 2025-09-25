@@ -320,7 +320,7 @@ public class ShopUserGUI implements Listener {
 		boolean taxEnabled = Slabbo.getInstance().getConfig().getBoolean("enableShopTax", false);
 		boolean sellerExempt = shopOwner.isOnline() && shopOwner.getPlayer().hasPermission("slabbo.tax.exempt");
 		boolean buyerExempt = humanEntity.hasPermission("slabbo.tax.exempt");
-		String taxMode = Slabbo.getInstance().getConfig().getString("shopTaxMode", "seller");
+		String taxMode = Shop.resolveShopTaxMode(shop, shop.location);
 		String taxRate = Shop.resolveShopTaxRate(shop, shop.location);
 
 		// Calculate tax only if enabled and not exempt

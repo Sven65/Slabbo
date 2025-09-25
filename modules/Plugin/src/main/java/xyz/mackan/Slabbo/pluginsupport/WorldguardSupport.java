@@ -9,6 +9,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.flags.IntegerFlag;
 import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.flags.StringFlag;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.managers.RegionManager;
@@ -30,6 +31,9 @@ public class WorldguardSupport {
 
 	public static IntegerFlag MAX_SHOPS;
 
+	public static StringFlag TAX_FLAG;
+	public static StringFlag TAX_MODE_FLAG;
+
 	public static void registerFlags () {
 		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 
@@ -37,14 +41,20 @@ public class WorldguardSupport {
 			StateFlag createShopsFlag = new StateFlag("slabbo-others-create-shops", true);
 			StateFlag useShopsFlag = new StateFlag("slabbo-others-use-shops", true);
 			IntegerFlag maxShopsFlag = new IntegerFlag("slabbo-max-shops");
+			StringFlag taxFlag = new StringFlag("slabbo-tax");
+			StringFlag taxModeFlag = new StringFlag("slabbo-tax-mode");
 
 			registry.register(createShopsFlag);
 			registry.register(useShopsFlag);
 			registry.register(maxShopsFlag);
+			registry.register(taxFlag);
+			registry.register(taxModeFlag);
 
 			CREATE_SHOPS = createShopsFlag;
 			USE_SHOPS = useShopsFlag;
 			MAX_SHOPS = maxShopsFlag;
+			TAX_FLAG = taxFlag;
+			TAX_MODE_FLAG = taxModeFlag;
 		} catch (FlagConflictException e) {
 			Bukkit.getLogger().severe("One or more flags conflict!");
 		}
@@ -205,5 +215,26 @@ public class WorldguardSupport {
 		}
 
 		return isOwner || canOthersUse;
+	}
+
+
+	public static String getRegionTaxFlag(Location location) {
+		if (!PluginSupport.isPluginEnabled("WorldGuard")) return null;
+		ProtectedRegion region = getHighestPriorityRegionForLocation(location);
+		if (region != null && TAX_FLAG != null) {
+			String taxValue = region.getFlag(TAX_FLAG);
+			if (taxValue != null) return taxValue;
+		}
+		return null;
+	}
+
+	public static String getRegionTaxModeFlag(Location location) {
+		if (!PluginSupport.isPluginEnabled("WorldGuard")) return null;
+		ProtectedRegion region = getHighestPriorityRegionForLocation(location);
+		if (region != null && TAX_MODE_FLAG != null) {
+			String modeValue = region.getFlag(TAX_MODE_FLAG);
+			if (modeValue != null) return modeValue;
+		}
+		return null;
 	}
 }

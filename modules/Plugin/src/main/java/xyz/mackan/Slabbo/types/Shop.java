@@ -7,9 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.inventory.ItemStack;
+import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
+import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 
 import java.time.Instant;
 import java.util.*;
@@ -114,6 +116,11 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	 * Per-shop tax rate. If null, use global/region config.
 	 */
 	public String shopTaxRate = null;
+
+	/**
+	 * Per-shop tax mode. If null, use global/region config.
+	 */
+	public String shopTaxMode = null;
 
 	// <editor-fold desc="Shop constructors with double prices">
 
@@ -324,15 +331,17 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 
 	/**
 	 * Utility to resolve the tax rate for a shop transaction.
-	 * Checks per-shop, region, and global config.
+	 * Checks per-shop, WorldGuard region flag, and global config.
 	 */
 	public static String resolveShopTaxRate(Shop shop, Location location) {
 		if (shop.shopTaxRate != null && !shop.shopTaxRate.isEmpty()) {
 			return shop.shopTaxRate;
 		}
-		// TODO: Integrate WorldGuard region tax lookup here if present
-		// Example: if (WorldGuardSupport.isEnabled()) { ... }
-		// For now, fallback to global config
+		String regionTax = WorldguardSupport.getRegionTaxFlag(location);
+		if (regionTax != null && !regionTax.isEmpty()) {
+			return regionTax;
+		}
+		// Fallback to global config
 		return Slabbo.getInstance().getConfig().getString("shopTax", "0");
 	}
 
@@ -356,5 +365,20 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 				return 0.0;
 			}
 		}
+	}
+
+	/**
+	 * Utility to resolve the tax mode for a shop transaction.
+	 * Checks per-shop, WorldGuard region flag, and global config.
+	 */
+	public static String resolveShopTaxMode(Shop shop, Location location) {
+		if (shop.shopTaxMode != null && !shop.shopTaxMode.isEmpty()) {
+			return shop.shopTaxMode;
+		}
+		String regionMode = xyz.mackan.Slabbo.pluginsupport.WorldguardSupport.getRegionTaxModeFlag(location);
+		if (regionMode != null && !regionMode.isEmpty()) {
+			return regionMode;
+		}
+		return Slabbo.getInstance().getConfig().getString("shopTaxMode", "seller");
 	}
 }

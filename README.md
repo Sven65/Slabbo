@@ -32,7 +32,6 @@ Destroying: Right click existing shop with stick
 | `slabbo.use`                              | Lets you use slab shops                                                          |
 | `slabbo.create`                           | Lets you create slab shops                                                       |
 | `slabbo.limit.*`                          | Gives you unlimited shops                                                        |
-| `slabbo.limit.{n}`                        | Gives you {n} shops                                                              |
 | `slabbo.destroy.self`                     | Lets you destroy your shops                                                      |
 | `slabbo.destroy.others`                   | Lets you destroy other peoples shops                                             |
 | `slabbo.modify.self.*`                    | Gives you access to all the modification commands                                |
@@ -42,19 +41,16 @@ Destroying: Right click existing shop with stick
 | `slabbo.modify.self.note`                 | Lets you modify the sellers note of shops with a command                         |
 | `slabbo.modify.self.itemdisplay`          | Lets you modify the item display settings of shops with a command                |
 | `slabbo.modify.self.itemdisplay.toggle`   | Lets you toggle the item display of shops with a command                         |
-| `slabbo.modify.self.itemdisplay.name`     | Lets you set the item display name of shops with a command                       |
 | `slabbo.modify.others.*`                  | Gives you access to use all the modification commands for other peoples shops    |
 | `slabbo.modify.others.buyprice`           | Lets you modify the buy price of other peoples shops                             |
 | `slabbo.modify.others.sellprice`          | Lets you modify the sell price of other peoples shops                            |
 | `slabbo.modify.others.quantity`           | Lets you modify the quantity of other peoples shops.                             |
 | `slabbo.modify.others.note`               | Lets you modify the sellers note of other peoples shops                          |
-| `slabbo.modify.others.itemdisplay`        | Lets you modify the item display settings of other peoples shops                 |
 | `slabbo.modify.others.itemdisplay.toggle` | Lets you toggle the item display of other peoples shops                          |
 | `slabbo.modify.others.itemdisplay.name`   | Lets you set the item display name of other peoples shops                        |
 | `slabbo.modify.*`                         | Gives you access to use all the modification commands for other peoples shops    |
 | `slabbo.modify.admin.*`                   | Gives you access to use all the admin modification commands                      |
 | `slabbo.modify.admin.owner`               | Lets you change the owner of a shop                                              |
-| `slabbo.modify.admin.stock`               | Lets you set the stock of a shop                                                 |
 | `slabbo.admin.*`                          | Gives you access to all admin commands                                           |
 | `slabbo.admin.toggle`                     | Lets you toggle shops as being admin shops                                       |
 | `slabbo.admin.limit.*`                    | Gives you access to all the limiting stock commands                              |
@@ -228,18 +224,6 @@ In order to develop Slabbo, you first need to setup the development environment.
 [[1.8+](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-legacy/)]
 [[1.10 to 1.15](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-10-1-15/)]
 [[1.16+](https://www.spigotmc.org/wiki/spigot-nms-and-minecraft-versions-1-16/)]
-
-2.1. In order to install dependencies for 1.18+, please run buildtools with the `--remapped` option to get the remapped revision jar.
-
-2.2. Be sure to compile craftbukkit using the `--compile craftbukkit` option
-3. Install the compiled JAR files to your local maven using `mvn install:install-file -Dfile="spigot-version.jar" -DgroupId=org.spigotmc -DartifactId=spigot -Dversion=version-R0.1-SNAPSHOT -Dpackaging=jar`
-
-### Common issues with NMS Compile
-
-#### Error with applyPatches.sh
-
-If you get an error with `\r` and alike when running applyPatches, make sure you're running with git bash and not WSL bash.
-
 #### Can't find bungeecoord-chat
 
 Run
@@ -273,17 +257,39 @@ Slabbo supports configurable shop taxes for transactions. These options allow se
 - The tax can be paid by the seller (deducted from profit) or buyer (added to price), as configured.
 - Tax information is displayed in shop GUIs and transaction messages.
 
+### Region-Based Taxes (WorldGuard)
+
+- To set region-based shop taxes, use the WorldGuard region flag `slabbo-tax`.
+- The value can be a fixed amount (e.g., `10`) or a percentage (e.g., `10%`).
+- The highest priority region at the shop's location determines the tax rate.
+- Example command to set a region tax:
+
+```
+/rg flag <region> slabbo-tax 5%
+```
+
+- If no region flag is set, the global config value is used.
+- Per-shop tax rates override region/global rates if set.
+
+### Region-Based Tax Mode (WorldGuard)
+
+- To set who pays the tax in a region, use the WorldGuard region flag `slabbo-tax-mode`.
+- Allowed values: `seller` (deducted from profit) or `buyer` (added to price).
+- Example command to set a region tax mode:
+
+```
+/rg flag <region> slabbo-tax-mode seller
+```
+
+- The highest priority region at the shop's location determines the tax mode.
+- Per-shop tax mode overrides region/global settings if set.
+
 ### Example config.yml
 
 ```yaml
 enableShopTax: true
 shopTax: "10%" # or "10" for fixed value
 shopTaxMode: seller # or buyer
-shopTaxLevels:
-  global: "10%"
-  region:
-    spawn: "5%"
-    market: "15%"
 allowPerShopTax: true
 ```
 
