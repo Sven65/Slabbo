@@ -74,7 +74,7 @@ public class ShopAdminGUI implements Listener {
 			inv.setItem(1, AdminGUIItems.getWithdrawItem(NameUtil.getName(shop.item), shop.stock, shop.admin));
 			inv.setItem(2, AdminGUIItems.getAmountItem(transferRate));
 
-			inv.setItem(6, GUIItems.getUserInfoItem(shop));
+			inv.setItem(6, GUIItems.getUserInfoItem(shop, true));
 			inv.setItem(7, AdminGUIItems.getModifyItem());
 			inv.setItem(8, AdminGUIItems.getViewAsCustomerItem());
 		}

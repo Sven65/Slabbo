@@ -108,7 +108,7 @@ public class GUIItems {
 		return item;
 	}
 
-isca	public static ItemStack getUserBuyItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
+	public static ItemStack getUserBuyItem (String itemName, int quantity, double price, int stock, boolean isAdmin, boolean isLimited) {
 		ItemStack item = itemAPI.getGoldIngot();
 		ItemMeta meta = item.getItemMeta();
 
@@ -149,6 +149,45 @@ isca	public static ItemStack getUserBuyItem (String itemName, int quantity, doub
 
 		item.setItemMeta(meta);
 
+		return item;
+	}
+
+	public static ItemStack getUserBuyItem(String itemName, int quantity, double basePrice, int stock, boolean isAdmin, boolean isLimited, String taxRateStr, boolean taxApplies, boolean showTax) {
+		ItemStack item = itemAPI.getGoldIngot();
+		ItemMeta meta = item.getItemMeta();
+
+		HashMap<String, Object> replacementMap = new HashMap<>();
+		replacementMap.put("item", "'"+itemName+"'");
+		replacementMap.put("quantity", quantity);
+		String currencyString = LocaleManager.getCurrencyString(basePrice);
+		replacementMap.put("price", currencyString);
+		if (isAdmin && !isLimited) {
+			replacementMap.put("count", "∞");
+		} else {
+			replacementMap.put("count", stock);
+		}
+		String inStock = !isLimited ? LocaleManager.replaceKey("general.general.in-stock", replacementMap)
+				: LocaleManager.replaceKey("general.general.limited-stock.buy-stock-left", replacementMap);
+		String stacks = LocaleManager.getString("general.general.stacks");
+		String buyFor = LocaleManager.replaceKey("general.general.buy-for", replacementMap);
+		List<String> lore;
+		if (isAdmin && !isLimited) {
+			lore = new ArrayList<>(Arrays.asList("§r"+buyFor, inStock, "(∞ "+stacks+")"));
+		} else {
+			lore = new ArrayList<>(Arrays.asList("§r"+buyFor, inStock, "("+Misc.countStacks(stock)+" "+stacks+")"));
+		}
+
+		// Always show base price
+		lore.add(ChatColor.YELLOW + "Price: " + LocaleManager.getCurrencyString(basePrice));
+
+		// Add tax info if needed
+		if (showTax && taxApplies && taxRateStr != null && !taxRateStr.isEmpty()) {
+			lore.add(ChatColor.YELLOW + "Includes tax: " + taxRateStr);
+		}
+
+		meta.setDisplayName(ChatColor.GOLD+LocaleManager.replaceKey("gui.items.user.buy-item", replacementMap));
+		meta.setLore(lore);
+		item.setItemMeta(meta);
 		return item;
 	}
 
@@ -222,6 +261,10 @@ isca	public static ItemStack getUserBuyItem (String itemName, int quantity, doub
 	}
 
 	public static ItemStack getUserInfoItem (Shop shop) {
+		return getUserInfoItem(shop, false);
+	}
+
+	public static ItemStack getUserInfoItem (Shop shop, boolean isAdminView) {
 		ItemStack item = itemAPI.getCommandBlock();
 		ItemMeta meta = item.getItemMeta();
 
@@ -305,6 +348,21 @@ isca	public static ItemStack getUserBuyItem (String itemName, int quantity, doub
 			lore.add(buyStockString);
 			lore.add(restockTimeString);
 			lore.add(nextRestockString);
+		}
+
+		if (isAdminView && Slabbo.getInstance().getConfig().getBoolean("enableShopTax")) {
+			String taxMode = shop.resolveShopTaxMode();
+			String taxRate = shop.resolveShopTaxRate();
+			if (taxMode != null) {
+				if (taxMode.equalsIgnoreCase("buyer")) {
+					lore.add(ChatColor.YELLOW + "Tax Mode: Buyer (tax is added to price)");
+				} else if (taxMode.equalsIgnoreCase("seller")) {
+					lore.add(ChatColor.YELLOW + "Tax Mode: Seller (tax is deducted from your profit)");
+				} else {
+					lore.add(ChatColor.YELLOW + "Tax Mode: " + taxMode);
+				}
+				lore.add(ChatColor.YELLOW + "Tax Rate: " + taxRate);
+			}
 		}
 
 		meta.setLore(lore);

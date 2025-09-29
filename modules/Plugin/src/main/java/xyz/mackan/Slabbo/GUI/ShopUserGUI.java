@@ -41,16 +41,34 @@ public class ShopUserGUI implements Listener {
 	public void initializeItems (Player player) {
 		boolean isLimitedShop = shop.admin && shop.shopLimit != null && shop.shopLimit.enabled;
 
+		String taxMode = shop.resolveShopTaxMode();
+		String taxRate = "";
+		boolean taxApplies = false;
+		boolean showTax = false;
+		if (Slabbo.getInstance().getConfig().getBoolean("enableShopTax") && taxMode != null && taxMode.equalsIgnoreCase("buyer")) {
+			taxRate = shop.resolveShopTaxRate();
+			taxApplies = taxRate != null && !taxRate.isEmpty() && !taxRate.equals("0") && !taxRate.equals("0.0") && !taxRate.equals("0%");
+			showTax = taxApplies;
+		}
+
+		// Format taxRate for display
+		String displayTaxRate = "";
+		if (taxRate != null && !taxRate.isEmpty()) {
+			if (taxRate.contains("%")) {
+				displayTaxRate = taxRate;
+			} else {
+				displayTaxRate = "$" + taxRate;
+			}
+		}
 
 		ItemStack shopItem = shop.item.clone();
-
 		shopItem.setAmount(Math.max(shop.quantity, 1));
 
 		if (shop.buyPrice > -1 && shop.quantity > 0) {
 			if (isLimitedShop) {
-				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop));
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop, displayTaxRate, taxApplies, showTax));
 			} else {
-				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin, isLimitedShop));
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin, isLimitedShop, displayTaxRate, taxApplies, showTax));
 			}
 		}
 
@@ -320,8 +338,8 @@ public class ShopUserGUI implements Listener {
 		boolean taxEnabled = Slabbo.getInstance().getConfig().getBoolean("enableShopTax", false);
 		boolean sellerExempt = shopOwner.isOnline() && shopOwner.getPlayer().hasPermission("slabbo.tax.exempt");
 		boolean buyerExempt = humanEntity.hasPermission("slabbo.tax.exempt");
-		String taxMode = Shop.resolveShopTaxMode(shop, shop.location);
-		String taxRate = Shop.resolveShopTaxRate(shop, shop.location);
+		String taxMode = shop.resolveShopTaxMode();
+		String taxRate = shop.resolveShopTaxRate();
 
 		// Calculate tax only if enabled and not exempt
 		double taxAmount = 0.0;
