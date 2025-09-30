@@ -95,6 +95,7 @@ Destroying: Right click existing shop with stick
 | `slabbo.admin.limit.virtual.stock.sell`   | Lets you set the sell stock limit on a virtual admin shop                        |
 | `slabbo.admin.limit.virtual.time`         | Lets you set the restock time on a virtual admin shop                            |
 | `slabbo.admin.set.virtual.owner_name`     | Lets you set the owner name on a virtual admin shop                              |
+| `slabbo.migrate`                          | Lets you migrate shops from one storage engine to another                        |
 
 ## Commands
 
@@ -143,7 +144,7 @@ Destroying: Right click existing shop with stick
 - `/slabbo admin limit virtual stock sell <shopName> <stock>`
 - `/slabbo admin set virtual owner_name <shopName> [name]`
 - `/slabbo admin set virtual time <shopName> <time>`
-- 
+- `/slabbo migrate <storageEngine>`
 
 ## SQLite Support
 
