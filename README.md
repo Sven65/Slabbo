@@ -160,7 +160,7 @@ storageEngine: sqlite
 
 ### Migrating Existing Data to SQLite
 
-If you are currently using another storage engine (such as YAML or MySQL), you can migrate your data to SQLite using the following workflow:
+If you are currently using another storage engine (such as YAML), you can migrate your data to SQLite using the following workflow:
 
 1. **Run the Migration Command**
 
