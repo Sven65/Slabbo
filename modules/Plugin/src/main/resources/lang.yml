@@ -77,7 +77,7 @@ success-message:
     owner-set: Owner set to {owner}
     stock-set: Stock set to {stock}
     note-set: Shop note set to {note}
-    modify:
+    item-display:
       item-display-enabled: "Custom item display name enabled for this shop."
       item-display-disabled: "Custom item display name disabled for this shop."
       item-display-name-removed: "Custom item display name removed."
