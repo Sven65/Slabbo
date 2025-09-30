@@ -66,9 +66,9 @@ public class ShopUserGUI implements Listener {
 
 		if (shop.buyPrice > -1 && shop.quantity > 0) {
 			if (isLimitedShop) {
-				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop, displayTaxRate, taxApplies, showTax));
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.calculateBuyPrice(), shop.shopLimit.buyStockLeft, shop.admin, isLimitedShop, displayTaxRate, taxApplies, showTax));
 			} else {
-				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.buyPrice, shop.stock, shop.admin, isLimitedShop, displayTaxRate, taxApplies, showTax));
+				inv.setItem(0, GUIItems.getUserBuyItem(NameUtil.getName(shop.item), shop.quantity, shop.calculateBuyPrice(), shop.stock, shop.admin, isLimitedShop, displayTaxRate, taxApplies, showTax));
 			}
 		}
 

@@ -355,6 +355,14 @@ public class Shop implements Cloneable, ConfigurationSerializable {
 	}
 
 	/**
+	 * Calculates buy price including tax if applicable.
+	 * @return
+	 */
+	public double calculateBuyPrice() {
+		return this.buyPrice + Shop.calculateTaxAmount(this.shopTaxRate, this.buyPrice);
+	}
+
+	/**
 	 * Utility to calculate tax amount from rate string ("10" or "10%") and base value.
 	 */
 	public static double calculateTaxAmount(String taxRate, double baseValue) {

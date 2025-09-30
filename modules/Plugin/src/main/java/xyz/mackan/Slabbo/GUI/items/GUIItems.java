@@ -177,9 +177,6 @@ public class GUIItems {
 			lore = new ArrayList<>(Arrays.asList("§r"+buyFor, inStock, "("+Misc.countStacks(stock)+" "+stacks+")"));
 		}
 
-		// Always show base price
-		lore.add(ChatColor.YELLOW + "Price: " + LocaleManager.getCurrencyString(basePrice));
-
 		// Add tax info if needed
 		if (showTax && taxApplies && taxRateStr != null && !taxRateStr.isEmpty()) {
 			lore.add(ChatColor.YELLOW + "Includes tax: " + taxRateStr);
