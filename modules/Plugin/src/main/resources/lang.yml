@@ -19,10 +19,26 @@ error-message:
     invalid-index: That's not a valid index!
     shop-does-not-exist: That shop doesn't exist!
     named-shop-already-exists: A shop with that name already exists.
+  shop:
+    null_world: "[Slabbo] Failed to get shop location because world '{world}' doesn't exist."
   import:
     file-not-found: That file can't be found
     plugin-not-supported: That plugin can't be imported
     general-error: An error occured when importing. See the console for more details.
+    ushops:
+      file_root_not_mapping: "ushops file root is not a mapping - aborting import."
+      malformed_yaml: "Malformed YAML in ushops file: {error}"
+      failed_read_file: "Failed to read ushops file: {error}"
+      unexpected_error: "Unexpected error while loading ushops file: {error}"
+      skipping_blank_key: "Skipping shop with blank or invalid key {key} in ushops.yml"
+      skipping_non_map_section: "Skipping shop '{key}': section is not a map."
+      itemstack_failed: "Could not construct ItemStack for shop {key}, using BARRIER placeholder."
+      null_location: "[Slabbo] Shop '{key}' produced a null Location from ShopManager.fromString!"
+      import_failed: "Failed to import shop {key} - {error}"
+      itemstack_invalid_amount_low: "[Slabbo] ItemStack amount for type {type} was <= 0, setting to 1"
+      itemstack_invalid_amount_high: "[Slabbo] ItemStack amount for type {type} was {amount}, clamping to max {max}"
+      file_not_found: "The ushops file '{file}' could not be found."
+
   modify:
     invalid-buy-price: Please provide a positive buy price or -1 for not buying.
     invalid-sell-price: Please provide a positive sell price or -1 for not selling.
@@ -69,6 +85,7 @@ success-message:
      removed-command: The command {command} has been removed.
   import:
     importing: Importing shops!
+    importing-advanced: Importing shops using advanced importer!
     success: Imported {count} shops. Skipped {skipped} as shops already exist at their locations.
   modify:
     buyprice-set: Buy price set to {price}

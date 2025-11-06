@@ -87,8 +87,8 @@ public class ShopManager {
 		if (dataStore.requiresCache()) {
 			shops.putAll(newShops);
 			// Rebuild owner/shop mappings and limitedShops if needed
-			loadShops(); // reloads all mappings
 			dataStore.saveShops(shops);
+			loadShops(); // reloads all mappings
 		} else {
 			for (Shop shop : newShops.values()) {
 				dataStore.addShop(shop);
@@ -209,7 +209,11 @@ public class ShopManager {
 		double z = Double.parseDouble(zString);
 
 		World world = Bukkit.getWorld(worldName);
-		if (world == null) return null;
+
+		if (world == null) {
+			Bukkit.getLogger().warning(LocaleManager.replaceSingleKey("error-message.import.ushops.null_world", "world", worldName));
+			return null;
+		}
 
 		return new Location(world, x, y, z);
 	}

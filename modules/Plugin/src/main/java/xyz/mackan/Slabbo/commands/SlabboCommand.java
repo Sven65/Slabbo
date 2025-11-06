@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.mackan.Slabbo.GUI.*;
 import xyz.mackan.Slabbo.Slabbo;
+import xyz.mackan.Slabbo.importers.UShopAdvancedImporter;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
@@ -646,7 +647,7 @@ public class SlabboCommand extends BaseCommand {
 	@Subcommand("import")
 	@Description("Imports shop from another plugin")
 	@CommandPermission("slabbo.importshops")
-	@CommandCompletion("ushops @importFiles")
+	@CommandCompletion("ushops @importFiles|ushopsa @importFiles")
 	public void onImportShops(Player player, String type, String file) {
 		File importFile = new File(Slabbo.getDataPath() + "/" + file);
 
@@ -661,6 +662,10 @@ public class SlabboCommand extends BaseCommand {
 			case "ushops":
 				player.sendMessage(LocaleManager.getString("success-message.import.importing"));
 				result = UShopImporter.importUShops(importFile);
+				break;
+			case "ushopsa":
+				player.sendMessage(LocaleManager.getString("success-message.import.importing-advanced"));
+				result = UShopAdvancedImporter.importUShops(importFile);
 				break;
 			default:
 				player.sendMessage(ChatColor.RED + LocaleManager.getString("error-message.import.plugin-not-supported"));
