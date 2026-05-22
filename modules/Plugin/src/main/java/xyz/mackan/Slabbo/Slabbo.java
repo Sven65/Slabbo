@@ -137,8 +137,8 @@ public class Slabbo extends JavaPlugin {
 		String bukkitVersion = Bukkit.getServer().getBukkitVersion();
 
 		// TODO: Move this to debug in config
-		//  Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
-		//  Bukkit.getLogger().info(String.format("Package name is %s", packageName));
+		// Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
+		// Bukkit.getLogger().info(String.format("Package name is %s", packageName));
 
 
 		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
@@ -147,8 +147,8 @@ public class Slabbo extends JavaPlugin {
 
 
 		// TODO: Move this to debug in config
-		//  Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
-		//  Bukkit.getLogger().info(String.format("Internals name is %s", nmsVersion));
+		// Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
+		// Bukkit.getLogger().info(String.format("Internals name is %s", nmsVersion));
 
 
 		try {

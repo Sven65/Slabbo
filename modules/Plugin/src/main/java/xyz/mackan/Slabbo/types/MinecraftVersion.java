@@ -85,7 +85,11 @@ public enum MinecraftVersion {
     v1_21_8(BukkitVersion.v1_21_R5),
     v1_21_9(BukkitVersion.v1_21_R5),
     v1_21_10(BukkitVersion.v1_21_R6),
-    v1_21_11(BukkitVersion.v1_21_R7);
+    v1_21_11(BukkitVersion.v1_21_R7),
+
+    v26_1(BukkitVersion.v26_1),
+    v26_1_1(BukkitVersion.v26_1),
+    v26_1_2(BukkitVersion.v26_1);
 
 
     public final BukkitVersion bukkitVersion;
@@ -95,7 +99,15 @@ public enum MinecraftVersion {
     }
 
     public static MinecraftVersion from(String version) {
-        String formattedVersion = String.format("v%s", version.toLowerCase().replace("-r0.1-snapshot", "").replace('.', '_'));
+        String cleaned = version.toLowerCase()
+                .replaceAll("-r\\d+\\.\\d+-snapshot", "")
+                .replaceAll("\\.build\\..*", "")
+                .replaceAll("-.*", "");
+
+        String formattedVersion = String.format("v%s", cleaned.replace('.', '_'));
+
+        System.out.println("[Slabbo] Raw version: " + version);
+        System.out.println("[Slabbo] Formatted version: " + formattedVersion);
 
         return valueOf(formattedVersion);
     }
