@@ -43,6 +43,7 @@ public class ShopDeletionGUI  implements Listener {
 		if (!shop.virtual) ItemUtil.removeShopItemsAtLocation(shop.location);
 
 		Slabbo.getInstance().getShopManager().removeShop(shop);
+		Slabbo.getInstance().getChestLinkManager().removeShopLink(shop);
 
 		((Player) humanEntity).playSound(shop.location == null ? humanEntity.getLocation() : shop.location, slabboSound.getSoundByKey("DESTROY"), 1, 1);
 
