@@ -8,7 +8,19 @@
 # Options:
 #   file   - Stores all shops in a YAML file (default)
 #   sqlite - Stores all shops in an SQLite database (recommended for servers with many shops or high player counts)
+#   mysql  - Stores all shops in a MySQL/MariaDB database (required if using transaction logs, not really recommended otherwise)
 storageEngine: file
+
+# Only required to fill if using 'mysql' as the storage engine.
+mysql:
+  host: 'localhost'
+  port: 3306
+  database: 'slabbo'
+  username: 'username'
+  password: 'password'
+  useSSL: true
+  verifyCertificate: true
+  allowPubKeyRetrieval: false
 
 # How the hovering items should be displayed
 # Accepts the following values:
@@ -142,3 +154,56 @@ items:
       paper: 0
       nametag: 0
       clock: 0
+
+########################
+#    Transaction Log   #
+########################
+
+# Stores transactions (buying/selling), this is currently un-used in slabbo, but could be used with 3rd party tools.
+# This requires a MySQL/MariaDB database set as the storage engine, and will not work without it.
+
+transactionLogs:
+  enabled: false
+
+  # Should selling to a shop be logged?
+  selling: true
+
+  # Should buying from a shop be logged?
+  buying: true
+
+  # Should buying/selling from an admin shop be logged?
+  adminShops: false
+
+  storedInfo:
+    # The item bought/sold
+    item: true
+
+    # The raw NBT of the item, might use a lot of storage on the DB if enabled!
+    itemNBT: false
+
+    # Who owns the shop
+    shopOwner: true
+
+    # Who's using the shop
+    shopUser: true
+
+    # Who's buying/selling
+    buyer: true
+
+    # The current price (or how much was made by selling)
+    price: true
+
+    # Stock is counted from AFTER buying/selling
+    stock: true
+
+    # How many were bought/sold
+    quantity: true
+
+  autoTrim:
+    enabled: true
+
+    # Defaults to 1 week in seconds, set this to 0 to disable
+    time: 604800
+
+    # Only stores the latest 1000, set this to 0 to disable
+    transactions: 1000
