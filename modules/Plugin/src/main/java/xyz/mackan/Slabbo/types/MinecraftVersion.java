@@ -89,7 +89,8 @@ public enum MinecraftVersion {
 
     v26_1(BukkitVersion.v26_1),
     v26_1_1(BukkitVersion.v26_1),
-    v26_1_2(BukkitVersion.v26_1);
+    v26_1_2(BukkitVersion.v26_1),
+    v26_2(BukkitVersion.v26_2);
 
 
     public final BukkitVersion bukkitVersion;
