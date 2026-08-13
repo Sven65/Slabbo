@@ -1396,7 +1396,7 @@ public class SlabboCommand extends BaseCommand {
 	@Subcommand("migrate")
 	@Description("Migrates shops between sqlite and file storage")
 	@CommandPermission("slabbo.migrate")
-	@CommandCompletion("sqlite|file")
+	@CommandCompletion("sqlite|mysql|file")
 	public void onMigrate(CommandSender sender, String target) {
 		if (!(sender instanceof org.bukkit.command.ConsoleCommandSender)) {
 			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.only-console", "target", target));
@@ -1404,7 +1404,7 @@ public class SlabboCommand extends BaseCommand {
 		}
 
 		target = (target == null) ? "" : target.toLowerCase();
-		if (!target.equals("sqlite") && !target.equals("file")) {
+		if (!target.equals("sqlite") && !target.equals("mysql") && !target.equals("file")) {
 			sender.sendMessage(ChatColor.RED + LocaleManager.replaceSingleKey("migrate.invalid-target", "target", target));
 			return;
 		}

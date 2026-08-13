@@ -14,6 +14,7 @@ import xyz.mackan.Slabbo.GUI.items.GUIItems;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.abstractions.ISlabboSound;
 import xyz.mackan.Slabbo.abstractions.SlabboAPI;
+import xyz.mackan.Slabbo.data.MySQLStore;
 import xyz.mackan.Slabbo.manager.LocaleManager;
 import xyz.mackan.Slabbo.types.Shop;
 import xyz.mackan.Slabbo.utils.InventoryUtil;
@@ -360,6 +361,14 @@ public class ShopUserGUI implements Listener {
 		}
 
 		inv.setItem(7, GUIItems.getUserFundsItem(Slabbo.getEconomy().getBalance((OfflinePlayer) humanEntity)));
+
+		// ===== Transaction logs =====
+
+		if (!Slabbo.getInstance().getConfig().getBoolean("transactionLogs.enabled")) return;
+		if (!Slabbo.getInstance().getConfig().getBoolean("transactionLogs.selling")) return;
+
+		// @TODO: Surely there's a proper place for actually handling this?
+		// @TODO: Actually handle transactions
 	}
 
 

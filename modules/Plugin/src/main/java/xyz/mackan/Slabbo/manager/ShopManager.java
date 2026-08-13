@@ -6,6 +6,7 @@ import org.bukkit.World;
 import xyz.mackan.Slabbo.Slabbo;
 import xyz.mackan.Slabbo.data.DataStore;
 import xyz.mackan.Slabbo.data.FileStore;
+import xyz.mackan.Slabbo.data.MySQLStore;
 import xyz.mackan.Slabbo.data.SQLiteStore;
 import xyz.mackan.Slabbo.types.Shop;
 
@@ -275,7 +276,9 @@ public class ShopManager {
 		setMigrationInProgress(true);
 		try {
 			// Determine the actual active store implementation (source of truth for migration)
-			String actualStore = (dataStore instanceof SQLiteStore) ? "sqlite" : "file";
+			String actualStore = (dataStore instanceof SQLiteStore) ? "sqlite" :
+				(dataStore instanceof MySQLStore) ? "mysql" :
+				"file";
 			// Read config for visibility; warn if it disagrees with the active store
 			String configType = Slabbo.getInstance().getConfig().getString("storage.type", actualStore).toLowerCase();
 			if (!actualStore.equals(configType)) {
@@ -293,6 +296,8 @@ public class ShopManager {
 				newStore = new SQLiteStore();
 			} else if (target.equalsIgnoreCase("file")) {
 				newStore = new FileStore();
+			} else if (target.equalsIgnoreCase("mysql")) {
+				newStore = new MySQLStore();
 			} else {
 				logger.severe("Invalid migration target provided: " + target);
 				return MigrationResult.INVALID_TARGET; // Invalid target

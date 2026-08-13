@@ -15,6 +15,7 @@ import xyz.mackan.Slabbo.abstractions.SlabboItemAPI;
 import xyz.mackan.Slabbo.commands.*;
 import xyz.mackan.Slabbo.data.DataStore;
 import xyz.mackan.Slabbo.data.FileStore;
+import xyz.mackan.Slabbo.data.MySQLStore;
 import xyz.mackan.Slabbo.data.SQLiteStore;
 import xyz.mackan.Slabbo.listeners.*;
 import xyz.mackan.Slabbo.manager.ChestLinkManager;
@@ -95,10 +96,18 @@ public class Slabbo extends JavaPlugin {
 
 		String engine = getConfig().getString("storageEngine", "file").toLowerCase();
 		DataStore dataStore = engine.equals("sqlite") ? new SQLiteStore() :
+				engine.equals("mysql") ? new MySQLStore() :
 				engine.equals("file") ? new FileStore() : null;
 
 		if (dataStore == null) {
-			getLogger().severe("Invalid storageEngine: " + engine + ". Use 'file' or 'sqlite'. Disabling plugin.");
+			getLogger().severe("Invalid storageEngine: " + engine + ". Use 'file', 'sqlite' or 'mysql'. Disabling plugin.");
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
+		// Possibly controversial, but otherwise it'd need to be accounted for every time it tries to write a transaction log.
+		if (getConfig().getBoolean("transactionLogs.enabled") && engine != "mysql") {
+			getLogger().severe("You've enabled 'transactionLogs' in the config, but did not set 'storageEngine' to 'mysql'! Disabling plugin.");
 			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}

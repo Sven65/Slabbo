@@ -200,7 +200,7 @@ gui:
       click-item-below: Click item below
 migrate:
     only-console: This command can only be run from the console.
-    invalid-target: Invalid target. Use 'sqlite' or 'file'.
+    invalid-target: Invalid target. Use 'sqlite', 'mysql' or 'file'.
     already-using: Already using {target} storage.
     in-progress: A migration is already in progress. Please wait.
     success: Migration to {target} completed successfully.
