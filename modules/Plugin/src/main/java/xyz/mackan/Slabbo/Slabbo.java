@@ -21,10 +21,7 @@ import xyz.mackan.Slabbo.manager.ChestLinkManager;
 import xyz.mackan.Slabbo.pluginsupport.PluginSupport;
 import xyz.mackan.Slabbo.pluginsupport.WorldguardSupport;
 import xyz.mackan.Slabbo.manager.SuggestedValuesManager;
-import xyz.mackan.Slabbo.types.BukkitVersion;
-import xyz.mackan.Slabbo.types.MinecraftVersion;
-import xyz.mackan.Slabbo.types.Shop;
-import xyz.mackan.Slabbo.types.ShopLimit;
+import xyz.mackan.Slabbo.types.*;
 import xyz.mackan.Slabbo.manager.ShopManager;
 import xyz.mackan.Slabbo.utils.UpdateChecker;
 import xyz.mackan.Slabbo.manager.LocaleManager;
@@ -140,10 +137,9 @@ public class Slabbo extends JavaPlugin {
 		// Bukkit.getLogger().info(String.format("Bukkit Version is %s", bukkitVersion));
 		// Bukkit.getLogger().info(String.format("Package name is %s", packageName));
 
-
-		MinecraftVersion nmsVersion = MinecraftVersion.from(bukkitVersion);
-
-		String internalsName = nmsVersion.bukkitVersion.getVersion();
+		String internalsName = ServerVersion.isSameOrLater(1, 14, 0)
+			? "Modern"
+			: "v" + MinecraftVersion.from(bukkitVersion).bukkitVersion.getVersion();
 
 
 		// TODO: Move this to debug in config
@@ -152,9 +148,9 @@ public class Slabbo extends JavaPlugin {
 
 
 		try {
-			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_v" + internalsName).newInstance();
-			itemApi = (SlabboItemAPI) Class.forName(packageName + ".abstractions.SlabboItemAPI_v" + internalsName).newInstance();
-			slabboSound = (ISlabboSound) Class.forName(packageName + ".abstractions.SlabboSound_v" + internalsName).newInstance();
+			api = (SlabboAPI) Class.forName(packageName + ".abstractions.SlabboAPI_" + internalsName).newInstance();
+			itemApi = (SlabboItemAPI) Class.forName(packageName + ".abstractions.SlabboItemAPI_" + internalsName).newInstance();
+			slabboSound = (ISlabboSound) Class.forName(packageName + ".abstractions.SlabboSound_" + internalsName).newInstance();
 
 			Bukkit.getServicesManager().register(SlabboAPI.class, api, this, ServicePriority.Highest);
 			Bukkit.getServicesManager().register(SlabboItemAPI.class, itemApi, this, ServicePriority.Highest);
@@ -198,15 +194,12 @@ public class Slabbo extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new InventoryPickupItemListener(), this);
 		getServer().getPluginManager().registerEvents(new PlayerFishEventListener(), this);
 
-		BukkitVersion version = BukkitVersion.getCurrentVersion();
-
-
-		if (version.isSameOrLater(BukkitVersion.v1_8_R3)) {
+		if (ServerVersion.isSameOrLater(1, 8, 4)) {
 			// 1.8.8
 			getServer().getPluginManager().registerEvents(new ItemMergeListener(), this);
 		}
 
-		if (version.isSameOrLater(BukkitVersion.v1_12_R1)) {
+		if (ServerVersion.isSameOrLater(1, 12, 0)) {
 			getServer().getPluginManager().registerEvents(new EntityPickupItemListener(), this);
 		} else {
 			getServer().getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
